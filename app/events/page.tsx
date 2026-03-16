@@ -28,19 +28,16 @@ function FadeUp({
   );
 }
 
-/* ── Event data ────────────────────────────────────────────────── */
+/* ── Event formats ─────────────────────────────────────────────── */
 
-const EVENTS = [
+const FORMATS = [
   {
     id: "rooftop-social",
     name: "Rooftop Social",
-    venue: "L.A. Jackson",
-    date: "Coming soon",
-    time: "7 PM",
-    guests: "40 guests",
-    detail: "50/50",
+    desc: "Our flagship format. Drinks, conversation, and guided icebreakers on Nashville\u2019s best rooftops. Big enough to meet someone new, small enough that everyone matters.",
+    guests: "40\u201360 guests",
+    vibe: "Lively",
     dress: "Smart casual",
-    spotsLeft: null,
     featured: true,
     image:
       "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=85",
@@ -48,13 +45,10 @@ const EVENTS = [
   {
     id: "wine-night",
     name: "Wine Night",
-    venue: "Bastion",
-    date: "Coming soon",
-    time: "8 PM",
+    desc: "Intimate and curated. A sommelier-led tasting with structured conversation rounds. The kind of evening where you remember every name.",
     guests: "20 guests",
-    detail: "Intimate",
-    dress: null,
-    spotsLeft: null,
+    vibe: "Intimate",
+    dress: "Cocktail",
     featured: false,
     image:
       "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80",
@@ -62,13 +56,10 @@ const EVENTS = [
   {
     id: "dinner-series",
     name: "Dinner Series",
-    venue: "Henrietta Red",
-    date: "Coming soon",
-    time: "7:30 PM",
+    desc: "Long-table dining at premium restaurants. Chef\u2019s menu, assigned seating that rotates between courses. Our most exclusive format.",
     guests: "12 guests",
-    detail: "Long table",
-    dress: "Premium ($120)",
-    spotsLeft: null,
+    vibe: "Exclusive",
+    dress: "Cocktail attire",
     featured: false,
     image:
       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
@@ -76,13 +67,10 @@ const EVENTS = [
   {
     id: "coffee-hike",
     name: "Coffee + Hike",
-    venue: "Radnor Lake",
-    date: "Coming soon",
-    time: "8:30 AM",
+    desc: "Start your morning with cold brew, fresh air, and rotating trail partners. The best conversations happen side by side, not across a table.",
     guests: "24 guests",
-    detail: "Athleisure",
-    dress: null,
-    spotsLeft: null,
+    vibe: "Active",
+    dress: "Athleisure",
     featured: false,
     image:
       "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
@@ -102,8 +90,8 @@ function Tag({ children }: { children: React.ReactNode }) {
 /* ═════════════════════════════════════════════════════════════════ */
 
 export default function EventsPage() {
-  const featured = EVENTS.find((e) => e.featured)!;
-  const secondary = EVENTS.filter((e) => !e.featured);
+  const featured = FORMATS.find((e) => e.featured)!;
+  const secondary = FORMATS.filter((e) => !e.featured);
 
   return (
     <>
@@ -116,7 +104,7 @@ export default function EventsPage() {
             transition={{ duration: 0.6 }}
             className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5"
           >
-            Upcoming
+            Events
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -124,7 +112,7 @@ export default function EventsPage() {
             transition={{ duration: 0.8, delay: 0.15 }}
             className="font-serif text-[40px] md:text-[56px] lg:text-[64px] font-bold text-white leading-[1.08] tracking-tight max-w-[18ch]"
           >
-            What&apos;s coming up.
+            What to expect.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -132,12 +120,12 @@ export default function EventsPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-white/40 text-base md:text-lg mt-5 max-w-lg"
           >
-            Join the waitlist to get early access when tickets drop.
+            Curated experiences at Nashville&apos;s best venues. Here are the formats we&apos;re planning for our founding members.
           </motion.p>
         </div>
       </section>
 
-      {/* ═══ FEATURED EVENT ═══ */}
+      {/* ═══ FEATURED FORMAT ═══ */}
       <section className="pb-6 md:pb-8">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp>
@@ -150,22 +138,19 @@ export default function EventsPage() {
                 sizes="(max-width: 768px) 100vw, 1152px"
                 priority
               />
-              {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-              {/* Content */}
               <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
-                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
+                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-3">
                   {featured.name}
                 </h2>
-
+                <p className="text-white/50 text-sm md:text-base max-w-lg mb-4 leading-relaxed">
+                  {featured.desc}
+                </p>
                 <div className="flex flex-wrap gap-2">
-                  <Tag>{featured.venue}</Tag>
-                  <Tag>{featured.date}</Tag>
-                  <Tag>{featured.time}</Tag>
                   <Tag>{featured.guests}</Tag>
-                  <Tag>{featured.detail}</Tag>
-                  {featured.dress && <Tag>{featured.dress}</Tag>}
+                  <Tag>{featured.vibe}</Tag>
+                  <Tag>{featured.dress}</Tag>
                 </div>
               </div>
             </div>
@@ -173,37 +158,65 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* ═══ SECONDARY EVENTS ═══ */}
+      {/* ═══ SECONDARY FORMATS ═══ */}
       <section className="pb-20 md:pb-28">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            {secondary.map((event, i) => (
-              <FadeUp key={event.id} delay={i * 0.1}>
-                <div className="relative rounded-3xl overflow-hidden aspect-[5/2]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {secondary.map((format, i) => (
+              <FadeUp key={format.id} delay={i * 0.1}>
+                <div className="relative rounded-3xl overflow-hidden aspect-[3/4]">
                   <Image
-                    src={event.image}
-                    alt={event.name}
+                    src={format.image}
+                    alt={format.name}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 560px"
+                    sizes="(max-width: 768px) 100vw, 370px"
                   />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
 
-                  {/* Content */}
                   <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
-                    <h3 className="font-serif text-xl md:text-2xl font-bold text-white mb-3">
-                      {event.name}
+                    <h3 className="font-serif text-xl md:text-2xl font-bold text-white mb-2">
+                      {format.name}
                     </h3>
+                    <p className="text-white/45 text-[13px] leading-relaxed mb-3">
+                      {format.desc}
+                    </p>
                     <div className="flex flex-wrap gap-1.5">
-                      <Tag>{event.venue}</Tag>
-                      <Tag>{event.date}</Tag>
-                      <Tag>{event.time}</Tag>
-                      <Tag>{event.guests}</Tag>
-                      <Tag>{event.detail}</Tag>
-                      {event.dress && <Tag>{event.dress}</Tag>}
+                      <Tag>{format.guests}</Tag>
+                      <Tag>{format.vibe}</Tag>
+                      <Tag>{format.dress}</Tag>
                     </div>
                   </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ HOW EVERY EVENT WORKS ═══ */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <FadeUp className="mb-12 md:mb-16">
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
+              Every event
+            </p>
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">
+              What you can count on.
+            </h2>
+          </FadeUp>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {[
+              { title: "Balanced guest list", desc: "We manage the ratio and mix for every event. You\u2019ll be in a room of interesting, vetted people." },
+              { title: "Guided icebreakers", desc: "No standing awkwardly with a drink. Every event has a format that makes it easy to meet everyone." },
+              { title: "Beautiful venues", desc: "We partner with Nashville\u2019s best restaurants, rooftops, and private spaces. Every setting is intentional." },
+              { title: "Double Take after", desc: "After the event, privately tell us who caught your eye. If it\u2019s mutual, we\u2019ll introduce you." },
+            ].map((item, i) => (
+              <FadeUp key={item.title} delay={i * 0.08}>
+                <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8">
+                  <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
+                  <p className="text-white/50 text-sm md:text-[15px] leading-relaxed">{item.desc}</p>
                 </div>
               </FadeUp>
             ))}
@@ -219,7 +232,7 @@ export default function EventsPage() {
               Want in?
             </h2>
             <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto">
-              Events are members-only. Apply to join the waitlist.
+              Our first events are launching soon. Apply now to be first in line.
             </p>
             <Link
               href="/apply"
@@ -231,7 +244,6 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Spacing before footer */}
       <div className="h-8" />
     </>
   );
