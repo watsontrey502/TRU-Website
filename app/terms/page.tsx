@@ -62,16 +62,30 @@ export default function TermsPage() {
               </p>
             </Section>
 
-            <Section title="2. Eligibility">
+            <Section title="2. Eligibility & Admission">
               <p>To use TR&Uuml;, you must:</p>
               <ul>
                 <li>Be at least 21 years of age.</li>
                 <li>Be currently single (not married or in a committed relationship).</li>
                 <li>Reside in or near the Nashville, Tennessee area.</li>
-                <li>Submit a truthful application and be accepted into the community.</li>
+                <li>Submit a truthful and accurate application and be accepted into the community.</li>
               </ul>
               <p>
-                We reserve the right to deny or revoke membership at our sole discretion.
+                TR&Uuml; is a curated, members-only community. Admission is based on subjective
+                assessments of overall fit, including social energy, genuine intent, and alignment
+                with our community values. We reserve the right to accept, deny, or revoke
+                membership at our sole discretion, without obligation to provide a reason.
+              </p>
+              <p>
+                Submitting an application does not guarantee acceptance. Providing false or
+                misleading information on your application is grounds for immediate membership
+                revocation without refund.
+              </p>
+              <p>
+                TR&Uuml; does not discriminate on the basis of race, color, national origin,
+                religion, disability, sexual orientation, or any other characteristic protected
+                by applicable law. Our admission decisions are based solely on subjective
+                community-fit criteria and are not influenced by protected characteristics.
               </p>
             </Section>
 

@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: "What\u2019s the gender ratio?",
-    a: "Every event is strictly 50/50. We actively manage this.",
+    a: "We strive for a 50/50 ratio at every event and actively manage the guest list to keep it balanced.",
   },
   {
     q: "What should I wear?",
@@ -102,21 +102,29 @@ export default function FAQPage() {
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
             className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5"
           >
             FAQ
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
+            initial={{ opacity: 0, y: 30, scale: 0.96, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1, delay: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
             className="font-serif text-[40px] md:text-[56px] lg:text-[64px] font-bold text-white leading-[1.08] tracking-tight max-w-[18ch]"
           >
             Questions &amp; answers.
           </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="text-white/40 text-base md:text-lg mt-5 max-w-lg"
+          >
+            Everything you need to know before you apply.
+          </motion.p>
         </div>
       </section>
 
@@ -179,8 +187,11 @@ export default function FAQPage() {
       <section className="py-20 md:py-32">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
           <FadeUp>
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.25em] uppercase mb-6">
+              Still curious?
+            </p>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
-              Still have questions?
+              Let&apos;s talk.
             </h2>
             <p className="text-white/50 text-base md:text-lg mb-3 max-w-md mx-auto">
               Reach out anytime. We&apos;ll get back within 24 hours.
@@ -194,7 +205,7 @@ export default function FAQPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/apply"
-                className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
+                className="btn-shimmer inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
               >
                 Apply to Join
               </Link>
@@ -209,7 +220,6 @@ export default function FAQPage() {
         </div>
       </section>
 
-      {/* Spacing before footer */}
       <div className="h-8" />
     </>
   );

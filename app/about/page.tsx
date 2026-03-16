@@ -1,6 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  motion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 /* ── Fade-in-up wrapper ────────────────────────────────────────── */
 
@@ -23,6 +30,41 @@ function FadeUp({
     >
       {children}
     </motion.div>
+  );
+}
+
+/* ── Parallax image section ────────────────────────────────────── */
+
+function ParallaxImage({
+  src,
+  alt,
+  children,
+}: {
+  src: string;
+  alt: string;
+  children?: React.ReactNode;
+}) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [1.08, 1]);
+
+  return (
+    <section ref={ref} className="relative h-[50vh] md:h-[65vh] overflow-hidden">
+      <motion.div className="absolute inset-0" style={{ scale }}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+      {children}
+    </section>
   );
 }
 
@@ -81,21 +123,29 @@ export default function AboutPage() {
       <section className="pt-32 pb-20 md:pt-40 md:pb-28">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
             className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5"
           >
             About TR&Uuml;
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
+            initial={{ opacity: 0, y: 30, scale: 0.96, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1, delay: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
             className="font-serif text-[40px] md:text-[56px] lg:text-[64px] font-bold text-white leading-[1.08] tracking-tight max-w-[18ch]"
           >
             The social club Nashville didn&apos;t know it needed.
           </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="text-white/40 text-base md:text-lg mt-5 max-w-lg"
+          >
+            A members-only experience designed around one idea: the best connections happen in person.
+          </motion.p>
         </div>
       </section>
 
@@ -128,7 +178,13 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp>
             <div className="rounded-2xl bg-dark-glass border border-dark-border p-8 md:p-14">
-              <div className="w-12 h-0.5 bg-gradient-to-r from-gold to-sand mb-8" />
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: 48 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="h-0.5 bg-gradient-to-r from-gold to-sand mb-8"
+              />
               <h2 className="font-serif text-2xl md:text-4xl font-bold text-white leading-snug mb-6">
                 A great night out first.<br />
                 Everything else second.
@@ -146,8 +202,29 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ═══ IMAGE BREAK ═══ */}
+      <ParallaxImage
+        src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1400&q=85"
+        alt="Friends enjoying a night out in Nashville"
+      >
+        <div className="absolute bottom-0 left-0 right-0 z-10 max-w-6xl mx-auto px-6 md:px-8 pb-14 md:pb-20">
+          <FadeUp>
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: 40 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="h-0.5 bg-gradient-to-r from-gold to-sand mb-5"
+            />
+            <p className="font-serif text-2xl md:text-4xl font-bold text-white leading-snug max-w-md">
+              Where real life meets real people.
+            </p>
+          </FadeUp>
+        </div>
+      </ParallaxImage>
+
       {/* ═══ 4. HOW IT WORKS ═══ */}
-      <section className="py-20 md:py-32">
+      <section className="py-24 md:py-36">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp className="mb-16 md:mb-20">
             <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
@@ -161,7 +238,11 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {steps.map((step, i) => (
               <FadeUp key={step.num} delay={i * 0.1}>
-                <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 h-full flex flex-col">
+                <motion.div
+                  whileHover={{ scale: 1.02, borderColor: "rgba(200,169,126,0.25)" }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 h-full flex flex-col cursor-default"
+                >
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
                       <span className="text-gold font-semibold text-sm">{step.num}</span>
@@ -169,7 +250,7 @@ export default function AboutPage() {
                     <h3 className="text-white font-semibold text-lg md:text-xl">{step.title}</h3>
                   </div>
                   <p className="text-white/50 text-sm md:text-[15px] leading-relaxed">{step.desc}</p>
-                </div>
+                </motion.div>
               </FadeUp>
             ))}
           </div>
@@ -181,6 +262,13 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp>
             <div className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-8 md:p-14">
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: 40 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="h-0.5 bg-gradient-to-r from-gold to-sand mb-6"
+              />
               <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5">
                 Double Take
               </p>
@@ -203,11 +291,17 @@ export default function AboutPage() {
                   { value: "3", label: "Max picks" },
                   { value: "48h", label: "Selection window" },
                   { value: "7 days", label: "Chat expires" },
-                ].map((stat) => (
-                  <div key={stat.label} className="rounded-xl bg-white/[0.04] border border-white/[0.06] p-4 text-center">
-                    <p className="text-gold font-semibold text-lg">{stat.value}</p>
-                    <p className="text-white/30 text-[10px] uppercase tracking-wider mt-1">{stat.label}</p>
-                  </div>
+                ].map((stat, i) => (
+                  <FadeUp key={stat.label} delay={0.1 + i * 0.08}>
+                    <motion.div
+                      whileHover={{ scale: 1.05, borderColor: "rgba(200,169,126,0.2)" }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="rounded-xl bg-white/[0.04] border border-white/[0.06] p-4 text-center cursor-default"
+                    >
+                      <p className="text-gold font-semibold text-lg">{stat.value}</p>
+                      <p className="text-white/30 text-[10px] uppercase tracking-wider mt-1">{stat.label}</p>
+                    </motion.div>
+                  </FadeUp>
                 ))}
               </div>
             </div>
@@ -218,7 +312,7 @@ export default function AboutPage() {
       {/* ═══ 6. EVENT TYPES ═══ */}
       <section className="py-20 md:py-32">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <FadeUp className="mb-16 md:mb-20">
+          <FadeUp className="mb-14 md:mb-20">
             <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
               Event formats
             </p>
@@ -230,13 +324,20 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {eventTypes.map((evt, i) => (
               <FadeUp key={evt.title} delay={i * 0.1}>
-                <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 h-full flex flex-col">
+                <motion.div
+                  whileHover={{ scale: 1.02, borderColor: "rgba(200,169,126,0.25)" }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 h-full flex flex-col cursor-default"
+                >
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-white font-semibold text-lg md:text-xl">{evt.title}</h3>
+                    <h3 className="text-white font-semibold text-lg md:text-xl">
+                      <span className="text-gold text-base mr-2">&#10022;</span>
+                      {evt.title}
+                    </h3>
                     <span className="text-gold/70 text-xs font-medium tracking-wide uppercase">{evt.guests}</span>
                   </div>
                   <p className="text-white/50 text-sm md:text-[15px] leading-relaxed">{evt.desc}</p>
-                </div>
+                </motion.div>
               </FadeUp>
             ))}
           </div>
@@ -247,23 +348,25 @@ export default function AboutPage() {
       <section className="py-20 md:py-32">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
           <FadeUp>
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.25em] uppercase mb-6">
+              Now accepting applications
+            </p>
             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
               Ready?
             </h2>
             <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto">
               Apply to join Nashville&apos;s most curated room.
             </p>
-            <a
+            <Link
               href="/apply"
-              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
+              className="btn-shimmer inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
             >
               Apply to Join
-            </a>
+            </Link>
           </FadeUp>
         </div>
       </section>
 
-      {/* Spacing before footer */}
       <div className="h-8" />
     </>
   );
