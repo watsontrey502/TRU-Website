@@ -181,7 +181,7 @@ export default function EventsPage() {
           <FadeUp>
             <motion.div
               whileHover="hover"
-              className="relative rounded-3xl overflow-hidden aspect-[16/9] cursor-default"
+              className="relative rounded-3xl overflow-hidden aspect-[3/4] md:aspect-[16/9] cursor-default"
             >
               {/* Ken Burns zoom */}
               <motion.div

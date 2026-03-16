@@ -1,5 +1,22 @@
--- TRU Dating Nashville — Database Schema
--- Run this in your Supabase SQL Editor
+-- TRU Dating Nashville — Fresh Schema (safe to re-run)
+-- Drops and recreates everything cleanly
+
+-- Drop existing tables (in dependency order)
+drop table if exists event_round_groups cascade;
+drop table if exists double_take_votes cascade;
+drop table if exists event_attendees cascade;
+drop table if exists waitlist_submissions cascade;
+drop table if exists events cascade;
+drop table if exists profiles cascade;
+
+-- Drop existing types
+drop type if exists profile_status cascade;
+drop type if exists attendee_status cascade;
+
+-- Drop existing functions/triggers
+drop trigger if exists on_auth_user_created on auth.users;
+drop function if exists handle_new_user();
+drop function if exists get_my_matches(uuid);
 
 -- ═══════════════════════════════════════════════════════════
 -- ENUMS
@@ -25,12 +42,12 @@ create table profiles (
   work text,
   avatar_url text,
   status profile_status default 'pending',
+  is_admin boolean default false,
   created_at timestamptz default now()
 );
 
 alter table profiles enable row level security;
 
--- Users can fully manage their own profile
 create policy "Users can view own profile"
   on profiles for select using (auth.uid() = id);
 
@@ -40,8 +57,6 @@ create policy "Users can update own profile"
 create policy "Users can insert own profile"
   on profiles for insert with check (auth.uid() = id);
 
--- Authenticated users can read basic info (first_name, instagram) of other profiles
--- This is needed for Double Take attendee lists and match display
 create policy "Authenticated users can read basic profile info"
   on profiles for select to authenticated using (true);
 
@@ -82,15 +97,24 @@ create table events (
   capacity integer,
   description text,
   image_url text,
+  phases jsonb default '[]'::jsonb,
+  current_phase_index integer default 0,
+  phase_started_at timestamptz,
+  phase_paused boolean default false,
+  phase_remaining_seconds integer,
+  live_status text default 'not_started',
   double_take_open boolean default false,
   created_at timestamptz default now()
 );
 
 alter table events enable row level security;
 
--- Events are readable by all authenticated users
 create policy "Authenticated users can view events"
   on events for select to authenticated using (true);
+
+create policy "Admins can update events"
+  on events for update to authenticated
+  using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
 
 -- ═══════════════════════════════════════════════════════════
 -- EVENT ATTENDEES
@@ -121,6 +145,10 @@ create policy "Users can insert own attendance"
 create policy "Users can cancel own attendance"
   on event_attendees for update using (profile_id = auth.uid());
 
+create policy "Admins can update attendee status"
+  on event_attendees for update to authenticated
+  using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
+
 -- ═══════════════════════════════════════════════════════════
 -- DOUBLE TAKE VOTES
 -- ═══════════════════════════════════════════════════════════
@@ -136,20 +164,15 @@ create table double_take_votes (
 
 alter table double_take_votes enable row level security;
 
--- Users can only insert their own votes
 create policy "Users can insert own votes"
   on double_take_votes for insert with check (voter_id = auth.uid());
 
--- Users can only see their own votes
 create policy "Users can view own votes"
   on double_take_votes for select using (voter_id = auth.uid());
 
 -- ═══════════════════════════════════════════════════════════
 -- MATCH DETECTION FUNCTION
 -- ═══════════════════════════════════════════════════════════
--- Uses SECURITY DEFINER to bypass RLS and detect mutual votes.
--- Without this, RLS on double_take_votes blocks the self-join
--- needed to find reciprocal matches.
 
 create or replace function get_my_matches(requesting_user_id uuid)
 returns table (
@@ -185,30 +208,6 @@ end;
 $$;
 
 -- ═══════════════════════════════════════════════════════════
--- LIVE EVENT — New columns on events
--- ═══════════════════════════════════════════════════════════
-
-alter table events add column phases jsonb default '[]'::jsonb;
-alter table events add column current_phase_index integer default 0;
-alter table events add column phase_started_at timestamptz;
-alter table events add column phase_paused boolean default false;
-alter table events add column phase_remaining_seconds integer;
-alter table events add column live_status text default 'not_started';
-
--- Admin flag on profiles
-alter table profiles add column is_admin boolean default false;
-
--- Allow admins to update events (for phase control)
-create policy "Admins can update events"
-  on events for update to authenticated
-  using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
-
--- Allow admins to update attendee status (for check-in)
-create policy "Admins can update attendee status"
-  on event_attendees for update to authenticated
-  using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
-
--- ═══════════════════════════════════════════════════════════
 -- EVENT ROUND GROUPS
 -- ═══════════════════════════════════════════════════════════
 
@@ -224,7 +223,6 @@ create table event_round_groups (
 
 alter table event_round_groups enable row level security;
 
--- Attendees can read groups for events they attend
 create policy "Attendees can view groups for their events"
   on event_round_groups for select to authenticated
   using (
@@ -233,21 +231,13 @@ create policy "Attendees can view groups for their events"
     )
   );
 
--- Admins can insert groups
 create policy "Admins can insert groups"
   on event_round_groups for insert to authenticated
   with check (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
 
--- Admins can delete groups (for regeneration)
 create policy "Admins can delete groups"
   on event_round_groups for delete to authenticated
   using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
-
--- ═══════════════════════════════════════════════════════════
--- ENABLE REALTIME on events table
--- ═══════════════════════════════════════════════════════════
-
-alter publication supabase_realtime add table events;
 
 -- ═══════════════════════════════════════════════════════════
 -- WAITLIST SUBMISSIONS
@@ -268,29 +258,26 @@ create table waitlist_submissions (
   interesting text,
   ideal_date text,
   referral_code text,
+  status text default 'pending',
+  updated_at timestamptz,
   created_at timestamptz default now()
 );
 
 alter table waitlist_submissions enable row level security;
 
--- Only admins can read waitlist submissions
 create policy "Admins can view waitlist submissions"
   on waitlist_submissions for select to authenticated
   using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
 
--- Admins can update waitlist submissions (status changes)
 create policy "Admins can update waitlist submissions"
   on waitlist_submissions for update to authenticated
   using (exists (select 1 from profiles where id = auth.uid() and is_admin = true));
 
--- Service role inserts (from API route) bypass RLS, so no insert policy needed for users
-
 -- ═══════════════════════════════════════════════════════════
--- WAITLIST STATUS COLUMN (run as migration)
+-- ENABLE REALTIME on events table
 -- ═══════════════════════════════════════════════════════════
 
-alter table waitlist_submissions add column status text default 'pending';
-alter table waitlist_submissions add column updated_at timestamptz;
+alter publication supabase_realtime add table events;
 
 -- ═══════════════════════════════════════════════════════════
 -- SEED DATA — Sample events for launch
