@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
+import { resend, FROM_EMAIL } from "@/lib/email/resend";
+import { applicationReceived } from "@/lib/email/templates";
 
 // Flodesk form reference: https://trudatingnashville.myflodesk.com/waitlist
 // Form ID: 6849f5cd1c9e3680be1db78b
@@ -45,57 +47,18 @@ export async function POST(request: Request) {
       // Don't fail the request — still try Flodesk
     }
 
-    // ── 2. Send to Flodesk (email marketing) ───────────────
-    const apiKey = process.env.FLODESK_API_KEY;
-    if (apiKey) {
+    // ── 2. Send confirmation email via Resend ──────────────
+    if (process.env.RESEND_API_KEY) {
       try {
-        const res = await fetch("https://api.flodesk.com/v1/subscribers", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Basic ${Buffer.from(`${apiKey}:`).toString("base64")}`,
-          },
-          body: JSON.stringify({
-            email,
-            first_name: firstName,
-            last_name: lastName,
-            custom_fields: {
-              phone,
-              age,
-              gender,
-              instagram,
-              neighborhood,
-              work,
-              heard_from: heardFrom,
-              interesting,
-              ideal_date: idealDate,
-              referral_code: referralCode,
-            },
-          }),
+        const { subject, html } = applicationReceived(firstName);
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: email,
+          subject,
+          html,
         });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("Flodesk API error:", res.status, errorText);
-        }
-
-        // Add subscriber to the Waitlist segment (if configured)
-        const segmentId = process.env.FLODESK_WAITLIST_SEGMENT_ID;
-        if (segmentId && res.ok) {
-          await fetch(
-            `https://api.flodesk.com/v1/subscribers/${encodeURIComponent(email)}/segments`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Basic ${Buffer.from(`${apiKey}:`).toString("base64")}`,
-              },
-              body: JSON.stringify({ segment_ids: [segmentId] }),
-            }
-          );
-        }
-      } catch (flodeskErr) {
-        console.error("Flodesk request failed:", flodeskErr);
+      } catch (emailErr) {
+        console.error("Resend email failed:", emailErr);
         // Non-fatal — data is safe in Supabase
       }
     }
