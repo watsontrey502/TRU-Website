@@ -181,7 +181,7 @@ export default function EventsPage() {
           <FadeUp>
             <motion.div
               whileHover="hover"
-              className="relative rounded-3xl overflow-hidden aspect-[3/4] md:aspect-[16/9] cursor-default"
+              className="relative rounded-3xl overflow-hidden aspect-[3/4] md:aspect-[16/9] cursor-default group"
             >
               {/* Ken Burns zoom */}
               <motion.div
@@ -202,14 +202,14 @@ export default function EventsPage() {
               </motion.div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-              <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
-                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-3">
+              <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10">
+                <h2 className="font-serif text-xl md:text-5xl font-bold text-white mb-2 md:mb-3">
                   {featured.name}
                 </h2>
-                <p className="text-white/50 text-sm md:text-base max-w-lg mb-4 leading-relaxed">
+                <p className="text-white/45 text-[13px] md:text-base leading-relaxed mb-3 md:mb-4 max-w-lg line-clamp-3 md:line-clamp-none">
                   {featured.desc}
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 md:gap-2">
                   <Tag gold>{featured.price}</Tag>
                   <Tag>{featured.guests}</Tag>
                   <Tag>{featured.vibe}</Tag>
