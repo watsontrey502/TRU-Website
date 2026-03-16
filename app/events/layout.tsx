@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Events",
   description:
-    "Browse upcoming TRÜ dating events in Nashville. Rooftop wine tastings, dinner parties, hikes, trivia nights, and more for singles aged 25–42.",
+    "Browse upcoming TRÜ events in Nashville. Curated experiences at beautiful venues for interesting people who happen to be single.",
   openGraph: {
-    title: "Upcoming Events | TRÜ Dating Nashville",
+    title: "Upcoming Events | TRÜ Nashville",
     description:
-      "Rooftop wine tastings, dinner parties, hikes, and more. Browse upcoming events for Nashville singles.",
+      "Curated experiences at beautiful Nashville venues. Browse upcoming events for members and waitlist.",
   },
 };
 

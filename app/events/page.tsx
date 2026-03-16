@@ -1,135 +1,247 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
-import EventCard from "@/components/EventCard";
-import Button from "@/components/Button";
-import PullToRefresh from "@/components/PullToRefresh";
-import { events } from "@/lib/constants";
 
-const filters = ["All", "This Week", "This Month"] as const;
+/* ── Fade-in-up wrapper ────────────────────────────────────────── */
+
+function FadeUp({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ── Event data ────────────────────────────────────────────────── */
+
+const EVENTS = [
+  {
+    id: "rooftop-social",
+    name: "Rooftop Social",
+    venue: "L.A. Jackson",
+    date: "Thursday, April 16",
+    time: "7 PM",
+    guests: "40 guests",
+    detail: "50/50",
+    dress: "Smart casual",
+    spotsLeft: 12,
+    featured: true,
+    image:
+      "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=85",
+  },
+  {
+    id: "wine-night",
+    name: "Wine Night",
+    venue: "Bastion",
+    date: "Saturday, April 26",
+    time: "8 PM",
+    guests: "20 guests",
+    detail: "Intimate",
+    dress: null,
+    spotsLeft: null,
+    featured: false,
+    image:
+      "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80",
+  },
+  {
+    id: "dinner-series",
+    name: "Dinner Series",
+    venue: "Henrietta Red",
+    date: "Friday, May 9",
+    time: "7:30 PM",
+    guests: "12 guests",
+    detail: "Long table",
+    dress: "Premium ($120)",
+    spotsLeft: null,
+    featured: false,
+    image:
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
+  },
+  {
+    id: "coffee-hike",
+    name: "Coffee + Hike",
+    venue: "Radnor Lake",
+    date: "Sunday, May 18",
+    time: "8:30 AM",
+    guests: "24 guests",
+    detail: "Athleisure",
+    dress: null,
+    spotsLeft: null,
+    featured: false,
+    image:
+      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
+  },
+];
+
+/* ── Tag pill ──────────────────────────────────────────────────── */
+
+function Tag({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-medium tracking-wide bg-white/[0.08] text-white/60 backdrop-blur-sm">
+      {children}
+    </span>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════ */
 
 export default function EventsPage() {
-  const [activeFilter, setActiveFilter] = useState<string>("All");
-  const router = useRouter();
-
-  const handleRefresh = useCallback(async () => {
-    router.refresh();
-    await new Promise((r) => setTimeout(r, 600));
-  }, [router]);
+  const featured = EVENTS.find((e) => e.featured)!;
+  const secondary = EVENTS.filter((e) => !e.featured);
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
-      {/* Hero Header */}
-      <section className="relative bg-forest pt-32 pb-20 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1920&q=80"
-          alt="Nashville events"
-          fill
-          className="object-cover opacity-20"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest/80 to-forest" />
-
-        <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
-          <AnimateOnScroll>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold text-white text-center mb-6">
-              What&apos;s Next
-            </h1>
-          </AnimateOnScroll>
-          <AnimateOnScroll delay={0.15}>
-            <p className="text-white/70 text-lg md:text-xl text-center max-w-2xl mx-auto">
-              Rooftop tastings, morning hikes, candlelit conversations, and more.
-              Find your next experience.
-            </p>
-          </AnimateOnScroll>
-          <AnimateOnScroll delay={0.25}>
-            <div className="w-16 h-0.5 bg-copper-light mx-auto mt-8" />
-          </AnimateOnScroll>
+    <>
+      {/* ═══ HEADER ═══ */}
+      <section className="pt-32 pb-16 md:pt-40 md:pb-20">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5"
+          >
+            Upcoming
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="font-serif text-[40px] md:text-[56px] lg:text-[64px] font-bold text-white leading-[1.08] tracking-tight max-w-[18ch]"
+          >
+            What&apos;s coming up.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-white/40 text-base md:text-lg mt-5 max-w-lg"
+          >
+            Join the waitlist to get early access when tickets drop.
+          </motion.p>
         </div>
       </section>
 
-      {/* Filter Tabs + Event Grid */}
-      <section className="bg-cream py-20">
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
-          {/* Filter Tabs */}
-          <AnimateOnScroll>
-            <div className="flex items-center justify-center gap-2 mb-14">
-              {filters.map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setActiveFilter(filter)}
-                  className={`relative px-6 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer ${
-                    activeFilter === filter
-                      ? "text-white"
-                      : "text-muted hover:text-dark"
-                  }`}
-                >
-                  {activeFilter === filter && (
-                    <motion.div
-                      layoutId="activeFilter"
-                      className="absolute inset-0 bg-forest rounded-full"
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10">{filter}</span>
-                </button>
-              ))}
-            </div>
-          </AnimateOnScroll>
-
-          {/* Event Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {events.map((event, index) => (
-              <EventCard
-                key={event.id}
-                id={event.id}
-                name={event.name}
-                date={event.date}
-                time={event.time}
-                venue={event.venue}
-                neighborhood={event.neighborhood}
-                price={event.price}
-                ageRange={event.ageRange}
-                spotsLeft={event.spotsLeft}
-                dressCode={event.dressCode}
-                gradient={event.gradient}
-                image={event.image}
-                delay={index * 0.1}
+      {/* ═══ FEATURED EVENT ═══ */}
+      <section className="pb-6 md:pb-8">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <FadeUp>
+            <div className="relative rounded-3xl overflow-hidden aspect-[16/9]">
+              <Image
+                src={featured.image}
+                alt={featured.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 1152px"
+                priority
               />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+              {/* Content */}
+              <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
+                {/* Spots left badge */}
+                {featured.spotsLeft && (
+                  <div className="mb-4">
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-wide bg-gradient-to-r from-gold to-[#b8935e] text-black">
+                      {featured.spotsLeft} spots left
+                    </span>
+                  </div>
+                )}
+
+                <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
+                  {featured.name}
+                </h2>
+
+                <div className="flex flex-wrap gap-2">
+                  <Tag>{featured.venue}</Tag>
+                  <Tag>{featured.date}</Tag>
+                  <Tag>{featured.time}</Tag>
+                  <Tag>{featured.guests}</Tag>
+                  <Tag>{featured.detail}</Tag>
+                  {featured.dress && <Tag>{featured.dress}</Tag>}
+                </div>
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ═══ SECONDARY EVENTS ═══ */}
+      <section className="pb-20 md:pb-28">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {secondary.map((event, i) => (
+              <FadeUp key={event.id} delay={i * 0.1}>
+                <div className="relative rounded-3xl overflow-hidden aspect-[5/2]">
+                  <Image
+                    src={event.image}
+                    alt={event.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 560px"
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+                  {/* Content */}
+                  <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
+                    <h3 className="font-serif text-xl md:text-2xl font-bold text-white mb-3">
+                      {event.name}
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      <Tag>{event.venue}</Tag>
+                      <Tag>{event.date}</Tag>
+                      <Tag>{event.time}</Tag>
+                      <Tag>{event.guests}</Tag>
+                      <Tag>{event.detail}</Tag>
+                      {event.dress && <Tag>{event.dress}</Tag>}
+                    </div>
+                  </div>
+                </div>
+              </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="bg-forest py-20">
+      {/* ═══ BOTTOM CTA ═══ */}
+      <section className="py-20 md:py-32">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
-          <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4">
-              Don&apos;t see the right event?
+          <FadeUp>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
+              Want in?
             </h2>
-          </AnimateOnScroll>
-          <AnimateOnScroll delay={0.1}>
-            <p className="text-white/70 text-lg md:text-xl mb-10 max-w-xl mx-auto">
-              More are coming soon. Apply to get first access to new events,
-              exclusive invites, and early-bird pricing.
+            <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto">
+              Events are members-only. Apply to join the waitlist.
             </p>
-          </AnimateOnScroll>
-          <AnimateOnScroll delay={0.2}>
-            <Button variant="primary" href="/apply">
-              Join the Waitlist
-            </Button>
-          </AnimateOnScroll>
+            <Link
+              href="/apply"
+              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
+            >
+              Apply to Join
+            </Link>
+          </FadeUp>
         </div>
       </section>
-    </PullToRefresh>
+
+      {/* Spacing before footer */}
+      <div className="h-8" />
+    </>
   );
 }

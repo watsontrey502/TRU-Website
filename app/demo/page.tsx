@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function DemoLanding() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-forest via-forest-dark to-forest-light flex flex-col items-center justify-center px-6 py-20">
+    <div className="min-h-screen bg-gradient-to-br from-black via-black to-black flex flex-col items-center justify-center px-6 py-20">
       {/* Branding */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -16,7 +16,7 @@ export default function DemoLanding() {
         <h1 className="font-serif text-5xl md:text-6xl font-bold text-white tracking-wider mb-3">
           TRÜ
         </h1>
-        <p className="text-copper-light text-lg font-sans font-medium tracking-wide">
+        <p className="text-sand text-lg font-sans font-medium tracking-wide">
           Experience a TRÜ Event
         </p>
         <p className="text-white/60 text-sm font-sans mt-2 max-w-md mx-auto">
@@ -32,7 +32,7 @@ export default function DemoLanding() {
         className="max-w-2xl w-full mb-6"
       >
         <Link href="/demo/apply" className="group block">
-          <div className="bg-gradient-to-r from-copper to-copper-dark rounded-2xl p-8 border border-copper/30 hover:border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]">
+          <div className="bg-gradient-to-r from-gold to-gold rounded-2xl p-8 border border-gold/30 hover:border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]">
             <div className="flex items-center gap-5">
               <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0">
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,9 +65,9 @@ export default function DemoLanding() {
           transition={{ duration: 0.6, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <Link href="/demo/host" className="group block">
-            <div className="bg-gray-950 rounded-2xl p-8 border border-gray-800 hover:border-copper/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]">
-              <div className="w-14 h-14 rounded-2xl bg-copper/15 flex items-center justify-center mb-5">
-                <svg className="w-7 h-7 text-copper" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gray-950 rounded-2xl p-8 border border-gray-800 hover:border-gold/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]">
+              <div className="w-14 h-14 rounded-2xl bg-gold/15 flex items-center justify-center mb-5">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
@@ -78,7 +78,7 @@ export default function DemoLanding() {
               <p className="text-gray-400 text-sm font-sans leading-relaxed">
                 Control the event — check in attendees, advance phases, manage timers, and generate groups in real-time.
               </p>
-              <div className="mt-6 text-copper text-sm font-sans font-medium group-hover:translate-x-1 transition-transform">
+              <div className="mt-6 text-gold text-sm font-sans font-medium group-hover:translate-x-1 transition-transform">
                 Open Host Controls &rarr;
               </div>
             </div>
@@ -92,19 +92,19 @@ export default function DemoLanding() {
           transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <Link href="/demo/attendee" className="group block">
-            <div className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-forest/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]">
-              <div className="w-14 h-14 rounded-2xl bg-forest/10 flex items-center justify-center mb-5">
-                <svg className="w-7 h-7 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-black/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]">
+              <div className="w-14 h-14 rounded-2xl bg-black/10 flex items-center justify-center mb-5">
+                <svg className="w-7 h-7 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <h2 className="font-serif text-2xl font-semibold text-dark mb-2">
+              <h2 className="font-serif text-2xl font-semibold text-black mb-2">
                 I&apos;m an Attendee
               </h2>
-              <p className="text-muted text-sm font-sans leading-relaxed">
+              <p className="text-stone text-sm font-sans leading-relaxed">
                 See the live event as an attendee — watch phases update, view your groups, and discover matches.
               </p>
-              <div className="mt-6 text-forest text-sm font-sans font-medium group-hover:translate-x-1 transition-transform">
+              <div className="mt-6 text-black text-sm font-sans font-medium group-hover:translate-x-1 transition-transform">
                 Open Attendee View &rarr;
               </div>
             </div>

@@ -158,7 +158,7 @@ export default function DemoHostPage() {
       <div className="max-w-lg mx-auto px-4 py-6 text-white">
         {/* Header */}
         <div className="mb-6">
-          <p className="text-copper text-xs uppercase tracking-[0.15em] font-medium font-sans mb-1">Host Controls</p>
+          <p className="text-gold text-xs uppercase tracking-[0.15em] font-medium font-sans mb-1">Host Controls</p>
           <h1 className="font-serif text-2xl font-semibold">{DEMO_EVENT.name}</h1>
           <div className="flex items-center gap-2 mt-2">
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-sans font-medium ${
@@ -191,7 +191,7 @@ export default function DemoHostPage() {
                 currentPhase.type === "grouped" ? "bg-blue-500/20 text-blue-400" :
                 currentPhase.type === "checkin" ? "bg-yellow-500/20 text-yellow-400" :
                 currentPhase.type === "mingle" ? "bg-purple-500/20 text-purple-400" :
-                "bg-copper/20 text-copper"
+                "bg-gold/20 text-gold"
               }`}>
                 {currentPhase.type}
               </span>
@@ -219,9 +219,9 @@ export default function DemoHostPage() {
                   key={i}
                   className={`h-1.5 flex-1 rounded-full ${
                     i < state.current_phase_index
-                      ? "bg-copper"
+                      ? "bg-gold"
                       : i === state.current_phase_index
-                        ? "bg-copper animate-pulse"
+                        ? "bg-gold animate-pulse"
                         : "bg-gray-700"
                   }`}
                 />
@@ -253,7 +253,7 @@ export default function DemoHostPage() {
               </button>
               <button
                 onClick={handleAdvance}
-                className="col-span-2 py-3 rounded-xl bg-copper text-white font-semibold text-sm font-sans hover:bg-copper-dark transition-colors cursor-pointer"
+                className="col-span-2 py-3 rounded-xl bg-gold text-white font-semibold text-sm font-sans hover:bg-gold transition-colors cursor-pointer"
               >
                 {state.current_phase_index + 1 >= phases.length ? "End Event" : "Next Phase \u2192"}
               </button>
@@ -302,7 +302,7 @@ export default function DemoHostPage() {
                   key={i}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-sans ${
                     i === state.current_phase_index && state.live_status === "active"
-                      ? "bg-copper/10 border border-copper/30"
+                      ? "bg-gold/10 border border-gold/30"
                       : i < state.current_phase_index && state.live_status === "active"
                         ? "text-gray-500"
                         : "text-gray-400"
@@ -310,7 +310,7 @@ export default function DemoHostPage() {
                 >
                   <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
                     i === state.current_phase_index && state.live_status === "active"
-                      ? "bg-copper text-white"
+                      ? "bg-gold text-white"
                       : i < state.current_phase_index && state.live_status === "active"
                         ? "bg-gray-700 text-gray-500"
                         : "bg-gray-800 text-gray-500"
@@ -348,7 +348,7 @@ export default function DemoHostPage() {
                   ) : (
                     <button
                       onClick={() => handleCheckIn(a.id)}
-                      className="px-3 py-1.5 rounded-lg bg-copper/20 text-copper text-xs font-sans font-medium hover:bg-copper/30 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-gold/20 text-gold text-xs font-sans font-medium hover:bg-gold/30 transition-colors cursor-pointer"
                     >
                       Check In
                     </button>

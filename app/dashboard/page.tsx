@@ -93,17 +93,17 @@ export default function DashboardHome() {
     <>
       {/* Welcome */}
       <div className="mb-10">
-        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-dark mb-2">
+        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-2">
           Welcome back{profile?.first_name ? `, ${profile.first_name}` : ""}
         </h1>
         <div className="flex items-center gap-3">
-          <p className="text-muted">Your TRU dashboard</p>
+          <p className="text-stone">Your TRU dashboard</p>
           {profile?.status && (
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
               profile.status === "approved"
-                ? "bg-forest/10 text-forest"
+                ? "bg-black/10 text-black"
                 : profile.status === "pending"
-                  ? "bg-copper/10 text-copper"
+                  ? "bg-gold/10 text-gold"
                   : "bg-red-50 text-red-600"
             }`}>
               {profile.status}
@@ -114,13 +114,13 @@ export default function DashboardHome() {
 
       {/* Upcoming Events */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-dark mb-4">
+        <h2 className="font-serif text-xl font-semibold text-black mb-4">
           Your Upcoming Events
         </h2>
         {upcomingEvents.length === 0 ? (
           <div className="bg-white rounded-2xl p-8 border border-gray-100 text-center">
-            <p className="text-muted mb-4">No upcoming events yet.</p>
-            <Link href="/dashboard" className="text-copper font-medium hover:text-copper-dark transition-colors text-sm">
+            <p className="text-stone mb-4">No upcoming events yet.</p>
+            <Link href="/dashboard" className="text-gold font-medium hover:text-gold transition-colors text-sm">
               Browse available events below
             </Link>
           </div>
@@ -132,15 +132,15 @@ export default function DashboardHome() {
                   whileHover={{ y: -2 }}
                   className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow"
                 >
-                  <p className="text-xs text-copper font-medium uppercase tracking-wide mb-1">
+                  <p className="text-xs text-gold font-medium uppercase tracking-wide mb-1">
                     {event.date} &middot; {event.time}
                   </p>
-                  <h3 className="font-serif text-lg font-semibold text-dark mb-1">
+                  <h3 className="font-serif text-lg font-semibold text-black mb-1">
                     {event.name}
                   </h3>
-                  <p className="text-muted text-sm">{event.venue} &middot; {event.neighborhood}</p>
+                  <p className="text-stone text-sm">{event.venue} &middot; {event.neighborhood}</p>
                   {event.double_take_open && (
-                    <span className="inline-flex items-center mt-3 px-3 py-1 rounded-full text-xs font-medium bg-copper/10 text-copper">
+                    <span className="inline-flex items-center mt-3 px-3 py-1 rounded-full text-xs font-medium bg-gold/10 text-gold">
                       Double Take Open
                     </span>
                   )}
@@ -153,12 +153,12 @@ export default function DashboardHome() {
 
       {/* Available Events */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-dark mb-4">
+        <h2 className="font-serif text-xl font-semibold text-black mb-4">
           Available Events
         </h2>
         {availableEvents.length === 0 ? (
           <div className="bg-white rounded-2xl p-8 border border-gray-100 text-center">
-            <p className="text-muted">No upcoming events available right now. Check back soon!</p>
+            <p className="text-stone">No upcoming events available right now. Check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -168,16 +168,16 @@ export default function DashboardHome() {
                   whileHover={{ y: -2 }}
                   className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow"
                 >
-                  <p className="text-xs text-muted font-medium uppercase tracking-wide mb-1">
+                  <p className="text-xs text-stone font-medium uppercase tracking-wide mb-1">
                     {event.date} &middot; {event.time}
                   </p>
-                  <h3 className="font-serif text-lg font-semibold text-dark mb-1">
+                  <h3 className="font-serif text-lg font-semibold text-black mb-1">
                     {event.name}
                   </h3>
-                  <p className="text-muted text-sm mb-3">{event.venue} &middot; {event.neighborhood}</p>
+                  <p className="text-stone text-sm mb-3">{event.venue} &middot; {event.neighborhood}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-dark font-semibold text-sm">${event.price}</span>
-                    <span className="text-copper text-sm font-medium">RSVP &rarr;</span>
+                    <span className="text-black font-semibold text-sm">${event.price}</span>
+                    <span className="text-gold text-sm font-medium">RSVP &rarr;</span>
                   </div>
                 </motion.div>
               </Link>
@@ -190,26 +190,26 @@ export default function DashboardHome() {
       {recentMatches.length > 0 && (
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-serif text-xl font-semibold text-dark">
+            <h2 className="font-serif text-xl font-semibold text-black">
               Recent Matches
             </h2>
-            <Link href="/dashboard/matches" className="text-copper text-sm font-medium hover:text-copper-dark transition-colors">
+            <Link href="/dashboard/matches" className="text-gold text-sm font-medium hover:text-gold transition-colors">
               View all &rarr;
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {recentMatches.map((match, i) => (
               <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[var(--shadow-card)] text-center">
-                <div className="w-12 h-12 rounded-full bg-copper/10 flex items-center justify-center mx-auto mb-3">
-                  <span className="text-copper font-serif font-bold text-lg">
+                <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-3">
+                  <span className="text-gold font-serif font-bold text-lg">
                     {match.matched_first_name?.[0] ?? "?"}
                   </span>
                 </div>
-                <h3 className="font-semibold text-dark text-sm">
+                <h3 className="font-semibold text-black text-sm">
                   {match.matched_first_name ?? "Someone"}
                 </h3>
-                <p className="text-muted text-xs mt-1">{match.event_name}</p>
-                <span className="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-forest/10 text-forest">
+                <p className="text-stone text-xs mt-1">{match.event_name}</p>
+                <span className="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-black/10 text-black">
                   It&apos;s mutual!
                 </span>
               </div>

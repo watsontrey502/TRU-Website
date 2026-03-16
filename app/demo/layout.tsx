@@ -19,14 +19,14 @@ export default function DemoLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="fixed inset-0 z-[60] overflow-auto bg-cream">
       {/* Floating DEMO MODE badge */}
-      <div className="fixed top-[max(1rem,env(safe-area-inset-top))] left-1/2 -translate-x-1/2 z-[70] bg-copper/90 text-white text-xs font-sans font-medium px-4 py-1.5 rounded-full tracking-wide shadow-lg">
+      <div className="fixed top-[max(1rem,env(safe-area-inset-top))] left-1/2 -translate-x-1/2 z-[70] bg-gold/90 text-white text-xs font-sans font-medium px-4 py-1.5 rounded-full tracking-wide shadow-lg">
         DEMO MODE
       </div>
 
       {/* Exit demo link */}
       <Link
         href="/"
-        className="fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-[70] text-muted hover:text-dark text-xs font-sans font-medium px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 transition-colors"
+        className="fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-[70] text-stone hover:text-black text-xs font-sans font-medium px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 transition-colors"
       >
         Exit Demo
       </Link>
@@ -44,7 +44,7 @@ export default function DemoLayout({ children }: { children: React.ReactNode }) 
                   key={item.label}
                   href={item.href}
                   className={`flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium transition-colors ${
-                    active ? "text-forest" : "text-muted"
+                    active ? "text-black" : "text-stone"
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

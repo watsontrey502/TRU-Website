@@ -58,10 +58,10 @@ export default function EventCard({
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500" />
             )}
             <div className="absolute top-4 left-4 flex gap-2 z-10">
-              <span className="bg-white/90 backdrop-blur-sm text-dark text-xs font-medium px-3 py-1 rounded-full">
+              <span className="bg-white/90 backdrop-blur-sm text-black text-xs font-medium px-3 py-1 rounded-full">
                 {ageRange}
               </span>
-              <span className="bg-white/90 backdrop-blur-sm text-dark text-xs font-medium px-3 py-1 rounded-full">
+              <span className="bg-white/90 backdrop-blur-sm text-black text-xs font-medium px-3 py-1 rounded-full">
                 {dressCode}
               </span>
             </div>
@@ -69,26 +69,26 @@ export default function EventCard({
 
           {/* Card content */}
           <div className="p-6">
-            <h3 className="font-serif text-2xl font-semibold text-dark mb-2 group-hover:text-forest transition-colors">
+            <h3 className="font-serif text-2xl font-semibold text-black mb-2 group-hover:text-black transition-colors">
               {name}
             </h3>
-            <p className="text-muted text-sm mb-1">
+            <p className="text-stone text-sm mb-1">
               {date} &middot; {time}
             </p>
-            <p className="text-muted text-sm mb-4">
+            <p className="text-stone text-sm mb-4">
               {venue}, {neighborhood}
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-dark font-semibold text-lg">${price}</span>
+              <span className="text-black font-semibold text-lg">${price}</span>
               <span
                 className={`text-sm font-medium ${
-                  spotsLeft <= 6 ? "text-copper" : "text-muted"
+                  spotsLeft <= 6 ? "text-gold" : "text-stone"
                 }`}
               >
                 {spotsLeft} spots left
               </span>
             </div>
-            <div className="mt-4 w-full bg-forest text-white text-center py-3 rounded-full text-sm font-medium tracking-wide uppercase group-hover:bg-forest-dark transition-colors">
+            <div className="mt-4 w-full bg-black text-white text-center py-3 rounded-full text-sm font-medium tracking-wide uppercase group-hover:bg-black transition-colors">
               Get Tickets
             </div>
           </div>

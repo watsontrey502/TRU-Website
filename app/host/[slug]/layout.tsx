@@ -35,8 +35,8 @@ export default function HostLayout({ children }: { children: React.ReactNode }) 
 
   if (!authorized) {
     return (
-      <div className="min-h-screen bg-forest flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-copper border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <div className="font-sans">
       {/* Hero */}
-      <section className="relative bg-forest pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden">
+      <section className="relative bg-black pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1920&q=80"
           alt=""
@@ -15,13 +15,13 @@ export default function TermsPage() {
           className="object-cover opacity-10"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-dark/60 to-forest/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/90" />
         <div className="relative max-w-7xl mx-auto px-6 md:px-8 text-center">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-copper-light text-sm font-medium tracking-widest uppercase mb-6"
+            className="text-sand text-sm font-medium tracking-widest uppercase mb-6"
           >
             Legal
           </motion.p>
@@ -45,7 +45,7 @@ export default function TermsPage() {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="w-20 h-0.5 bg-copper-light mx-auto mt-8"
+            className="w-20 h-0.5 bg-sand mx-auto mt-8"
           />
         </div>
       </section>
@@ -149,7 +149,7 @@ export default function TermsPage() {
             <Section title="11. Contact">
               <p>
                 Questions about these Terms? Reach out at{" "}
-                <a href="mailto:hello@trudating.com" className="text-copper hover:text-copper-dark transition-colors underline underline-offset-2">
+                <a href="mailto:hello@trudating.com" className="text-gold hover:text-gold transition-colors underline underline-offset-2">
                   hello@trudating.com
                 </a>.
               </p>
@@ -164,8 +164,8 @@ export default function TermsPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h2 className="font-serif text-2xl font-semibold text-dark mb-4">{title}</h2>
-      <div className="text-muted leading-relaxed space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_a]:text-copper [&_a]:underline [&_a]:underline-offset-2">
+      <h2 className="font-serif text-2xl font-semibold text-black mb-4">{title}</h2>
+      <div className="text-stone leading-relaxed space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_a]:text-gold [&_a]:underline [&_a]:underline-offset-2">
         {children}
       </div>
     </div>

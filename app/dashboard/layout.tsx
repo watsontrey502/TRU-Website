@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center pt-20">
-        <div className="w-8 h-8 border-2 border-copper border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -62,7 +62,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col md:pt-20">
         <div className="flex flex-1 flex-col border-r border-gray-200 bg-white px-4 py-8">
           <div className="px-3 mb-8">
-            <p className="text-xs uppercase tracking-[0.15em] text-copper font-medium">
+            <p className="text-xs uppercase tracking-[0.15em] text-gold font-medium">
               Member Dashboard
             </p>
           </div>
@@ -76,8 +76,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href={item.href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     active
-                      ? "bg-forest/5 text-forest"
-                      : "text-muted hover:bg-gray-50 hover:text-dark"
+                      ? "bg-black/5 text-black"
+                      : "text-stone hover:bg-gray-50 hover:text-black"
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {isAdmin && (
               <>
                 <div className="pt-4 mt-4 border-t border-gray-100">
-                  <p className="px-3 mb-2 text-[10px] uppercase tracking-[0.15em] text-copper font-medium">
+                  <p className="px-3 mb-2 text-[10px] uppercase tracking-[0.15em] text-gold font-medium">
                     Admin
                   </p>
                 </div>
@@ -104,8 +104,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       href={item.href}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                         active
-                          ? "bg-forest/5 text-forest"
-                          : "text-muted hover:bg-gray-50 hover:text-dark"
+                          ? "bg-black/5 text-black"
+                          : "text-stone hover:bg-gray-50 hover:text-black"
                       }`}
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted hover:bg-gray-50 hover:text-dark transition-all cursor-pointer"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-stone hover:bg-gray-50 hover:text-black transition-all cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -141,7 +141,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium transition-colors ${
-                  active ? "text-forest" : "text-muted"
+                  active ? "text-black" : "text-stone"
                 }`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +153,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
           <button
             onClick={handleSignOut}
-            className="flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium text-muted cursor-pointer"
+            className="flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium text-stone cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

@@ -1,165 +1,216 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
-import Button from "@/components/Button";
-import { faqData } from "@/lib/constants";
 
-function FAQItem({
-  question,
-  answer,
-  isOpen,
-  onToggle,
-  index,
+/* ── FAQ data ──────────────────────────────────────────────────── */
+
+const FAQS = [
+  {
+    q: "What is TR\u00dc?",
+    a: "TR\u00dc is a members-only social club where everyone happens to be single. We host curated events at Nashville\u2019s best venues. It\u2019s not a dating event \u2014 it\u2019s a great night out where meeting people feels natural.",
+  },
+  {
+    q: "How is this different from a dating app?",
+    a: "No swiping. No algorithms. No profiles to scroll through. You show up to an incredible event, meet real people in person, and use Double Take afterward to reconnect with anyone who caught your eye.",
+  },
+  {
+    q: "What is Double Take?",
+    a: "After each event, you can select up to 3 people you\u2019d like to see again. If someone you selected also selected you, chat unlocks for 7 days. Your selections are completely private \u2014 no one sees who you picked unless it\u2019s mutual.",
+  },
+  {
+    q: "Who gets accepted?",
+    a: "We review every application. We\u2019re looking for interesting, warm, accomplished people who want to meet other interesting people. We don\u2019t vet for pedigree \u2014 we vet for quality and intention.",
+  },
+  {
+    q: "What\u2019s the gender ratio?",
+    a: "Every event is strictly 50/50. We actively manage this.",
+  },
+  {
+    q: "What should I wear?",
+    a: "Each event has a dress code (smart casual, cocktail attire, etc.) communicated when you RSVP. Think: the kind of outfit you\u2019d wear to a nice dinner with friends.",
+  },
+  {
+    q: "How much does it cost?",
+    a: "Membership starts at $25/month. Individual event tickets range from $10\u2013$60 depending on the event and format. Founding members lock in their pricing forever.",
+  },
+  {
+    q: "What cities are you in?",
+    a: "We\u2019re launching in Nashville. Austin, Dallas, Miami, NYC, and LA are on the roadmap.",
+  },
+];
+
+/* ── Fade-in-up wrapper ────────────────────────────────────────── */
+
+function FadeUp({
+  children,
+  delay = 0,
+  className = "",
 }: {
-  question: string;
-  answer: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  index: number;
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
 }) {
   return (
-    <AnimateOnScroll delay={index * 0.05} className="w-full">
-      <div className="border-b border-forest/10 last:border-b-0">
-        <button
-          onClick={onToggle}
-          className="w-full flex items-center justify-between py-7 md:py-8 text-left cursor-pointer group"
-          aria-expanded={isOpen}
-        >
-          <span className="font-serif text-xl md:text-2xl text-dark font-medium pr-8 group-hover:text-forest transition-colors duration-300">
-            {question}
-          </span>
-          <span className="flex-shrink-0 w-10 h-10 rounded-full border border-forest/20 flex items-center justify-center group-hover:border-copper group-hover:bg-copper/5 transition-all duration-300">
-            <motion.span
-              animate={{ rotate: isOpen ? 45 : 0 }}
-              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="text-forest text-xl leading-none select-none"
-            >
-              +
-            </motion.span>
-          </span>
-        </button>
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-              className="overflow-hidden"
-            >
-              <p className="pb-8 text-muted text-base md:text-lg leading-relaxed max-w-3xl">
-                {answer}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </AnimateOnScroll>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
 }
+
+/* ── Chevron icon ──────────────────────────────────────────────── */
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <motion.svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      animate={{ rotate: open ? 180 : 0 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      className="flex-shrink-0 text-gold"
+    >
+      <path
+        d="M5 7.5L10 12.5L15 7.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </motion.svg>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════ */
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const handleToggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
   return (
-    <div className="font-sans">
-      {/* Hero */}
-      <section className="relative bg-forest pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1920&q=80"
-          alt="Nashville atmosphere"
-          fill
-          className="object-cover opacity-15"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-dark/60 to-forest/90" />
-        <div className="relative max-w-7xl mx-auto px-6 md:px-8 text-center">
+    <>
+      {/* ═══ HEADER ═══ */}
+      <section className="pt-32 pb-16 md:pt-40 md:pb-20">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-copper-light text-sm font-medium tracking-widest uppercase mb-6"
+            className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5"
           >
-            Help Center
+            FAQ
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold text-white mb-6"
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="font-serif text-[40px] md:text-[56px] lg:text-[64px] font-bold text-white leading-[1.08] tracking-tight max-w-[18ch]"
           >
-            Frequently Asked Questions
+            Questions &amp; answers.
           </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto"
-          >
-            Everything you need to know about TR&Uuml; Dating Nashville.
-          </motion.p>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="w-20 h-0.5 bg-copper-light mx-auto mt-8"
-          />
         </div>
       </section>
 
-      {/* FAQ Accordion */}
-      <section className="bg-cream py-24 md:py-32">
+      {/* ═══ ACCORDION ═══ */}
+      <section className="pb-20 md:pb-28">
         <div className="max-w-3xl mx-auto px-6 md:px-8">
-          <div className="bg-white rounded-3xl shadow-[var(--shadow-card)] px-8 md:px-12 py-4">
-            {faqData.map((item, index) => (
-              <FAQItem
-                key={index}
-                question={item.question}
-                answer={item.answer}
-                isOpen={openIndex === index}
-                onToggle={() => handleToggle(index)}
-                index={index}
-              />
-            ))}
+          <div className="divide-y divide-white/[0.06]">
+            {FAQS.map((faq, i) => {
+              const isOpen = openIndex === i;
+              return (
+                <FadeUp key={i} delay={i * 0.05}>
+                  <div
+                    className={`transition-all duration-300 ${
+                      isOpen ? "border-l-2 border-l-gold pl-5 -ml-5" : ""
+                    }`}
+                  >
+                    <button
+                      onClick={() => toggle(i)}
+                      className="w-full flex items-center justify-between py-6 md:py-7 text-left cursor-pointer group"
+                      aria-expanded={isOpen}
+                    >
+                      <span
+                        className={`font-medium text-base md:text-lg pr-6 transition-colors duration-300 ${
+                          isOpen
+                            ? "text-white"
+                            : "text-white/70 group-hover:text-white"
+                        }`}
+                      >
+                        {faq.q}
+                      </span>
+                      <Chevron open={isOpen} />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            duration: 0.35,
+                            ease: [0.25, 0.1, 0.25, 1],
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pb-6 md:pb-7 text-white/40 text-[15px] md:text-base leading-relaxed max-w-2xl">
+                            {faq.a}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </FadeUp>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-white py-24 md:py-32">
+      {/* ═══ CTA ═══ */}
+      <section className="py-20 md:py-32">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
-          <AnimateOnScroll>
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-dark mb-6">
+          <FadeUp>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
               Still have questions?
             </h2>
-            <p className="text-muted text-lg md:text-xl mb-4 max-w-xl mx-auto">
-              We&rsquo;d love to hear from you. Reach out anytime and we&rsquo;ll
-              get back to you within 24 hours.
+            <p className="text-white/50 text-base md:text-lg mb-3 max-w-md mx-auto">
+              Reach out anytime. We&apos;ll get back within 24 hours.
             </p>
             <a
               href="mailto:hello@trudating.com"
-              className="inline-block text-copper hover:text-copper-dark font-medium text-lg transition-colors duration-300 mb-10"
+              className="inline-block text-gold hover:text-gold/80 font-medium text-base transition-colors mb-10"
             >
               hello@trudating.com
             </a>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button href="/apply" variant="primary">
-                Join the Waitlist
-              </Button>
-              <Button href="/events" variant="dark">
+              <Link
+                href="/apply"
+                className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
+              >
+                Apply to Join
+              </Link>
+              <Link
+                href="/events"
+                className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white/80 text-sm font-medium bg-white/[0.07] border border-white/10 hover:bg-white/[0.12] transition-colors"
+              >
                 Browse Events
-              </Button>
+              </Link>
             </div>
-          </AnimateOnScroll>
+          </FadeUp>
         </div>
       </section>
-    </div>
+
+      {/* Spacing before footer */}
+      <div className="h-8" />
+    </>
   );
 }

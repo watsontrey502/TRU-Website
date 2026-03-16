@@ -68,7 +68,7 @@ export default function MembershipPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-forest pt-32 pb-24 overflow-hidden">
+      <section className="relative bg-black pt-32 pb-24 overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1920&q=80"
           alt="Nashville rooftop"
@@ -76,11 +76,11 @@ export default function MembershipPage() {
           className="object-cover opacity-15"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest/60 to-forest" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black" />
 
         <div className="max-w-4xl mx-auto px-6 md:px-8 relative z-10 text-center">
           <AnimateOnScroll>
-            <p className="text-copper-light text-sm uppercase tracking-[0.2em] font-medium mb-6">
+            <p className="text-sand text-sm uppercase tracking-[0.2em] font-medium mb-6">
               Membership
             </p>
           </AnimateOnScroll>
@@ -97,7 +97,7 @@ export default function MembershipPage() {
             </p>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.3}>
-            <div className="w-16 h-0.5 bg-copper-light mx-auto mt-8" />
+            <div className="w-16 h-0.5 bg-sand mx-auto mt-8" />
           </AnimateOnScroll>
         </div>
       </section>
@@ -114,14 +114,14 @@ export default function MembershipPage() {
             {/* Member Tier */}
             <AnimateOnScroll>
               <div className="bg-white rounded-3xl p-8 md:p-10 shadow-[var(--shadow-card)] border border-gray-100 text-center h-full flex flex-col">
-                <p className="text-xs uppercase tracking-[0.15em] text-muted font-medium mb-2">
+                <p className="text-xs uppercase tracking-[0.15em] text-stone font-medium mb-2">
                   Member
                 </p>
                 <div className="flex items-baseline justify-center gap-1 mb-2">
-                  <span className="font-serif text-5xl font-bold text-dark">$25</span>
-                  <span className="text-muted text-lg">/month</span>
+                  <span className="font-serif text-5xl font-bold text-black">$25</span>
+                  <span className="text-stone text-lg">/month</span>
                 </div>
-                <p className="text-muted text-sm mb-8">
+                <p className="text-stone text-sm mb-8">
                   Everything you need to get started
                 </p>
 
@@ -133,10 +133,10 @@ export default function MembershipPage() {
                     "Cancel anytime \u2014 no fees, no hassle",
                   ].map((item) => (
                     <div key={item} className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-forest flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-black flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-dark text-[15px]">{item}</span>
+                      <span className="text-black text-[15px]">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -149,13 +149,13 @@ export default function MembershipPage() {
 
             {/* Inner Circle Tier */}
             <AnimateOnScroll delay={0.1}>
-              <div className="bg-forest rounded-3xl p-8 md:p-10 shadow-[var(--shadow-elevated)] border border-forest text-center h-full flex flex-col relative overflow-hidden">
+              <div className="bg-black rounded-3xl p-8 md:p-10 shadow-[var(--shadow-elevated)] border border-black text-center h-full flex flex-col relative overflow-hidden">
                 {/* Popular badge */}
-                <div className="absolute top-0 right-0 bg-copper text-white text-[10px] uppercase tracking-wider font-semibold px-4 py-1.5 rounded-bl-xl">
+                <div className="absolute top-0 right-0 bg-gold text-white text-[10px] uppercase tracking-wider font-semibold px-4 py-1.5 rounded-bl-xl">
                   Most Popular
                 </div>
 
-                <p className="text-xs uppercase tracking-[0.15em] text-copper-light font-medium mb-2">
+                <p className="text-xs uppercase tracking-[0.15em] text-sand font-medium mb-2">
                   Inner Circle
                 </p>
                 <div className="flex items-baseline justify-center gap-1 mb-2">
@@ -176,7 +176,7 @@ export default function MembershipPage() {
                     "Priority waitlist for sold-out events",
                   ].map((item, i) => (
                     <div key={item} className="flex items-start gap-3">
-                      <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${i === 0 ? "text-white/40" : "text-copper-light"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${i === 0 ? "text-white/40" : "text-sand"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className={`text-[15px] ${i === 0 ? "text-white/40" : "text-white"}`}>{item}</span>
@@ -211,13 +211,13 @@ export default function MembershipPage() {
             {features.map((feature, i) => (
               <AnimateOnScroll key={feature.title} delay={i * 0.1}>
                 <div className="bg-cream rounded-2xl p-8 text-center h-full">
-                  <div className="w-14 h-14 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-5 text-forest">
+                  <div className="w-14 h-14 rounded-full bg-black/10 flex items-center justify-center mx-auto mb-5 text-black">
                     {feature.icon}
                   </div>
-                  <h3 className="font-serif text-2xl font-semibold text-dark mb-3">
+                  <h3 className="font-serif text-2xl font-semibold text-black mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-muted leading-relaxed">
+                  <p className="text-stone leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -228,7 +228,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Double Take Deep-Dive */}
-      <section className="bg-forest py-20">
+      <section className="bg-black py-20">
         <div className="max-w-4xl mx-auto px-6 md:px-8">
           <SectionHeading
             title="How Double Take Works"
@@ -240,8 +240,8 @@ export default function MembershipPage() {
             {doubleTakeSteps.map((item, i) => (
               <AnimateOnScroll key={item.step} delay={i * 0.15}>
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full border-2 border-copper/40 flex items-center justify-center mx-auto mb-5">
-                    <span className="font-serif text-2xl font-bold text-copper-light">
+                  <div className="w-16 h-16 rounded-full border-2 border-gold/40 flex items-center justify-center mx-auto mb-5">
+                    <span className="font-serif text-2xl font-bold text-sand">
                       {item.step}
                     </span>
                   </div>
@@ -261,7 +261,7 @@ export default function MembershipPage() {
               <p className="text-white/80 text-lg font-serif italic">
                 &ldquo;Your selections are never revealed unless they&rsquo;re mutual.&rdquo;
               </p>
-              <p className="text-copper-light text-sm mt-3 font-medium">
+              <p className="text-sand text-sm mt-3 font-medium">
                 Privacy is at the core of Double Take
               </p>
             </div>
@@ -278,17 +278,17 @@ export default function MembershipPage() {
           />
 
           <div className="relative">
-            <div className="absolute left-6 top-0 bottom-0 w-px bg-copper/20" />
+            <div className="absolute left-6 top-0 bottom-0 w-px bg-gold/20" />
 
             {eventExperience.map((item, i) => (
               <AnimateOnScroll key={item.time} delay={i * 0.08}>
                 <div className="relative flex items-start mb-10 last:mb-0">
-                  <div className="absolute left-6 top-1.5 w-3 h-3 rounded-full bg-copper border-2 border-cream -translate-x-1/2 z-10" />
+                  <div className="absolute left-6 top-1.5 w-3 h-3 rounded-full bg-gold border-2 border-cream -translate-x-1/2 z-10" />
                   <div className="ml-14">
-                    <span className="text-copper font-semibold text-sm tracking-wide uppercase">
+                    <span className="text-gold font-semibold text-sm tracking-wide uppercase">
                       {item.time}
                     </span>
-                    <p className="text-dark mt-1 leading-relaxed">
+                    <p className="text-black mt-1 leading-relaxed">
                       {item.activity}
                     </p>
                   </div>
@@ -300,7 +300,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="bg-forest py-20">
+      <section className="bg-black py-20">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
           <AnimateOnScroll>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4">

@@ -11,7 +11,7 @@ export default function AppleIcon() {
         style={{
           width: 180,
           height: 180,
-          backgroundColor: "#2C4A3E",
+          backgroundColor: "#0C0C0D",
           borderRadius: 36,
           display: "flex",
           flexDirection: "column",
@@ -23,10 +23,10 @@ export default function AppleIcon() {
         <div
           style={{
             fontSize: 72,
-            fontWeight: 700,
+            fontWeight: 800,
             color: "white",
             lineHeight: 1,
-            letterSpacing: "0.02em",
+            letterSpacing: "-0.02em",
           }}
         >
           TRÜ
@@ -35,7 +35,7 @@ export default function AppleIcon() {
           style={{
             width: 40,
             height: 2,
-            backgroundColor: "#D4935A",
+            background: "linear-gradient(90deg, #C8A97E, #D8B89A)",
           }}
         />
       </div>

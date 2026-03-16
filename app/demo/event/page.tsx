@@ -27,15 +27,15 @@ export default function DemoEventPage() {
   return (
     <div className="min-h-screen bg-cream pb-24">
       {/* Demo banner */}
-      <div className="bg-forest/5 border-b border-forest/10 px-4 py-2 text-center">
-        <p className="text-xs text-forest font-medium">
+      <div className="bg-black/5 border-b border-black/10 px-4 py-2 text-center">
+        <p className="text-xs text-black font-medium">
           Demo Mode — Event detail page
         </p>
       </div>
 
       <div className="max-w-2xl mx-auto px-6 py-8">
         {/* Back link */}
-        <Link href="/demo/dashboard" className="inline-flex items-center gap-2 text-muted hover:text-dark text-sm font-medium transition-colors mb-6">
+        <Link href="/demo/dashboard" className="inline-flex items-center gap-2 text-stone hover:text-black text-sm font-medium transition-colors mb-6">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -44,8 +44,8 @@ export default function DemoEventPage() {
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-[var(--shadow-card)] overflow-hidden">
           {/* Event header */}
-          <div className="bg-forest p-6">
-            <p className="text-copper-light text-xs uppercase tracking-[0.15em] font-medium mb-2">
+          <div className="bg-black p-6">
+            <p className="text-sand text-xs uppercase tracking-[0.15em] font-medium mb-2">
               {DEMO_EVENT.date} &middot; {DEMO_EVENT.time}
             </p>
             <h1 className="font-serif text-3xl font-semibold text-white mb-2">
@@ -66,8 +66,8 @@ export default function DemoEventPage() {
                 { label: "Attending", value: `${DEMO_ATTENDEES.length} people` },
               ].map((item) => (
                 <div key={item.label} className="bg-cream rounded-xl p-4 text-center">
-                  <p className="text-[11px] uppercase tracking-wide text-muted mb-1">{item.label}</p>
-                  <p className="font-semibold text-dark text-sm">{item.value}</p>
+                  <p className="text-[11px] uppercase tracking-wide text-stone mb-1">{item.label}</p>
+                  <p className="font-semibold text-black text-sm">{item.value}</p>
                 </div>
               ))}
             </div>
@@ -75,15 +75,15 @@ export default function DemoEventPage() {
             {/* Description */}
             {DEMO_EVENT.description && (
               <div>
-                <h2 className="font-serif text-xl font-semibold text-dark mb-3">About</h2>
-                <p className="text-muted leading-relaxed">{DEMO_EVENT.description}</p>
+                <h2 className="font-serif text-xl font-semibold text-black mb-3">About</h2>
+                <p className="text-stone leading-relaxed">{DEMO_EVENT.description}</p>
               </div>
             )}
 
             {/* Attendee preview */}
             <div>
-              <h2 className="font-serif text-xl font-semibold text-dark mb-3">Who&apos;s Going</h2>
-              <p className="text-muted text-sm">
+              <h2 className="font-serif text-xl font-semibold text-black mb-3">Who&apos;s Going</h2>
+              <p className="text-stone text-sm">
                 {attendeePreview.join(", ")}
                 {otherCount > 0 && `, and ${otherCount} other${otherCount > 1 ? "s" : ""}`}
               </p>
@@ -96,18 +96,18 @@ export default function DemoEventPage() {
                   onClick={handleRSVP}
                   whileHover={{ scale: 1.015 }}
                   whileTap={{ scale: 0.985 }}
-                  className="flex-1 py-4 rounded-xl bg-copper text-white font-semibold text-base tracking-wide transition-colors hover:bg-copper-dark cursor-pointer shadow-lg shadow-copper/15"
+                  className="flex-1 py-4 rounded-xl bg-gold text-white font-semibold text-base tracking-wide transition-colors hover:bg-gold cursor-pointer shadow-lg shadow-gold/15"
                 >
                   RSVP &mdash; ${DEMO_EVENT.price}
                 </motion.button>
               ) : (
                 <>
-                  <div className="flex-1 py-4 rounded-xl bg-forest/5 border border-forest/20 text-forest font-semibold text-base text-center">
+                  <div className="flex-1 py-4 rounded-xl bg-black/5 border border-black/20 text-black font-semibold text-base text-center">
                     You&apos;re attending
                   </div>
                   <Link
                     href="/demo/attendee"
-                    className="flex-1 py-4 rounded-xl bg-forest text-white font-semibold text-base text-center tracking-wide hover:bg-forest/90 transition-colors shadow-lg shadow-forest/15 animate-pulse"
+                    className="flex-1 py-4 rounded-xl bg-black text-white font-semibold text-base text-center tracking-wide hover:bg-black/90 transition-colors shadow-lg shadow-black/15 animate-pulse"
                   >
                     Join Live Event
                   </Link>

@@ -1,24 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import BottomTabBar from "@/components/BottomTabBar";
 import { ToastProvider } from "@/components/Toast";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -27,39 +27,40 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
-  themeColor: "#2C4A3E",
+  themeColor: "#0C0C0D",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://trudating.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://trudatingnashville.com"
   ),
   title: {
-    default: "TRÜ Dating Nashville | Curated Dating Events",
-    template: "%s | TRÜ Dating Nashville",
+    default:
+      "TRÜ — The Offline Era | Nashville's Members-Only Social Club",
+    template: "%s | TRÜ Nashville",
   },
   description:
-    "Curated dating events for Nashville singles aged 25-42. Rooftop tastings, hikes, dinner parties, and more. Stop swiping. Start connecting.",
+    "A private social club for interesting people who happen to be single. Curated events, beautiful venues, and Double Take post-event matching. Nashville waitlist now open.",
   keywords: [
-    "Nashville dating",
-    "dating events Nashville",
-    "singles events",
-    "curated dating",
+    "Nashville social club",
+    "members only club Nashville",
+    "curated events Nashville",
     "Nashville singles",
+    "private social club",
   ],
   openGraph: {
-    title: "TRÜ Dating Nashville | Dating Done Differently",
+    title: "TRÜ — The Offline Era | Nashville's Members-Only Social Club",
     description:
-      "Curated dating events for Nashville singles who are done with swiping. Rooftop tastings, hikes, dinner parties, and more.",
+      "A private social club for interesting people who happen to be single. Curated events, beautiful venues, and Double Take post-event matching.",
     type: "website",
     locale: "en_US",
-    siteName: "TRÜ Dating Nashville",
+    siteName: "TRÜ Nashville",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TRÜ Dating Nashville | Dating Done Differently",
+    title: "TRÜ — The Offline Era | Nashville's Members-Only Social Club",
     description:
-      "Curated dating events for Nashville singles who are done with swiping.",
+      "A private social club for interesting people who happen to be single. Curated events, beautiful venues, and Double Take post-event matching.",
   },
 };
 
@@ -79,13 +80,12 @@ export default function RootLayout({
         <link rel="apple-touch-startup-image" href="/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" />
       </head>
       <body
-        className={`${cormorant.variable} ${dmSans.variable} antialiased`}
+        className={`${playfair.variable} ${inter.variable} antialiased`}
       >
         <ToastProvider>
           <Navbar />
           <main>{children}</main>
           <Footer />
-          <BottomTabBar />
         </ToastProvider>
         <Analytics />
         <SpeedInsights />

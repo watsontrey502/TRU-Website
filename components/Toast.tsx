@@ -27,7 +27,7 @@ let nextId = 0;
 
 const icons: Record<ToastType, React.ReactNode> = {
   success: (
-    <svg className="w-4 h-4 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
     </svg>
   ),
@@ -37,7 +37,7 @@ const icons: Record<ToastType, React.ReactNode> = {
     </svg>
   ),
   info: (
-    <svg className="w-4 h-4 text-copper" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
@@ -69,7 +69,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               className="pointer-events-auto flex items-center gap-2.5 bg-white rounded-full px-5 py-3 shadow-[var(--shadow-elevated)] border border-gray-100"
             >
               {icons[t.type]}
-              <span className="text-sm font-medium text-dark">{t.message}</span>
+              <span className="text-sm font-medium text-black">{t.message}</span>
             </motion.div>
           ))}
         </AnimatePresence>

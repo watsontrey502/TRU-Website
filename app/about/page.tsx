@@ -1,214 +1,270 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import AnimateOnScroll from "@/components/AnimateOnScroll";
-import SectionHeading from "@/components/SectionHeading";
-import Button from "@/components/Button";
 
-const manifestoItems = [
-  "We believe in face-to-face over FaceTime.",
-  "We believe in quality over quantity.",
-  "We believe your Saturday night should be worth getting dressed up for.",
-  "We believe the right people in the right room changes everything.",
-];
+/* ── Fade-in-up wrapper ────────────────────────────────────────── */
 
-const comparisonData = [
-  {
-    app: "Endless swiping",
-    tru: "Curated guest lists",
-  },
-  {
-    app: "Awkward first-date small talk",
-    tru: "Guided icebreakers & shared experiences",
-  },
-  {
-    app: "Ghosting & dead-end DMs",
-    tru: "Mutual matching with Double Take",
-  },
-  {
-    app: "Staring at a screen alone",
-    tru: "Meeting real people in real rooms",
-  },
-  {
-    app: "Anyone can sign up",
-    tru: "Application-based, intentional community",
-  },
-  {
-    app: "One-size-fits-all",
-    tru: "Age-balanced, ratio-managed events",
-  },
-];
+function FadeUp({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ═════════════════════════════════════════════════════════════════ */
 
 export default function AboutPage() {
+  const steps = [
+    {
+      num: "01",
+      title: "Apply",
+      desc: "Fill out a short application telling us what makes you interesting. It takes about 2 minutes. We ask about your work, your interests, and what you\u2019re looking for \u2014 not your height or zodiac sign.",
+    },
+    {
+      num: "02",
+      title: "Get Approved",
+      desc: "We review every application personally. We\u2019re looking for interesting, genuine people who bring energy to a room. You\u2019ll hear back within 48 hours with your status.",
+    },
+    {
+      num: "03",
+      title: "Attend",
+      desc: "Browse the calendar and RSVP to events at Nashville\u2019s best venues. Every event has a balanced guest list, guided icebreakers, and a format designed so you meet everyone in the room. Show up solo \u2014 that\u2019s the whole point.",
+    },
+    {
+      num: "04",
+      title: "Double Take",
+      desc: "After the event, open the app and tell us who caught your eye. If the feeling is mutual, we\u2019ll introduce you. No awkward DMs, no guessing. Just mutual interest, confirmed.",
+    },
+  ];
+
+  const eventTypes = [
+    {
+      title: "Rooftop Social",
+      guests: "40\u201360 guests",
+      desc: "Our flagship format. Drinks, conversation, and guided icebreakers on Nashville\u2019s best rooftops. Big enough to meet someone new, small enough that everyone matters.",
+    },
+    {
+      title: "Wine Night",
+      guests: "20 guests",
+      desc: "Intimate and curated. A sommelier-led tasting with structured conversation rounds. The kind of evening where you remember every name.",
+    },
+    {
+      title: "Dinner Series",
+      guests: "12 guests",
+      desc: "Long-table dining at premium restaurants. Chef\u2019s menu, assigned seating that rotates between courses. $80\u2013$150 per person. Our most exclusive format.",
+    },
+    {
+      title: "Activity Events",
+      guests: "20\u201330 guests",
+      desc: "Cooking classes, golf simulators, art workshops. A shared activity reduces the pressure and gives you something to bond over besides small talk.",
+    },
+  ];
+
   return (
-    <div className="font-sans">
-      {/* Hero */}
-      <section className="relative bg-forest pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1920&q=80"
-          alt="Nashville evening atmosphere"
-          fill
-          className="object-cover opacity-25"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest-dark/70 to-forest/90" />
-        <div className="relative max-w-7xl mx-auto px-6 md:px-8 text-center">
+    <>
+      {/* ═══ 1. HERO ═══ */}
+      <section className="pt-32 pb-20 md:pt-40 md:pb-28">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-copper-light text-sm font-medium tracking-widest uppercase mb-6"
+            className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5"
           >
-            Our Story
+            About TR&Uuml;
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold text-white mb-6"
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="font-serif text-[40px] md:text-[56px] lg:text-[64px] font-bold text-white leading-[1.08] tracking-tight max-w-[18ch]"
           >
-            Why TR&Uuml; Exists
+            The social club Nashville didn&apos;t know it needed.
           </motion.h1>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="w-20 h-0.5 bg-copper-light mx-auto"
-          />
         </div>
       </section>
 
-      {/* Founder Story — 2-col with atmospheric photo */}
-      <section className="bg-cream py-24 md:py-32">
+      {/* ═══ 2. WHAT IS TRÜ ═══ */}
+      <section className="py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-            {/* Quote */}
-            <AnimateOnScroll>
-              <div className="relative">
-                <div className="absolute -top-8 -left-4 text-copper/20 font-serif text-[120px] md:text-[160px] leading-none select-none">
-                  &ldquo;
-                </div>
-                <blockquote className="relative z-10 font-serif text-2xl md:text-3xl text-dark leading-relaxed md:leading-relaxed font-normal italic">
-                  I got tired of swiping. I got tired of first dates that felt like
-                  job interviews. I started TR&Uuml; because Nashville deserves better
-                  than dating apps. Our events bring together real people for real
-                  experiences&nbsp;&mdash; the kind where you laugh, connect, and actually
-                  remember someone&rsquo;s name the next day.
-                </blockquote>
-                <div className="mt-12 flex items-center gap-4">
-                  <div className="w-12 h-0.5 bg-copper" />
-                  <p className="font-serif text-xl text-forest font-medium">
-                    &mdash; Trey, Founder
-                  </p>
-                </div>
-              </div>
-            </AnimateOnScroll>
-
-            {/* Photo */}
-            <AnimateOnScroll delay={0.2}>
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/5] shadow-[var(--shadow-elevated)]">
-                <Image
-                  src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&q=80"
-                  alt="Nashville rooftop atmosphere"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-            </AnimateOnScroll>
-          </div>
-        </div>
-      </section>
-
-      {/* The TRU Manifesto */}
-      <section className="bg-white py-24 md:py-32">
-        <div className="max-w-5xl mx-auto px-6 md:px-8">
-          <SectionHeading
-            title="The TR&Uuml; Manifesto"
-            subtitle="What we stand for."
-          />
-          <div className="mt-16 space-y-12 md:space-y-16">
-            {manifestoItems.map((item, index) => (
-              <AnimateOnScroll
-                key={index}
-                delay={index * 0.15}
-                direction={index % 2 === 0 ? "left" : "right"}
-              >
-                <div className="relative group">
-                  <div className="absolute -left-4 md:-left-8 top-0 bottom-0 w-0.5 bg-copper/30 group-hover:bg-copper transition-colors duration-500" />
-                  <p className="font-serif text-2xl md:text-3xl lg:text-4xl text-dark italic leading-snug md:leading-snug pl-4 md:pl-8">
-                    {item}
-                  </p>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How We're Different */}
-      <section className="bg-forest py-24 md:py-32">
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <SectionHeading
-            title="How We&rsquo;re Different"
-            subtitle="This isn't another dating app. It's the alternative."
-            light
-          />
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {/* Column Headers */}
-            <AnimateOnScroll delay={0}>
-              <div className="text-center mb-4">
-                <p className="text-white/40 text-sm font-medium tracking-widest uppercase">
-                  Dating Apps
-                </p>
-              </div>
-            </AnimateOnScroll>
-            <AnimateOnScroll delay={0.1}>
-              <div className="text-center mb-4">
-                <p className="text-copper-light text-sm font-medium tracking-widest uppercase">
-                  TR&Uuml;
-                </p>
-              </div>
-            </AnimateOnScroll>
-
-            {/* Comparison Rows */}
-            {comparisonData.map((row, index) => (
-              <div key={index} className="contents">
-                <AnimateOnScroll delay={0.1 + index * 0.08} direction="left">
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
-                    <p className="text-white/50 text-lg font-light">{row.app}</p>
-                  </div>
-                </AnimateOnScroll>
-                <AnimateOnScroll delay={0.15 + index * 0.08} direction="right">
-                  <div className="bg-copper/10 border border-copper/30 rounded-2xl p-6 text-center">
-                    <p className="text-white text-lg font-medium">{row.tru}</p>
-                  </div>
-                </AnimateOnScroll>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-cream py-24 md:py-32">
-        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
-          <AnimateOnScroll>
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold text-dark mb-6">
-              Ready to try something real?
-            </h2>
-            <p className="text-muted text-lg md:text-xl mb-10 max-w-xl mx-auto">
-              Join a community of Nashville singles who believe dating should be
-              an experience, not an app.
+          <FadeUp>
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
+              What is TR&Uuml;
             </p>
-            <Button href="/apply" variant="primary">
-              Join the Waitlist
-            </Button>
-          </AnimateOnScroll>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <div className="max-w-3xl">
+              <p className="text-white/70 text-base md:text-lg leading-relaxed">
+                TR&Uuml; is a members-only social club where everyone happens to be single.
+                It is not a dating event. It&apos;s not a mixer. It&apos;s a high-quality social
+                environment where interesting, polished people meet naturally.
+              </p>
+              <p className="text-white/70 text-base md:text-lg leading-relaxed mt-5">
+                Romance happens organically &mdash; and the Double Take system allows people
+                to reconnect privately after the event. No pressure during. No awkwardness after.
+              </p>
+            </div>
+          </FadeUp>
         </div>
       </section>
-    </div>
+
+      {/* ═══ 3. THE PHILOSOPHY ═══ */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <FadeUp>
+            <div className="rounded-2xl bg-dark-glass border border-dark-border p-8 md:p-14">
+              <div className="w-12 h-0.5 bg-gradient-to-r from-gold to-sand mb-8" />
+              <h2 className="font-serif text-2xl md:text-4xl font-bold text-white leading-snug mb-6">
+                A great night out first.<br />
+                Everything else second.
+              </h2>
+              <div className="max-w-2xl">
+                <p className="text-white/50 text-[15px] md:text-base leading-relaxed">
+                  TR&Uuml; is designed to feel like the kind of night you&apos;d attend regardless
+                  of your relationship status. A beautiful venue. A balanced room of interesting
+                  people. A warm atmosphere where conversation flows naturally. The fact that
+                  everyone happens to be single is just the subtext &mdash; never the headline.
+                </p>
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ═══ 4. HOW IT WORKS ═══ */}
+      <section className="py-20 md:py-32">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <FadeUp className="mb-16 md:mb-20">
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
+              How it works
+            </p>
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">
+              From application to connection.
+            </h2>
+          </FadeUp>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {steps.map((step, i) => (
+              <FadeUp key={step.num} delay={i * 0.1}>
+                <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 h-full flex flex-col">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
+                      <span className="text-gold font-semibold text-sm">{step.num}</span>
+                    </div>
+                    <h3 className="text-white font-semibold text-lg md:text-xl">{step.title}</h3>
+                  </div>
+                  <p className="text-white/50 text-sm md:text-[15px] leading-relaxed">{step.desc}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 5. DOUBLE TAKE ═══ */}
+      <section className="py-20 md:py-28">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <FadeUp>
+            <div className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-8 md:p-14">
+              <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5">
+                Double Take
+              </p>
+              <h2 className="font-serif text-2xl md:text-4xl font-bold text-white leading-snug mb-6 max-w-xl">
+                The event is the experience. Double Take is what happens after.
+              </h2>
+              <div className="max-w-2xl space-y-4">
+                <p className="text-white/50 text-[15px] md:text-base leading-relaxed">
+                  After every event, you have 48 hours to open the app and select up to 3 people
+                  who caught your eye. No one sees your selections unless they picked you too.
+                </p>
+                <p className="text-white/50 text-[15px] md:text-base leading-relaxed">
+                  When it&apos;s mutual, a private chat unlocks for 7 days &mdash; long enough
+                  to make plans, short enough to keep the momentum. No endless texting. No ghosting
+                  a match from three weeks ago. Just real follow-through on a real connection.
+                </p>
+              </div>
+              <div className="mt-8 grid grid-cols-3 gap-3 md:gap-4 max-w-md">
+                {[
+                  { value: "3", label: "Max picks" },
+                  { value: "48h", label: "Selection window" },
+                  { value: "7 days", label: "Chat expires" },
+                ].map((stat) => (
+                  <div key={stat.label} className="rounded-xl bg-white/[0.04] border border-white/[0.06] p-4 text-center">
+                    <p className="text-gold font-semibold text-lg">{stat.value}</p>
+                    <p className="text-white/30 text-[10px] uppercase tracking-wider mt-1">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ═══ 6. EVENT TYPES ═══ */}
+      <section className="py-20 md:py-32">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
+          <FadeUp className="mb-16 md:mb-20">
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
+              Event formats
+            </p>
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">
+              Something for every vibe.
+            </h2>
+          </FadeUp>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {eventTypes.map((evt, i) => (
+              <FadeUp key={evt.title} delay={i * 0.1}>
+                <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 h-full flex flex-col">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white font-semibold text-lg md:text-xl">{evt.title}</h3>
+                    <span className="text-gold/70 text-xs font-medium tracking-wide uppercase">{evt.guests}</span>
+                  </div>
+                  <p className="text-white/50 text-sm md:text-[15px] leading-relaxed">{evt.desc}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 7. CTA ═══ */}
+      <section className="py-20 md:py-32">
+        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
+          <FadeUp>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
+              Ready?
+            </h2>
+            <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto">
+              Apply to join Nashville&apos;s most curated room.
+            </p>
+            <a
+              href="/apply"
+              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
+            >
+              Apply to Join
+            </a>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* Spacing before footer */}
+      <div className="h-8" />
+    </>
   );
 }

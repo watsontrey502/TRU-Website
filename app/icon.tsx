@@ -11,7 +11,7 @@ export default function Icon() {
         style={{
           width: 32,
           height: 32,
-          backgroundColor: "#2C4A3E",
+          backgroundColor: "#0C0C0D",
           borderRadius: 6,
           display: "flex",
           alignItems: "center",
@@ -21,8 +21,8 @@ export default function Icon() {
         <div
           style={{
             fontSize: 18,
-            fontWeight: 700,
-            color: "#D4935A",
+            fontWeight: 800,
+            color: "#C8A97E",
             lineHeight: 1,
             letterSpacing: "-0.02em",
           }}

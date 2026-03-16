@@ -4,7 +4,7 @@ export default function EventsLoading() {
   return (
     <>
       {/* Hero placeholder */}
-      <section className="bg-forest pt-32 pb-20">
+      <section className="bg-black pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex flex-col items-center">
           <Skeleton className="h-12 w-64 mb-6 !bg-white/10" />
           <Skeleton className="h-5 w-96 max-w-full !bg-white/10" />

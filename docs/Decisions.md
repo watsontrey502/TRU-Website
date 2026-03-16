@@ -29,7 +29,9 @@
 - Algorithm optimizes for gender balance, neighborhood mixing, and zero repeat pairings across rounds
 
 ## Design System
-- **Forest green** (#2C4A3E) — primary brand color, trust, nature
-- **Copper** (#B87333) — accent, warmth, premium feel
-- **Cream** (#FFF8F0) — background, soft, inviting
-- **Fonts**: Cormorant Garamond (serif headings), DM Sans (body text)
+- **Black** (#0C0C0D) — primary background, sophistication
+- **Gold** (#C8A97E) — accent, warmth, premium feel
+- **Sand** (#D8B89A) — secondary accent, gradient pairing
+- **Champagne** (#F7F3EE) — light text alternative
+- **Stone** (#BDB8B2) — muted text
+- **Fonts**: Playfair Display (serif headings), Inter (body text)

@@ -2,14 +2,14 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "TRU Dating Nashville",
-    short_name: "TRU",
+    name: "TRÜ Nashville",
+    short_name: "TRÜ",
     description:
-      "Curated dating events for Nashville singles. Stop swiping. Start connecting.",
+      "A private social club for interesting people who happen to be single. Nashville waitlist now open.",
     start_url: "/",
     display: "standalone",
-    background_color: "#FFF8F0",
-    theme_color: "#2C4A3E",
+    background_color: "#0C0C0D",
+    theme_color: "#0C0C0D",
     icons: [
       {
         src: "/icon-192.png",

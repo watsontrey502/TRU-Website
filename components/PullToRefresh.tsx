@@ -60,8 +60,8 @@ export default function PullToRefresh({
         style={{ opacity: spinnerOpacity, scale: spinnerScale, y: useTransform(y, (v) => v - 32) }}
       >
         <div
-          className={`w-8 h-8 border-2 border-copper rounded-full ${
-            refreshing ? "border-t-transparent animate-spin" : "border-t-copper"
+          className={`w-8 h-8 border-2 border-gold rounded-full ${
+            refreshing ? "border-t-transparent animate-spin" : "border-t-gold"
           }`}
         />
       </motion.div>

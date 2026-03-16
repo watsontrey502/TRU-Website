@@ -84,7 +84,7 @@ export default function BottomTabBar() {
                 onClick={hapticTap}
                 className="flex flex-col items-center gap-0.5 -mt-3"
               >
-                <div className="w-12 h-12 rounded-full bg-copper flex items-center justify-center shadow-lg shadow-copper/30">
+                <div className="w-12 h-12 rounded-full bg-gold flex items-center justify-center shadow-lg shadow-gold/30">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -94,7 +94,7 @@ export default function BottomTabBar() {
                     {tab.icon}
                   </svg>
                 </div>
-                <span className="text-[10px] font-medium text-copper">
+                <span className="text-[10px] font-medium text-gold">
                   {tab.label}
                 </span>
               </Link>
@@ -107,7 +107,7 @@ export default function BottomTabBar() {
               href={tab.href}
               onClick={hapticTap}
               className={`flex flex-col items-center gap-0.5 px-3 py-1.5 text-[10px] font-medium transition-colors ${
-                active ? "text-forest" : "text-muted"
+                active ? "text-black" : "text-stone"
               }`}
             >
               <svg

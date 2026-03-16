@@ -50,13 +50,13 @@ function FAQItem({
           onClick={() => setIsOpen(!isOpen)}
           className="w-full flex items-center justify-between py-6 text-left cursor-pointer group"
         >
-          <span className="font-serif text-xl md:text-2xl font-semibold text-dark group-hover:text-forest transition-colors pr-8">
+          <span className="font-serif text-xl md:text-2xl font-semibold text-black group-hover:text-black transition-colors pr-8">
             {question}
           </span>
           <motion.span
             animate={{ rotate: isOpen ? 45 : 0 }}
             transition={{ duration: 0.3 }}
-            className="text-copper text-2xl font-light flex-shrink-0 leading-none"
+            className="text-gold text-2xl font-light flex-shrink-0 leading-none"
           >
             +
           </motion.span>
@@ -70,7 +70,7 @@ function FAQItem({
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
               className="overflow-hidden"
             >
-              <p className="text-muted leading-relaxed pb-6 max-w-2xl">
+              <p className="text-stone leading-relaxed pb-6 max-w-2xl">
                 {answer}
               </p>
             </motion.div>
@@ -91,12 +91,12 @@ export default function EventDetailPage() {
       <div className="min-h-screen bg-cream flex items-center justify-center pt-20">
         <div className="text-center px-6">
           <AnimateOnScroll>
-            <h1 className="font-serif text-4xl md:text-5xl font-semibold text-dark mb-4">
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold text-black mb-4">
               Event Not Found
             </h1>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.1}>
-            <p className="text-muted text-lg mb-8 max-w-md mx-auto">
+            <p className="text-stone text-lg mb-8 max-w-md mx-auto">
               This event may have already happened or doesn&apos;t exist. Check
               out our upcoming events instead.
             </p>
@@ -214,9 +214,9 @@ export default function EventDetailPage() {
             {/* Venue */}
             <AnimateOnScroll delay={0}>
               <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-5 shadow-[var(--shadow-card)] border border-white/60 text-center col-span-2 md:col-span-1">
-                <div className="w-10 h-10 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-3">
+                <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center mx-auto mb-3">
                   <svg
-                    className="w-5 h-5 text-forest"
+                    className="w-5 h-5 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -235,16 +235,16 @@ export default function EventDetailPage() {
                     />
                   </svg>
                 </div>
-                <p className="text-xs text-muted uppercase tracking-wide mb-1">
+                <p className="text-xs text-stone uppercase tracking-wide mb-1">
                   Venue
                 </p>
-                <p className="font-semibold text-dark text-sm">{event.venue}</p>
-                <p className="text-muted text-xs mb-2">{event.neighborhood}</p>
+                <p className="font-semibold text-black text-sm">{event.venue}</p>
+                <p className="text-stone text-xs mb-2">{event.neighborhood}</p>
                 <a
                   href={googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-copper text-xs font-medium hover:text-copper-dark transition-colors"
+                  className="text-gold text-xs font-medium hover:text-gold transition-colors"
                 >
                   Get Directions &rarr;
                 </a>
@@ -254,9 +254,9 @@ export default function EventDetailPage() {
             {/* Dress Code */}
             <AnimateOnScroll delay={0.05}>
               <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-5 shadow-[var(--shadow-card)] border border-white/60 text-center">
-                <div className="w-10 h-10 rounded-full bg-copper/10 flex items-center justify-center mx-auto mb-3">
+                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-3">
                   <svg
-                    className="w-5 h-5 text-copper"
+                    className="w-5 h-5 text-gold"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -275,10 +275,10 @@ export default function EventDetailPage() {
                     />
                   </svg>
                 </div>
-                <p className="text-xs text-muted uppercase tracking-wide mb-1">
+                <p className="text-xs text-stone uppercase tracking-wide mb-1">
                   Dress Code
                 </p>
-                <p className="font-semibold text-dark text-sm">
+                <p className="font-semibold text-black text-sm">
                   {event.dressCode}
                 </p>
               </div>
@@ -287,9 +287,9 @@ export default function EventDetailPage() {
             {/* Age Range */}
             <AnimateOnScroll delay={0.1}>
               <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-5 shadow-[var(--shadow-card)] border border-white/60 text-center">
-                <div className="w-10 h-10 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-3">
+                <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center mx-auto mb-3">
                   <svg
-                    className="w-5 h-5 text-forest"
+                    className="w-5 h-5 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -302,10 +302,10 @@ export default function EventDetailPage() {
                     />
                   </svg>
                 </div>
-                <p className="text-xs text-muted uppercase tracking-wide mb-1">
+                <p className="text-xs text-stone uppercase tracking-wide mb-1">
                   Age Range
                 </p>
-                <p className="font-semibold text-dark text-sm">
+                <p className="font-semibold text-black text-sm">
                   {event.ageRange}
                 </p>
               </div>
@@ -314,9 +314,9 @@ export default function EventDetailPage() {
             {/* Price */}
             <AnimateOnScroll delay={0.15}>
               <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-5 shadow-[var(--shadow-card)] border border-white/60 text-center">
-                <div className="w-10 h-10 rounded-full bg-copper/10 flex items-center justify-center mx-auto mb-3">
+                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-3">
                   <svg
-                    className="w-5 h-5 text-copper"
+                    className="w-5 h-5 text-gold"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -329,10 +329,10 @@ export default function EventDetailPage() {
                     />
                   </svg>
                 </div>
-                <p className="text-xs text-muted uppercase tracking-wide mb-1">
+                <p className="text-xs text-stone uppercase tracking-wide mb-1">
                   Price
                 </p>
-                <p className="font-semibold text-dark text-sm">
+                <p className="font-semibold text-black text-sm">
                   ${event.price}
                 </p>
               </div>
@@ -343,12 +343,12 @@ export default function EventDetailPage() {
               <div className="backdrop-blur-xl bg-white/90 rounded-2xl p-5 shadow-[var(--shadow-card)] border border-white/60 text-center">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 ${
-                    event.spotsLeft <= 6 ? "bg-copper/10" : "bg-forest/10"
+                    event.spotsLeft <= 6 ? "bg-gold/10" : "bg-black/10"
                   }`}
                 >
                   <svg
                     className={`w-5 h-5 ${
-                      event.spotsLeft <= 6 ? "text-copper" : "text-forest"
+                      event.spotsLeft <= 6 ? "text-gold" : "text-black"
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -362,12 +362,12 @@ export default function EventDetailPage() {
                     />
                   </svg>
                 </div>
-                <p className="text-xs text-muted uppercase tracking-wide mb-1">
+                <p className="text-xs text-stone uppercase tracking-wide mb-1">
                   Spots Left
                 </p>
                 <p
                   className={`font-semibold text-sm ${
-                    event.spotsLeft <= 6 ? "text-copper" : "text-dark"
+                    event.spotsLeft <= 6 ? "text-gold" : "text-black"
                   }`}
                 >
                   {event.spotsLeft} remaining
@@ -382,17 +382,17 @@ export default function EventDetailPage() {
       <section className="bg-cream py-20">
         <div className="max-w-3xl mx-auto px-6 md:px-8">
           <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-dark mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-6">
               About This Event
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.1}>
-            <p className="text-muted text-lg leading-relaxed">
+            <p className="text-stone text-lg leading-relaxed">
               {event.description}
             </p>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.15}>
-            <p className="text-muted text-lg leading-relaxed mt-6">
+            <p className="text-stone text-lg leading-relaxed mt-6">
               Your ticket includes the full experience, your first drink, and
               access to our Double Take matching system. Arrive a few minutes
               early to check in and settle in before things get started.
@@ -405,12 +405,12 @@ export default function EventDetailPage() {
       <section className="bg-white py-20">
         <div className="max-w-3xl mx-auto px-6 md:px-8">
           <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-dark mb-4 text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-4 text-center">
               What to Expect
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.1}>
-            <p className="text-muted text-center mb-14 max-w-lg mx-auto">
+            <p className="text-stone text-center mb-14 max-w-lg mx-auto">
               Here&apos;s how the evening unfolds. Every moment is designed to
               make connection feel effortless.
             </p>
@@ -442,16 +442,16 @@ export default function EventDetailPage() {
                         isLeft ? "md:pr-12 md:text-right" : "md:pl-12 md:text-left"
                       }`}
                     >
-                      <span className="text-copper font-semibold text-sm tracking-wide">
+                      <span className="text-gold font-semibold text-sm tracking-wide">
                         {item.time}
                       </span>
-                      <h3 className="font-serif text-xl font-semibold text-dark mt-1">
+                      <h3 className="font-serif text-xl font-semibold text-black mt-1">
                         {item.activity}
                       </h3>
                     </div>
 
                     {/* Dot on the line */}
-                    <div className="absolute left-6 md:left-1/2 top-1 w-3 h-3 rounded-full bg-copper border-2 border-white shadow-sm -translate-x-1/2" />
+                    <div className="absolute left-6 md:left-1/2 top-1 w-3 h-3 rounded-full bg-gold border-2 border-white shadow-sm -translate-x-1/2" />
 
                     {/* Spacer for the other side on desktop */}
                     <div className="hidden md:block md:w-1/2" />
@@ -464,7 +464,7 @@ export default function EventDetailPage() {
       </section>
 
       {/* Get Tickets CTA */}
-      <section className="bg-forest py-20">
+      <section className="bg-black py-20">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
           <AnimateOnScroll>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-4">
@@ -496,12 +496,12 @@ export default function EventDetailPage() {
       <section className="bg-cream py-20">
         <div className="max-w-3xl mx-auto px-6 md:px-8">
           <AnimateOnScroll>
-            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-dark mb-4 text-center">
+            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-4 text-center">
               Common Questions
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.1}>
-            <p className="text-muted text-center mb-14 max-w-lg mx-auto">
+            <p className="text-stone text-center mb-14 max-w-lg mx-auto">
               First time? Here&apos;s everything you need to know before your
               event.
             </p>
@@ -519,11 +519,11 @@ export default function EventDetailPage() {
           </div>
 
           <AnimateOnScroll delay={0.2}>
-            <p className="text-center text-muted mt-10">
+            <p className="text-center text-stone mt-10">
               Have another question?{" "}
               <a
                 href="mailto:hello@trudating.com"
-                className="text-copper font-medium hover:text-copper-dark transition-colors"
+                className="text-gold font-medium hover:text-gold transition-colors"
               >
                 Reach out to us
               </a>
@@ -536,10 +536,10 @@ export default function EventDetailPage() {
       <div className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-dark text-sm">${event.price}</p>
+            <p className="font-semibold text-black text-sm">${event.price}</p>
             <p
               className={`text-xs font-medium ${
-                event.spotsLeft <= 6 ? "text-copper" : "text-muted"
+                event.spotsLeft <= 6 ? "text-gold" : "text-stone"
               }`}
             >
               {event.spotsLeft} spots left

@@ -39,8 +39,8 @@ export default function LoginPage() {
   };
 
   const inputBase =
-    "w-full rounded-xl border bg-white py-3.5 px-4 text-[15px] text-dark placeholder:text-gray-300 transition-all duration-200 focus:outline-none focus:ring-2";
-  const inputNormal = `${inputBase} border-gray-200 focus:border-copper focus:ring-copper/20`;
+    "w-full rounded-xl border bg-white py-3.5 px-4 text-[15px] text-black placeholder:text-gray-300 transition-all duration-200 focus:outline-none focus:ring-2";
+  const inputNormal = `${inputBase} border-gray-200 focus:border-gold focus:ring-gold/20`;
   const inputErr = `${inputBase} border-red-300 focus:border-red-400 focus:ring-red-200/40`;
 
   return (
@@ -100,14 +100,14 @@ export default function LoginPage() {
             <div className="w-full max-w-md mx-auto px-6 py-16">
               {!sent ? (
                 <>
-                  <p className="text-xs uppercase tracking-[0.15em] text-copper font-medium mb-3">
+                  <p className="text-xs uppercase tracking-[0.15em] text-gold font-medium mb-3">
                     Member Login
                   </p>
-                  <div className="w-8 h-px bg-copper/40 mb-3" />
-                  <h2 className="font-serif text-2xl md:text-3xl font-semibold text-dark mb-2">
+                  <div className="w-8 h-px bg-gold/40 mb-3" />
+                  <h2 className="font-serif text-2xl md:text-3xl font-semibold text-black mb-2">
                     Sign in with email
                   </h2>
-                  <p className="text-muted text-sm mb-8">
+                  <p className="text-stone text-sm mb-8">
                     We&apos;ll send you a magic link — no password needed.
                   </p>
 
@@ -132,7 +132,7 @@ export default function LoginPage() {
                       disabled={loading}
                       whileHover={{ scale: 1.015 }}
                       whileTap={{ scale: 0.985 }}
-                      className="w-full py-4 rounded-xl bg-copper text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-copper-dark cursor-pointer shadow-lg shadow-copper/15 disabled:opacity-50"
+                      className="w-full py-4 rounded-xl bg-gold text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-gold cursor-pointer shadow-lg shadow-gold/15 disabled:opacity-50"
                     >
                       {loading ? "Sending..." : "Send Magic Link"}
                     </motion.button>
@@ -140,29 +140,29 @@ export default function LoginPage() {
 
                   <p className="text-center text-[11px] text-gray-300 mt-5">
                     Not a member yet?{" "}
-                    <Link href="/apply" className="text-copper hover:text-copper-dark transition-colors">
+                    <Link href="/apply" className="text-gold hover:text-gold transition-colors">
                       Apply here
                     </Link>
                   </p>
                 </>
               ) : (
                 <div className="text-center py-8">
-                  <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center">
-                    <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-black/10 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="font-serif text-2xl font-semibold text-dark mb-3">
+                  <h3 className="font-serif text-2xl font-semibold text-black mb-3">
                     Check your email
                   </h3>
-                  <p className="text-muted leading-relaxed max-w-xs mx-auto mb-8 text-[15px]">
-                    We sent a login link to <span className="font-medium text-dark">{email}</span>.
+                  <p className="text-stone leading-relaxed max-w-xs mx-auto mb-8 text-[15px]">
+                    We sent a login link to <span className="font-medium text-black">{email}</span>.
                     Click the link to sign in.
                   </p>
                   <button
                     type="button"
                     onClick={() => { setSent(false); setEmail(""); }}
-                    className="text-sm text-copper hover:text-copper-dark transition-colors cursor-pointer"
+                    className="text-sm text-gold hover:text-gold transition-colors cursor-pointer"
                   >
                     Use a different email
                   </button>
@@ -176,14 +176,14 @@ export default function LoginPage() {
         <div className="md:hidden px-5 py-8 pb-16">
           {!sent ? (
             <>
-              <p className="text-xs uppercase tracking-[0.15em] text-copper font-medium mb-3">
+              <p className="text-xs uppercase tracking-[0.15em] text-gold font-medium mb-3">
                 Member Login
               </p>
-              <div className="w-8 h-px bg-copper/40 mb-3" />
-              <h2 className="font-serif text-2xl font-semibold text-dark mb-2">
+              <div className="w-8 h-px bg-gold/40 mb-3" />
+              <h2 className="font-serif text-2xl font-semibold text-black mb-2">
                 Sign in with email
               </h2>
-              <p className="text-muted text-sm mb-8">
+              <p className="text-stone text-sm mb-8">
                 We&apos;ll send you a magic link — no password needed.
               </p>
 
@@ -208,7 +208,7 @@ export default function LoginPage() {
                   disabled={loading}
                   whileHover={{ scale: 1.015 }}
                   whileTap={{ scale: 0.985 }}
-                  className="w-full py-4 rounded-xl bg-copper text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-copper-dark cursor-pointer shadow-lg shadow-copper/15 disabled:opacity-50"
+                  className="w-full py-4 rounded-xl bg-gold text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-gold cursor-pointer shadow-lg shadow-gold/15 disabled:opacity-50"
                 >
                   {loading ? "Sending..." : "Send Magic Link"}
                 </motion.button>
@@ -216,29 +216,29 @@ export default function LoginPage() {
 
               <p className="text-center text-[11px] text-gray-300 mt-5">
                 Not a member yet?{" "}
-                <Link href="/apply" className="text-copper hover:text-copper-dark transition-colors">
+                <Link href="/apply" className="text-gold hover:text-gold transition-colors">
                   Apply here
                 </Link>
               </p>
             </>
           ) : (
             <div className="text-center py-8">
-              <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center">
-                <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-black/10 flex items-center justify-center">
+                <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-dark mb-3">
+              <h3 className="font-serif text-2xl font-semibold text-black mb-3">
                 Check your email
               </h3>
-              <p className="text-muted leading-relaxed max-w-xs mx-auto mb-8 text-[15px]">
-                We sent a login link to <span className="font-medium text-dark">{email}</span>.
+              <p className="text-stone leading-relaxed max-w-xs mx-auto mb-8 text-[15px]">
+                We sent a login link to <span className="font-medium text-black">{email}</span>.
                 Click the link to sign in.
               </p>
               <button
                 type="button"
                 onClick={() => { setSent(false); setEmail(""); }}
-                className="text-sm text-copper hover:text-copper-dark transition-colors cursor-pointer"
+                className="text-sm text-gold hover:text-gold transition-colors cursor-pointer"
               >
                 Use a different email
               </button>

@@ -10,7 +10,7 @@ export const events = [
     ageRange: "Ages 25-35",
     spotsLeft: 6,
     dressCode: "Cocktail Attire",
-    gradient: "from-forest via-forest-light to-copper/30",
+    gradient: "from-black via-black to-gold/30",
     image:
       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
     description:
@@ -35,7 +35,7 @@ export const events = [
     ageRange: "Ages 25-38",
     spotsLeft: 10,
     dressCode: "Athleisure",
-    gradient: "from-forest-dark via-forest to-forest-light",
+    gradient: "from-black via-black to-black",
     image:
       "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
     description:
@@ -60,7 +60,7 @@ export const events = [
     ageRange: "Ages 28-40",
     spotsLeft: 4,
     dressCode: "Smart Casual",
-    gradient: "from-copper-dark via-copper to-copper-light",
+    gradient: "from-gold via-gold to-sand",
     image:
       "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=800&q=80",
     description:
@@ -86,7 +86,7 @@ export const events = [
     ageRange: "Ages 25-35",
     spotsLeft: 12,
     dressCode: "Casual Chic",
-    gradient: "from-forest via-copper/40 to-forest-dark",
+    gradient: "from-black via-gold/40 to-black",
     image:
       "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80",
     description:
@@ -109,7 +109,7 @@ export const eventTypes = [
     name: "Rooftop Wine Tastings",
     description: "Sunset views, curated flights, and conversations that matter.",
     price: "From $50",
-    gradient: "from-forest via-forest-light to-copper/20",
+    gradient: "from-black via-black to-gold/20",
     image:
       "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&q=80",
   },
@@ -117,7 +117,7 @@ export const eventTypes = [
     name: "Coffee + Hikes",
     description: "Trail conversations with rotating partners at Radnor Lake.",
     price: "From $30",
-    gradient: "from-forest-dark via-forest to-forest-light",
+    gradient: "from-black via-black to-black",
     image:
       "https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&q=80",
   },
@@ -125,7 +125,7 @@ export const eventTypes = [
     name: "Cocktail Masterclasses",
     description: "Mix drinks and chemistry at Nashville\u2019s best bars.",
     price: "From $55",
-    gradient: "from-copper-dark via-copper to-copper-light/60",
+    gradient: "from-gold via-gold to-sand/60",
     image:
       "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80",
   },
@@ -133,7 +133,7 @@ export const eventTypes = [
     name: "VIP Dinner Parties",
     description: "Intimate 16-person chef\u2019s table experiences.",
     price: "From $85",
-    gradient: "from-forest-dark via-forest to-copper/30",
+    gradient: "from-black via-black to-gold/30",
     image:
       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80",
   },
@@ -141,7 +141,7 @@ export const eventTypes = [
     name: "Trivia Nights",
     description: "Team up with strangers. Win together. Connect after.",
     price: "From $40",
-    gradient: "from-forest via-copper/30 to-forest-dark",
+    gradient: "from-black via-gold/30 to-black",
     image:
       "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80",
   },
@@ -149,7 +149,7 @@ export const eventTypes = [
     name: "Candlelight & Conversation",
     description: "Guided conversations in stunning venues.",
     price: "From $45",
-    gradient: "from-copper via-forest/40 to-copper-dark",
+    gradient: "from-gold via-black/40 to-gold",
     image:
       "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=800&q=80",
   },
@@ -158,25 +158,25 @@ export const eventTypes = [
 export const neighborhoods = [
   {
     name: "Germantown",
-    gradient: "from-forest to-forest-light",
+    gradient: "from-black to-black",
     image:
       "https://images.unsplash.com/photo-1555992336-03a23c7b20ee?w=600&q=80",
   },
   {
     name: "East Nashville",
-    gradient: "from-copper-dark to-copper",
+    gradient: "from-gold to-gold",
     image:
       "https://images.unsplash.com/photo-1533105079903-3e4f7bbc650a?w=600&q=80",
   },
   {
     name: "The Gulch",
-    gradient: "from-forest-dark to-forest",
+    gradient: "from-black to-black",
     image:
       "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=600&q=80",
   },
   {
     name: "12 South",
-    gradient: "from-copper to-copper-light",
+    gradient: "from-gold to-sand",
     image:
       "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&q=80",
   },
@@ -185,43 +185,30 @@ export const neighborhoods = [
 export const testimonials = [
   {
     quote:
-      "I deleted Hinge after my first TR\u00dc event. The people were genuine, the vibe was incredible, and I actually remembered everyone\u2019s name the next day.",
+      "I went expecting a dating event and got the best night out I\u2019ve had in Nashville. The people were incredible.",
     name: "Sarah",
-    age: 29,
-    neighborhood: "East Nashville",
-    event: "Rooftop Ros\u00e9",
+    age: 30,
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80",
+    caption: "Founding member",
   },
   {
     quote:
-      "I was nervous walking in alone. By the second icebreaker, I forgot I came solo. Left with three new numbers and a date for Saturday.",
-    name: "Marcus",
+      "Double Take is genius. No awkward number exchanges \u2014 just a quiet way to say \u2018I\u2019d like to see you again.\u2019",
+    name: "James",
     age: 31,
-    neighborhood: "Germantown",
-    event: "Trivia Night",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80",
+    caption: "Founding member",
   },
   {
     quote:
-      "This is what dating should feel like. No algorithms, no awkward DMs \u2014 just real people, great wine, and a rooftop sunset.",
-    name: "Lauren",
+      "I told my friends \u2018come to this members-only thing at L.A. Jackson\u2019 \u2014 not \u2018come to a dating event.\u2019 That\u2019s why it works.",
+    name: "Olivia",
     age: 27,
-    neighborhood: "The Gulch",
-    event: "Rooftop Wine Tasting",
-  },
-  {
-    quote:
-      "The coffee hike was my favorite morning in Nashville. Met someone amazing on the trail and we\u2019ve been together three months now.",
-    name: "Jake",
-    age: 33,
-    neighborhood: "12 South",
-    event: "Coffee + Hike",
-  },
-  {
-    quote:
-      "Finally, something for people who are serious about meeting someone but refuse to take themselves too seriously. TR\u00dc nails it.",
-    name: "Priya",
-    age: 28,
-    neighborhood: "Sylvan Park",
-    event: "Candlelight & Conversation",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80",
+    caption: "Founding member",
   },
 ];
 

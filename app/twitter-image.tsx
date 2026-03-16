@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "TRÜ Dating Nashville — Curated Dating Events";
+export const alt = "TRÜ — The Offline Era | Nashville's Members-Only Social Club";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#2C4A3E",
+          backgroundColor: "#0C0C0D",
           position: "relative",
         }}
       >
@@ -25,15 +25,7 @@ export default async function Image() {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse at top right, rgba(184,115,51,0.15), transparent 60%)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(135deg, rgba(30,50,40,0.8) 0%, transparent 50%, rgba(30,50,40,0.6) 100%)",
+              "radial-gradient(ellipse at top right, rgba(200,169,126,0.1), transparent 60%)",
           }}
         />
 
@@ -44,7 +36,7 @@ export default async function Image() {
             left: 0,
             right: 0,
             height: 4,
-            background: "linear-gradient(90deg, #B87333, #D4935A, #B87333)",
+            background: "linear-gradient(90deg, #C8A97E, #D8B89A, #C8A97E)",
           }}
         />
 
@@ -61,9 +53,9 @@ export default async function Image() {
           <div
             style={{
               fontSize: 120,
-              fontWeight: 700,
+              fontWeight: 800,
               color: "white",
-              letterSpacing: "0.05em",
+              letterSpacing: "-0.02em",
               lineHeight: 1,
             }}
           >
@@ -74,7 +66,7 @@ export default async function Image() {
             style={{
               width: 80,
               height: 2,
-              backgroundColor: "#D4935A",
+              background: "linear-gradient(90deg, #C8A97E, #D8B89A)",
               marginTop: 24,
               marginBottom: 24,
             }}
@@ -83,18 +75,18 @@ export default async function Image() {
           <div
             style={{
               fontSize: 28,
-              color: "rgba(255,255,255,0.7)",
+              color: "rgba(255,255,255,0.6)",
               letterSpacing: "0.15em",
               textTransform: "uppercase" as const,
             }}
           >
-            Dating Done Differently
+            The Offline Era
           </div>
 
           <div
             style={{
               fontSize: 18,
-              color: "#D4935A",
+              color: "#C8A97E",
               letterSpacing: "0.2em",
               textTransform: "uppercase" as const,
               marginTop: 16,
@@ -120,7 +112,7 @@ export default async function Image() {
               letterSpacing: "0.1em",
             }}
           >
-            trudating.com
+            trudatingnashville.com
           </div>
         </div>
       </div>

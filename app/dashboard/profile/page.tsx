@@ -69,12 +69,12 @@ export default function ProfilePage() {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-gray-200 bg-white py-3.5 px-4 text-[15px] text-dark placeholder:text-gray-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-copper focus:ring-copper/20";
+    "w-full rounded-xl border border-gray-200 bg-white py-3.5 px-4 text-[15px] text-black placeholder:text-gray-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20";
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-copper border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -82,10 +82,10 @@ export default function ProfilePage() {
   return (
     <>
       <div className="mb-10">
-        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-dark mb-2">
+        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-2">
           Your Profile
         </h1>
-        <p className="text-muted">Manage your account details.</p>
+        <p className="text-stone">Manage your account details.</p>
       </div>
 
       <div className="max-w-lg">
@@ -95,9 +95,9 @@ export default function ProfilePage() {
             <p className="text-sm font-medium text-gray-600 mb-2">Membership Status</p>
             <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
               profile.status === "approved"
-                ? "bg-forest/10 text-forest"
+                ? "bg-black/10 text-black"
                 : profile.status === "pending"
-                  ? "bg-copper/10 text-copper"
+                  ? "bg-gold/10 text-gold"
                   : "bg-red-50 text-red-600"
             }`}>
               {profile.status.charAt(0).toUpperCase() + profile.status.slice(1)}
@@ -112,7 +112,7 @@ export default function ProfilePage() {
             type="email"
             value={profile?.email ?? ""}
             disabled
-            className={`${inputClass} bg-gray-50 text-muted cursor-not-allowed`}
+            className={`${inputClass} bg-gray-50 text-stone cursor-not-allowed`}
           />
         </div>
 
@@ -167,7 +167,7 @@ export default function ProfilePage() {
           disabled={saving}
           whileHover={{ scale: 1.015 }}
           whileTap={{ scale: 0.985 }}
-          className="px-8 py-3.5 rounded-xl bg-copper text-white font-semibold text-sm tracking-wide transition-colors hover:bg-copper-dark cursor-pointer shadow-lg shadow-copper/15 disabled:opacity-50"
+          className="px-8 py-3.5 rounded-xl bg-gold text-white font-semibold text-sm tracking-wide transition-colors hover:bg-gold cursor-pointer shadow-lg shadow-gold/15 disabled:opacity-50"
         >
           {saving ? "Saving..." : "Save Changes"}
         </motion.button>

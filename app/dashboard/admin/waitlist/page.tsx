@@ -64,7 +64,7 @@ export default function AdminWaitlistPage() {
   if (!isAdmin || loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-copper border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -85,10 +85,10 @@ export default function AdminWaitlistPage() {
   return (
     <>
       <div className="mb-8">
-        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-dark mb-2">
+        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-2">
           Waitlist
         </h1>
-        <p className="text-muted">
+        <p className="text-stone">
           {submissions.length} total application{submissions.length !== 1 ? "s" : ""}
         </p>
       </div>
@@ -100,14 +100,14 @@ export default function AdminWaitlistPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name, email, or neighborhood..."
-          className="w-full max-w-md rounded-xl border border-gray-200 bg-white py-3 px-4 text-sm text-dark placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:border-copper focus:ring-copper/20"
+          className="w-full max-w-md rounded-xl border border-gray-200 bg-white py-3 px-4 text-sm text-black placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20"
         />
       </div>
 
       {/* Table */}
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         {/* Header */}
-        <div className="hidden md:grid md:grid-cols-[1fr_1fr_1fr_auto] gap-4 px-5 py-3 border-b border-gray-100 text-xs uppercase tracking-wide text-muted font-medium">
+        <div className="hidden md:grid md:grid-cols-[1fr_1fr_1fr_auto] gap-4 px-5 py-3 border-b border-gray-100 text-xs uppercase tracking-wide text-stone font-medium">
           <span>Name</span>
           <span>Email / Phone</span>
           <span>Details</span>
@@ -115,7 +115,7 @@ export default function AdminWaitlistPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="p-8 text-center text-muted">
+          <div className="p-8 text-center text-stone">
             {search ? "No matches found." : "No applications yet."}
           </div>
         ) : (
@@ -128,25 +128,25 @@ export default function AdminWaitlistPage() {
               >
                 <div className="md:grid md:grid-cols-[1fr_1fr_1fr_auto] gap-4 items-center">
                   <div>
-                    <span className="font-medium text-dark text-sm">
+                    <span className="font-medium text-black text-sm">
                       {s.first_name} {s.last_name}
                     </span>
                     {s.gender && (
-                      <span className="ml-2 text-xs text-muted">{s.gender}</span>
+                      <span className="ml-2 text-xs text-stone">{s.gender}</span>
                     )}
                     {s.age && (
-                      <span className="ml-1 text-xs text-muted">· {s.age}</span>
+                      <span className="ml-1 text-xs text-stone">· {s.age}</span>
                     )}
                   </div>
-                  <div className="text-sm text-muted mt-1 md:mt-0">
+                  <div className="text-sm text-stone mt-1 md:mt-0">
                     <div>{s.email}</div>
                     {s.phone && <div className="text-xs">{s.phone}</div>}
                   </div>
-                  <div className="text-sm text-muted mt-1 md:mt-0">
+                  <div className="text-sm text-stone mt-1 md:mt-0">
                     {s.neighborhood && <span>{s.neighborhood}</span>}
                     {s.heard_from && <span className="text-xs"> · via {s.heard_from}</span>}
                   </div>
-                  <div className="text-xs text-muted mt-1 md:mt-0 whitespace-nowrap">
+                  <div className="text-xs text-stone mt-1 md:mt-0 whitespace-nowrap">
                     {formatDate(s.created_at)}
                   </div>
                 </div>
@@ -157,32 +157,32 @@ export default function AdminWaitlistPage() {
                 <div className="px-5 py-4 bg-cream/50 border-b border-gray-100 space-y-3">
                   {s.instagram && (
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-muted font-medium">Instagram</span>
-                      <p className="text-sm text-dark">{s.instagram}</p>
+                      <span className="text-xs uppercase tracking-wide text-stone font-medium">Instagram</span>
+                      <p className="text-sm text-black">{s.instagram}</p>
                     </div>
                   )}
                   {s.work && (
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-muted font-medium">Work</span>
-                      <p className="text-sm text-dark">{s.work}</p>
+                      <span className="text-xs uppercase tracking-wide text-stone font-medium">Work</span>
+                      <p className="text-sm text-black">{s.work}</p>
                     </div>
                   )}
                   {s.interesting && (
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-muted font-medium">What makes them interesting</span>
-                      <p className="text-sm text-dark">{s.interesting}</p>
+                      <span className="text-xs uppercase tracking-wide text-stone font-medium">What makes them interesting</span>
+                      <p className="text-sm text-black">{s.interesting}</p>
                     </div>
                   )}
                   {s.ideal_date && (
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-muted font-medium">Ideal first date</span>
-                      <p className="text-sm text-dark">{s.ideal_date}</p>
+                      <span className="text-xs uppercase tracking-wide text-stone font-medium">Ideal first date</span>
+                      <p className="text-sm text-black">{s.ideal_date}</p>
                     </div>
                   )}
                   {s.referral_code && (
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-muted font-medium">Referral code</span>
-                      <p className="text-sm text-dark">{s.referral_code}</p>
+                      <span className="text-xs uppercase tracking-wide text-stone font-medium">Referral code</span>
+                      <p className="text-sm text-black">{s.referral_code}</p>
                     </div>
                   )}
                 </div>

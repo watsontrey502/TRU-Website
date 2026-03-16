@@ -169,7 +169,7 @@ export default function LiveEventPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-copper border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -177,8 +177,8 @@ export default function LiveEventPage() {
   if (!event) {
     return (
       <div className="text-center py-20">
-        <h1 className="font-serif text-2xl font-semibold text-dark mb-4">Event not found</h1>
-        <Link href="/dashboard" className="text-copper font-medium">Back to dashboard</Link>
+        <h1 className="font-serif text-2xl font-semibold text-black mb-4">Event not found</h1>
+        <Link href="/dashboard" className="text-gold font-medium">Back to dashboard</Link>
       </div>
     );
   }
@@ -191,16 +191,16 @@ export default function LiveEventPage() {
   if (event.live_status === "not_started") {
     return (
       <div className="text-center py-16">
-        <div className="w-16 h-16 rounded-full bg-copper/10 flex items-center justify-center mx-auto mb-5">
-          <svg className="w-8 h-8 text-copper" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-5">
+          <svg className="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 className="font-serif text-2xl font-semibold text-dark mb-2">{event.name}</h1>
-        <p className="text-muted mb-1">{event.venue}</p>
-        <p className="text-muted text-sm">The event hasn&apos;t started yet. Hang tight!</p>
+        <h1 className="font-serif text-2xl font-semibold text-black mb-2">{event.name}</h1>
+        <p className="text-stone mb-1">{event.venue}</p>
+        <p className="text-stone text-sm">The event hasn&apos;t started yet. Hang tight!</p>
         <div className="mt-8">
-          <div className="w-3 h-3 rounded-full bg-copper/40 animate-pulse mx-auto" />
+          <div className="w-3 h-3 rounded-full bg-gold/40 animate-pulse mx-auto" />
         </div>
       </div>
     );
@@ -210,17 +210,17 @@ export default function LiveEventPage() {
   if (event.live_status === "ended") {
     return (
       <div className="text-center py-16">
-        <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mx-auto mb-5">
-          <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-16 h-16 rounded-full bg-black/10 flex items-center justify-center mx-auto mb-5">
+          <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="font-serif text-2xl font-semibold text-dark mb-2">Thanks for coming!</h1>
-        <p className="text-muted mb-6">Hope you made some great connections tonight.</p>
+        <h1 className="font-serif text-2xl font-semibold text-black mb-2">Thanks for coming!</h1>
+        <p className="text-stone mb-6">Hope you made some great connections tonight.</p>
         {event.double_take_open && (
           <Link
             href={`/dashboard/events/${slug}/double-take`}
-            className="inline-block px-6 py-3 rounded-xl bg-copper text-white font-semibold hover:bg-copper-dark transition-colors"
+            className="inline-block px-6 py-3 rounded-xl bg-gold text-white font-semibold hover:bg-gold transition-colors"
           >
             Open Double Take
           </Link>
@@ -232,7 +232,7 @@ export default function LiveEventPage() {
   // Live — show current phase
   return (
     <div className="max-w-md mx-auto">
-      <Link href={`/dashboard/events/${slug}`} className="inline-flex items-center gap-2 text-muted hover:text-dark text-sm font-medium transition-colors mb-6">
+      <Link href={`/dashboard/events/${slug}`} className="inline-flex items-center gap-2 text-stone hover:text-black text-sm font-medium transition-colors mb-6">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
@@ -246,9 +246,9 @@ export default function LiveEventPage() {
             key={i}
             className={`h-1.5 flex-1 rounded-full ${
               i < event.current_phase_index
-                ? "bg-copper"
+                ? "bg-gold"
                 : i === event.current_phase_index
-                  ? "bg-copper animate-pulse"
+                  ? "bg-gold animate-pulse"
                   : "bg-gray-200"
             }`}
           />
@@ -259,8 +259,8 @@ export default function LiveEventPage() {
       {currentPhase && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-[var(--shadow-card)] overflow-hidden">
           {/* Phase header */}
-          <div className="bg-forest px-6 py-5">
-            <p className="text-copper-light text-xs uppercase tracking-[0.15em] font-medium mb-1">
+          <div className="bg-black px-6 py-5">
+            <p className="text-sand text-xs uppercase tracking-[0.15em] font-medium mb-1">
               {event.name}
             </p>
             <h1 className="font-serif text-2xl font-semibold text-white">
@@ -273,12 +273,12 @@ export default function LiveEventPage() {
             {timer !== null && (
               <div className="text-center">
                 <span className={`font-mono text-5xl font-bold ${
-                  timer <= 60 ? "text-red-500" : timer <= 180 ? "text-copper" : "text-dark"
+                  timer <= 60 ? "text-red-500" : timer <= 180 ? "text-gold" : "text-black"
                 }`}>
                   {formatTime(timer)}
                 </span>
                 {event.phase_paused && (
-                  <p className="text-copper text-xs font-medium mt-1">PAUSED</p>
+                  <p className="text-gold text-xs font-medium mt-1">PAUSED</p>
                 )}
               </div>
             )}
@@ -286,7 +286,7 @@ export default function LiveEventPage() {
             {/* Prompt */}
             {currentPhase.prompt && (
               <div className="bg-cream rounded-xl p-4 text-center">
-                <p className="text-dark font-medium italic">
+                <p className="text-black font-medium italic">
                   &ldquo;{currentPhase.prompt}&rdquo;
                 </p>
               </div>
@@ -295,18 +295,18 @@ export default function LiveEventPage() {
             {/* Group assignment */}
             {currentPhase.type === "grouped" && myGroup.length > 0 && (
               <div>
-                <p className="text-xs uppercase tracking-wide text-muted font-medium mb-3 text-center">
+                <p className="text-xs uppercase tracking-wide text-stone font-medium mb-3 text-center">
                   Your Group {myGroupNumber ? `(#${myGroupNumber})` : ""}
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   {myGroup.map((member) => (
                     <div key={member.profile_id} className="flex flex-col items-center gap-1.5">
-                      <div className="w-12 h-12 rounded-full bg-copper/10 flex items-center justify-center">
-                        <span className="text-copper font-serif font-bold text-lg">
+                      <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
+                        <span className="text-gold font-serif font-bold text-lg">
                           {member.first_name[0]}
                         </span>
                       </div>
-                      <span className="text-dark text-sm font-medium">{member.first_name}</span>
+                      <span className="text-black text-sm font-medium">{member.first_name}</span>
                     </div>
                   ))}
                 </div>
@@ -317,7 +317,7 @@ export default function LiveEventPage() {
             {currentPhase.type === "double_take" && event.double_take_open && (
               <Link
                 href={`/dashboard/events/${slug}/double-take`}
-                className="block w-full py-4 rounded-xl bg-copper text-white font-semibold text-center text-base tracking-wide hover:bg-copper-dark transition-colors shadow-lg shadow-copper/15"
+                className="block w-full py-4 rounded-xl bg-gold text-white font-semibold text-center text-base tracking-wide hover:bg-gold transition-colors shadow-lg shadow-gold/15"
               >
                 Open Double Take
               </Link>
@@ -326,7 +326,7 @@ export default function LiveEventPage() {
             {/* Mingle message */}
             {currentPhase.type === "mingle" && (
               <div className="text-center">
-                <p className="text-muted text-sm">
+                <p className="text-stone text-sm">
                   No assigned groups — mingle freely!
                 </p>
               </div>
@@ -342,15 +342,15 @@ export default function LiveEventPage() {
             key={i}
             className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm ${
               i === event.current_phase_index
-                ? "bg-copper/5 border border-copper/20 text-dark font-medium"
+                ? "bg-gold/5 border border-gold/20 text-black font-medium"
                 : i < event.current_phase_index
-                  ? "text-muted line-through"
-                  : "text-muted"
+                  ? "text-stone line-through"
+                  : "text-stone"
             }`}
           >
             <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
               i === event.current_phase_index
-                ? "bg-copper text-white"
+                ? "bg-gold text-white"
                 : i < event.current_phase_index
                   ? "bg-gray-200 text-gray-400"
                   : "bg-gray-100 text-gray-400"

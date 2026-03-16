@@ -57,8 +57,8 @@ function isValidPhone(p: string) { return /^[\d\s()+-]{7,}$/.test(p); }
 /* ── Styled form primitives ────────────────────────────────────── */
 
 const inputBase =
-  "w-full rounded-xl border bg-white py-3.5 px-4 text-[15px] text-dark placeholder:text-gray-300 transition-all duration-200 focus:outline-none focus:ring-2";
-const inputNormal = `${inputBase} border-gray-200 focus:border-copper focus:ring-copper/20`;
+  "w-full rounded-xl border bg-white py-3.5 px-4 text-[15px] text-black placeholder:text-gray-300 transition-all duration-200 focus:outline-none focus:ring-2";
+const inputNormal = `${inputBase} border-gray-200 focus:border-gold focus:ring-gold/20`;
 const inputError = `${inputBase} border-red-300 focus:border-red-400 focus:ring-red-200/40`;
 
 function Label({ htmlFor, children, optional }: { htmlFor: string; children: React.ReactNode; optional?: boolean }) {
@@ -153,7 +153,7 @@ function GenderPills({
             onClick={() => onChange(g)}
             className={`rounded-full py-3 text-sm font-medium tracking-wide transition-all duration-200 cursor-pointer ${
               value === g
-                ? "bg-forest text-white shadow-sm"
+                ? "bg-black text-white shadow-sm"
                 : "bg-gray-50 text-gray-500 border border-gray-200 hover:border-gray-300 hover:text-gray-700"
             }`}
           >
@@ -180,9 +180,9 @@ function StepIndicator({ current }: { current: number }) {
             <div className="flex flex-col items-center">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
                 completed
-                  ? "bg-copper"
+                  ? "bg-gold"
                   : active
-                    ? "bg-copper"
+                    ? "bg-gold"
                     : future
                       ? "border-2 border-white/30 bg-transparent"
                       : ""
@@ -203,7 +203,7 @@ function StepIndicator({ current }: { current: number }) {
             </div>
             {i < STEP_LABELS.length - 1 && (
               <div className={`w-12 h-px mb-5 mx-1.5 transition-colors duration-300 ${
-                i < current && current < 3 ? "bg-copper" : "bg-white/20"
+                i < current && current < 3 ? "bg-gold" : "bg-white/20"
               }`} />
             )}
           </div>
@@ -313,15 +313,15 @@ export default function DemoApplyPage() {
       {/* Animated checkmark */}
       <div className="mx-auto mb-8 w-20 h-20">
         <motion.svg viewBox="0 0 80 80" className="w-20 h-20" initial="h" animate="v">
-          <motion.circle cx="40" cy="40" r="36" fill="none" stroke="#2C4A3E" strokeWidth="2.5"
+          <motion.circle cx="40" cy="40" r="36" fill="none" stroke="#0C0C0D" strokeWidth="2.5"
             variants={{ h: { pathLength: 0, opacity: 0 }, v: { pathLength: 1, opacity: 1, transition: { duration: 0.7 } } }} />
-          <motion.path d="M24 40L35 51L56 30" fill="none" stroke="#B87333" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+          <motion.path d="M24 40L35 51L56 30" fill="none" stroke="#C8A97E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
             variants={{ h: { pathLength: 0, opacity: 0 }, v: { pathLength: 1, opacity: 1, transition: { duration: 0.4, delay: 0.6 } } }} />
         </motion.svg>
       </div>
 
       <motion.h3 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}
-        className="font-serif text-2xl font-semibold text-dark mb-3">
+        className="font-serif text-2xl font-semibold text-black mb-3">
         You{"\u2019"}re on the list!
       </motion.h3>
 
@@ -336,7 +336,7 @@ export default function DemoApplyPage() {
           href="https://instagram.com/trudatingnashville"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-copper font-medium hover:text-copper-dark transition-colors"
+          className="inline-flex items-center gap-2 text-gold font-medium hover:text-gold transition-colors"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
@@ -360,7 +360,7 @@ export default function DemoApplyPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="absolute inset-0 bg-gradient-to-br from-copper via-forest to-forest-dark flex flex-col items-center justify-center px-8"
+            className="absolute inset-0 bg-gradient-to-br from-gold via-black to-black flex flex-col items-center justify-center px-8"
           >
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -382,7 +382,7 @@ export default function DemoApplyPage() {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
-              className="mt-6 w-16 h-px bg-copper-light origin-center"
+              className="mt-6 w-16 h-px bg-sand origin-center"
             />
           </motion.div>
         ) : (
@@ -434,7 +434,7 @@ export default function DemoApplyPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
-                className="absolute inset-0 bg-gradient-to-br from-copper via-forest to-forest-dark flex flex-col items-center justify-center px-6"
+                className="absolute inset-0 bg-gradient-to-br from-gold via-black to-black flex flex-col items-center justify-center px-6"
               >
                 <p className="text-white/60 text-xs uppercase tracking-[0.2em] font-medium mb-2">
                   You{"\u2019"}re in
@@ -484,7 +484,7 @@ export default function DemoApplyPage() {
                 <div className="mb-10">
                   <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
                     <motion.div
-                      className="h-full bg-copper rounded-full"
+                      className="h-full bg-gold rounded-full"
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
                     />
@@ -498,16 +498,16 @@ export default function DemoApplyPage() {
                     <motion.p key={`label-${step}`}
                       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.2 }}
-                      className="text-xs uppercase tracking-[0.15em] text-copper font-medium mb-3">
+                      className="text-xs uppercase tracking-[0.15em] text-gold font-medium mb-3">
                       {STEP_SUBTITLES[step]}
                     </motion.p>
                   </AnimatePresence>
-                  <div className="w-8 h-px bg-copper/40 mb-3" />
+                  <div className="w-8 h-px bg-gold/40 mb-3" />
                   <AnimatePresence mode="wait">
                     <motion.h2 key={`title-${step}`}
                       initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.2, delay: 0.05 }}
-                      className="font-serif text-2xl md:text-3xl font-semibold text-dark">
+                      className="font-serif text-2xl md:text-3xl font-semibold text-black">
                       {STEP_TITLES[step]}
                     </motion.h2>
                   </AnimatePresence>
@@ -528,7 +528,7 @@ export default function DemoApplyPage() {
                 <div className="mt-8 space-y-3">
                   <motion.button type="button" onClick={next}
                     whileHover={{ scale: 1.015 }} whileTap={{ scale: 0.985 }}
-                    className="w-full py-4 rounded-xl bg-copper text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-copper-dark cursor-pointer shadow-lg shadow-copper/15">
+                    className="w-full py-4 rounded-xl bg-gold text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-gold cursor-pointer shadow-lg shadow-gold/15">
                     {step === 2 ? "Submit Application" : "Continue"}
                   </motion.button>
                   {step > 0 && (
@@ -547,7 +547,7 @@ export default function DemoApplyPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1.2 }}
-                    className="w-full py-4 rounded-xl bg-forest text-white font-semibold text-base tracking-wide hover:bg-forest-dark transition-colors cursor-pointer"
+                    className="w-full py-4 rounded-xl bg-black text-white font-semibold text-base tracking-wide hover:bg-black transition-colors cursor-pointer"
                   >
                     View Dashboard
                   </motion.button>
@@ -569,7 +569,7 @@ export default function DemoApplyPage() {
             <div className="mb-8">
               <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-copper rounded-full"
+                  className="h-full bg-gold rounded-full"
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 />
@@ -583,16 +583,16 @@ export default function DemoApplyPage() {
                 <motion.p key={`m-label-${step}`}
                   initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.2 }}
-                  className="text-xs uppercase tracking-[0.15em] text-copper font-medium mb-3">
+                  className="text-xs uppercase tracking-[0.15em] text-gold font-medium mb-3">
                   {STEP_SUBTITLES[step]}
                 </motion.p>
               </AnimatePresence>
-              <div className="w-8 h-px bg-copper/40 mb-3" />
+              <div className="w-8 h-px bg-gold/40 mb-3" />
               <AnimatePresence mode="wait">
                 <motion.h2 key={`m-title-${step}`}
                   initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.2, delay: 0.05 }}
-                  className="font-serif text-2xl font-semibold text-dark">
+                  className="font-serif text-2xl font-semibold text-black">
                   {STEP_TITLES[step]}
                 </motion.h2>
               </AnimatePresence>
@@ -613,7 +613,7 @@ export default function DemoApplyPage() {
             <div className="mt-8 space-y-3">
               <motion.button type="button" onClick={next}
                 whileHover={{ scale: 1.015 }} whileTap={{ scale: 0.985 }}
-                className="w-full py-4 rounded-xl bg-copper text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-copper-dark cursor-pointer shadow-lg shadow-copper/15">
+                className="w-full py-4 rounded-xl bg-gold text-white font-semibold text-base tracking-wide transition-colors duration-200 hover:bg-gold cursor-pointer shadow-lg shadow-gold/15">
                 {step === 2 ? "Submit Application" : "Continue"}
               </motion.button>
               {step > 0 && (
@@ -632,7 +632,7 @@ export default function DemoApplyPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2 }}
-                className="w-full py-4 rounded-xl bg-forest text-white font-semibold text-base tracking-wide hover:bg-forest-dark transition-colors cursor-pointer"
+                className="w-full py-4 rounded-xl bg-black text-white font-semibold text-base tracking-wide hover:bg-black transition-colors cursor-pointer"
               >
                 View Dashboard
               </motion.button>

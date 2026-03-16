@@ -17,10 +17,10 @@ interface ButtonProps {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-copper text-white hover:bg-copper-dark active:bg-copper-dark shadow-lg shadow-copper/20 hover:shadow-copper/30",
+    "bg-gold text-white hover:bg-gold active:bg-gold shadow-lg shadow-gold/20 hover:shadow-gold/30",
   secondary:
     "bg-transparent border-2 border-white text-white hover:bg-white/10 active:bg-white/15",
-  dark: "bg-forest text-white hover:bg-forest-dark active:bg-forest-dark shadow-lg shadow-forest/20",
+  dark: "bg-black text-white hover:bg-black active:bg-black shadow-lg shadow-black/20",
 };
 
 export default function Button({
