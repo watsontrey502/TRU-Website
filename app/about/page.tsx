@@ -43,7 +43,7 @@ export default function AboutPage() {
     {
       num: "03",
       title: "Attend",
-      desc: "Browse the calendar and RSVP to events at Nashville\u2019s best venues. Every event has a balanced guest list, guided icebreakers, and a format designed so you meet everyone in the room. Show up solo \u2014 that\u2019s the whole point.",
+      desc: "Browse the calendar and RSVP to events at Nashville\u2019s best venues. Every event has a balanced guest list, guided icebreakers, and a format designed so you meet everyone in the room. Come alone or bring a friend.",
     },
     {
       num: "04",

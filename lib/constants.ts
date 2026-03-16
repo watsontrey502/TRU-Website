@@ -217,7 +217,7 @@ export const faqData = [
   {
     question: "Can I attend events alone?",
     answer:
-      "Absolutely \u2014 and most people do. Our events are specifically designed for solo attendees. The icebreaker structure and guided rotations mean you\u2019ll meet everyone naturally. Coming alone is the whole point.",
+      "Absolutely \u2014 and most people do. Our events are designed so you\u2019ll meet everyone naturally through guided icebreakers and rotations. You can also bring a friend if that\u2019s more your speed.",
   },
   {
     question: "What\u2019s the age range?",

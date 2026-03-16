@@ -18,7 +18,7 @@ const faqs = [
   {
     question: "Can I come alone?",
     answer:
-      "Absolutely \u2014 and most people do. Our events are specifically designed for solo attendees. The icebreaker structure and guided rotations mean you\u2019ll meet everyone naturally without any awkward standing-around-alone moments. Coming solo is the whole point.",
+      "Absolutely \u2014 and most people do. Our events are designed so you\u2019ll meet everyone naturally through guided icebreakers and rotations. You can also bring a friend if that\u2019s more your speed.",
   },
   {
     question: "What\u2019s Double Take?",

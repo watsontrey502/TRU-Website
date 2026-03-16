@@ -45,7 +45,7 @@ export default function Home() {
     {
       num: "03",
       title: "Attend",
-      desc: "Browse the calendar and RSVP to curated events at Nashville\u2019s best venues. Show up solo \u2014 that\u2019s the point.",
+      desc: "Browse the calendar and RSVP to curated events at Nashville\u2019s best venues. Come alone or bring a friend \u2014 either way, you\u2019ll meet everyone.",
     },
     {
       num: "04",
