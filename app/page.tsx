@@ -85,8 +85,8 @@ export default function Home() {
           transition={{ duration: 25, ease: "linear" }}
         >
           <Image
-            src="https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1400&q=85"
-            alt="Candlelit evening at a Nashville venue"
+            src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1400&q=85"
+            alt="Friends socializing at an evening event"
             fill
             className="object-cover"
             priority
