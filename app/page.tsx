@@ -1,42 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { testimonials } from "@/lib/constants";
-
-/* ── Animated counter ──────────────────────────────────────────── */
-
-function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (v) => Math.round(v));
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          animate(count, target, { duration: 2, ease: "easeOut" });
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [count, target, hasAnimated]);
-
-  useEffect(() => {
-    const unsub = rounded.on("change", (v) => {
-      if (ref.current) ref.current.textContent = `${v}${suffix}`;
-    });
-    return unsub;
-  }, [rounded, suffix]);
-
-  return <span ref={ref}>0{suffix}</span>;
-}
+import { motion } from "framer-motion";
 
 /* ── Fade-in-up wrapper ────────────────────────────────────────── */
 
@@ -62,94 +27,6 @@ function FadeUp({
   );
 }
 
-/* ── Waitlist form ─────────────────────────────────────────────── */
-
-function WaitlistForm() {
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!firstName.trim() || !email.trim()) return;
-    setLoading(true);
-    try {
-      await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: firstName.trim(),
-          lastName: "",
-          email: email.trim(),
-          instagram: instagram.trim() || undefined,
-        }),
-      });
-      setSubmitted(true);
-    } catch {
-      // silent fail — data may still be in Supabase
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center py-12"
-      >
-        <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-gold">
-            <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <h3 className="font-serif text-2xl font-bold text-white mb-2">You&apos;re on the list.</h3>
-        <p className="text-white/50 text-sm">We&apos;ll be in touch soon.</p>
-      </motion.div>
-    );
-  }
-
-  const inputClass =
-    "w-full rounded-xl bg-white/[0.04] border border-white/[0.08] py-4 px-4 text-white text-[15px] placeholder:text-white/[0.22] focus:outline-none focus:border-gold focus:shadow-[0_0_0_3px_rgba(200,169,126,0.15)] transition-all";
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="text"
-        placeholder="First name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        required
-        className={inputClass}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className={inputClass}
-      />
-      <input
-        type="text"
-        placeholder="Instagram (optional)"
-        value={instagram}
-        onChange={(e) => setInstagram(e.target.value)}
-        className={inputClass}
-      />
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-4 rounded-xl text-white font-medium text-[15px] bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-      >
-        {loading ? "Submitting..." : "Join the Waitlist"}
-      </button>
-    </form>
-  );
-}
 
 /* ═════════════════════════════════════════════════════════════════ */
 
@@ -248,27 +125,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 2. SOCIAL PROOF BAR ═══ */}
-      <section className="py-6 md:py-8">
-        <div className="max-w-6xl mx-auto px-6 md:px-8">
-          <FadeUp>
-            <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 text-center bg-gradient-to-r from-gold/[0.04] via-transparent to-gold/[0.04]">
-              <p className="text-white/60 text-sm md:text-base">
-                <span className="text-gold font-semibold">
-                  <AnimatedCounter target={847} />
-                </span>
-                {" people on the waitlist "}
-                <span className="text-white/30 mx-2">&middot;</span>
-                {" "}
-                <span className="text-gold font-semibold">
-                  <AnimatedCounter target={37} suffix="%" />
-                </span>
-                {" acceptance rate"}
-              </p>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
 
       {/* ═══ 3. STAT CARDS ═══ */}
       <section className="py-8 md:py-12">
@@ -364,40 +220,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 7. TESTIMONIALS ═══ */}
+      {/* ═══ 7. WHY TRÜ ═══ */}
       <section className="py-20 md:py-32">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp className="mb-16">
             <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
-              From our members
+              Why TR&Uuml;
             </p>
             <h2 className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">
-              What they&apos;re saying.
+              What makes this different.
             </h2>
           </FadeUp>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {testimonials.map((t, i) => (
-              <FadeUp key={t.name} delay={i * 0.12}>
+            {[
+              {
+                title: "It\u2019s not a dating event",
+                desc: "It\u2019s a social club where everyone happens to be single. The vibe is a great night out \u2014 not a mixer.",
+              },
+              {
+                title: "Every room is curated",
+                desc: "We review every application and balance every guest list. The result is a room full of people you\u2019d actually want to meet.",
+              },
+              {
+                title: "No pressure, real follow-up",
+                desc: "Double Take lets you privately share interest after the event. If it\u2019s mutual, we connect you. No awkward exchanges in the moment.",
+              },
+            ].map((item, i) => (
+              <FadeUp key={item.title} delay={i * 0.12}>
                 <div className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-6 md:p-8 flex flex-col h-full">
-                  <p className="text-white/60 italic text-[15px] leading-relaxed flex-1">
-                    &ldquo;{t.quote}&rdquo;
+                  <h3 className="text-white font-semibold text-lg mb-3">{item.title}</h3>
+                  <p className="text-white/50 text-[15px] leading-relaxed">
+                    {item.desc}
                   </p>
-                  <div className="flex items-center gap-3 mt-6 pt-6 border-t border-white/[0.06]">
-                    <Image
-                      src={t.avatar}
-                      alt={t.name}
-                      width={36}
-                      height={36}
-                      className="rounded-full object-cover"
-                    />
-                    <div>
-                      <p className="text-white text-sm font-medium">
-                        {t.name}, {t.age}
-                      </p>
-                      <p className="text-white/30 text-xs">{t.caption}</p>
-                    </div>
-                  </div>
                 </div>
               </FadeUp>
             ))}
@@ -405,22 +260,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 8. WAITLIST CTA ═══ */}
+      {/* ═══ 8. CTA ═══ */}
       <section className="py-20 md:py-32">
-        <div className="max-w-xl mx-auto px-6 md:px-8">
+        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
           <FadeUp>
-            <div className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-8 md:p-12">
-              <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
-                Founding Members
-              </p>
-              <h2 className="font-serif text-2xl md:text-3xl font-bold text-white mb-3 leading-snug">
-                Join the Nashville waitlist.
-              </h2>
-              <p className="text-white/50 text-sm mb-8 leading-relaxed">
-                We&apos;re launching with a small founding class. Apply now to be first in line for events, early pricing, and the Double Take beta.
-              </p>
-              <WaitlistForm />
-            </div>
+            <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-5">
+              Now accepting applications
+            </p>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
+              Ready to meet interesting people?
+            </h2>
+            <p className="text-white/50 text-base md:text-lg mb-10 max-w-md mx-auto">
+              Apply to join Nashville&apos;s members-only social club. It takes about 2 minutes.
+            </p>
+            <a
+              href="/apply"
+              className="inline-flex items-center justify-center px-10 py-4 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_24px_rgba(200,169,126,0.25)]"
+            >
+              Apply to Join
+            </a>
           </FadeUp>
         </div>
       </section>

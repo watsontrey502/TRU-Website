@@ -48,7 +48,7 @@ export default function AboutPage() {
     {
       num: "04",
       title: "Double Take",
-      desc: "After the event, open the app and tell us who caught your eye. If the feeling is mutual, we\u2019ll introduce you. No awkward DMs, no guessing. Just mutual interest, confirmed.",
+      desc: "After the event, tell us who caught your eye. If the feeling is mutual, we\u2019ll introduce you privately. No awkward DMs, no guessing. Just mutual interest, confirmed.",
     },
   ];
 
@@ -189,7 +189,7 @@ export default function AboutPage() {
               </h2>
               <div className="max-w-2xl space-y-4">
                 <p className="text-white/50 text-[15px] md:text-base leading-relaxed">
-                  After every event, you have 48 hours to open the app and select up to 3 people
+                  After every event, you have 48 hours to select up to 3 people
                   who caught your eye. No one sees your selections unless they picked you too.
                 </p>
                 <p className="text-white/50 text-[15px] md:text-base leading-relaxed">

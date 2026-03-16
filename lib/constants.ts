@@ -182,43 +182,6 @@ export const neighborhoods = [
   },
 ];
 
-export const testimonials = [
-  {
-    quote:
-      "I went expecting a dating event and got the best night out I\u2019ve had in Nashville. The people were incredible.",
-    name: "Sarah",
-    age: 30,
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80",
-    caption: "Founding member",
-  },
-  {
-    quote:
-      "Double Take is genius. No awkward number exchanges \u2014 just a quiet way to say \u2018I\u2019d like to see you again.\u2019",
-    name: "James",
-    age: 31,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80",
-    caption: "Founding member",
-  },
-  {
-    quote:
-      "I told my friends \u2018come to this members-only thing at L.A. Jackson\u2019 \u2014 not \u2018come to a dating event.\u2019 That\u2019s why it works.",
-    name: "Olivia",
-    age: 27,
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80",
-    caption: "Founding member",
-  },
-];
-
-export const pressLogos = [
-  "Nashville Scene",
-  "StyleBlueprint",
-  "The Tennessean",
-  "Nashville Lifestyles",
-  "NashvilleGuru",
-];
 
 export const faqData = [
   {

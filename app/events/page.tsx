@@ -35,12 +35,12 @@ const EVENTS = [
     id: "rooftop-social",
     name: "Rooftop Social",
     venue: "L.A. Jackson",
-    date: "Thursday, April 16",
+    date: "Coming soon",
     time: "7 PM",
     guests: "40 guests",
     detail: "50/50",
     dress: "Smart casual",
-    spotsLeft: 12,
+    spotsLeft: null,
     featured: true,
     image:
       "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=85",
@@ -49,7 +49,7 @@ const EVENTS = [
     id: "wine-night",
     name: "Wine Night",
     venue: "Bastion",
-    date: "Saturday, April 26",
+    date: "Coming soon",
     time: "8 PM",
     guests: "20 guests",
     detail: "Intimate",
@@ -63,7 +63,7 @@ const EVENTS = [
     id: "dinner-series",
     name: "Dinner Series",
     venue: "Henrietta Red",
-    date: "Friday, May 9",
+    date: "Coming soon",
     time: "7:30 PM",
     guests: "12 guests",
     detail: "Long table",
@@ -77,7 +77,7 @@ const EVENTS = [
     id: "coffee-hike",
     name: "Coffee + Hike",
     venue: "Radnor Lake",
-    date: "Sunday, May 18",
+    date: "Coming soon",
     time: "8:30 AM",
     guests: "24 guests",
     detail: "Athleisure",
@@ -155,15 +155,6 @@ export default function EventsPage() {
 
               {/* Content */}
               <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
-                {/* Spots left badge */}
-                {featured.spotsLeft && (
-                  <div className="mb-4">
-                    <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-semibold tracking-wide bg-gradient-to-r from-gold to-[#b8935e] text-black">
-                      {featured.spotsLeft} spots left
-                    </span>
-                  </div>
-                )}
-
                 <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
                   {featured.name}
                 </h2>
