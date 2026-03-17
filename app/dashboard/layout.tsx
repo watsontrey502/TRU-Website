@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-[#0C0C0D] flex items-center justify-center pt-20">
         <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -59,10 +59,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <ToastProvider>
-    <div className="min-h-screen bg-cream pt-20">
+    <div className="min-h-screen bg-[#0C0C0D] pt-20">
       {/* Desktop sidebar */}
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col md:pt-20">
-        <div className="flex flex-1 flex-col border-r border-gray-200 bg-white px-4 py-8">
+        <div className="flex flex-1 flex-col border-r border-white/10 bg-[#131315] px-4 py-8">
           <div className="px-3 mb-8">
             <p className="text-xs uppercase tracking-[0.15em] text-gold font-medium">
               Member Dashboard
@@ -78,8 +78,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href={item.href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     active
-                      ? "bg-black/5 text-black"
-                      : "text-stone hover:bg-gray-50 hover:text-black"
+                      ? "bg-white/10 text-champagne"
+                      : "text-[#BDB8B2] hover:bg-white/5 hover:text-champagne"
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Admin section */}
             {isAdmin && (
               <>
-                <div className="pt-4 mt-4 border-t border-gray-100">
+                <div className="pt-4 mt-4 border-t border-white/10">
                   <p className="px-3 mb-2 text-[10px] uppercase tracking-[0.15em] text-gold font-medium">
                     Admin
                   </p>
@@ -106,8 +106,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       href={item.href}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                         active
-                          ? "bg-black/5 text-black"
-                          : "text-stone hover:bg-gray-50 hover:text-black"
+                          ? "bg-white/10 text-champagne"
+                          : "text-[#BDB8B2] hover:bg-white/5 hover:text-champagne"
                       }`}
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-stone hover:bg-gray-50 hover:text-black transition-all cursor-pointer"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[#BDB8B2] hover:bg-white/5 hover:text-champagne transition-all cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -134,7 +134,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Mobile bottom nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-200 bottom-nav-safe">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#131315] border-t border-white/10 bottom-nav-safe">
         <div className="flex justify-around py-2">
           {navItems.map((item) => {
             const active = pathname === item.href;
@@ -143,7 +143,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium transition-colors ${
-                  active ? "text-black" : "text-stone"
+                  active ? "text-champagne" : "text-[#BDB8B2]"
                 }`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +155,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
           <button
             onClick={handleSignOut}
-            className="flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium text-stone cursor-pointer"
+            className="flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium text-[#BDB8B2] cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

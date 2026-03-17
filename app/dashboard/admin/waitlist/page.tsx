@@ -37,26 +37,26 @@ const STATUS_CONFIG: Record<
 > = {
   pending: {
     label: "Pending",
-    bg: "bg-amber-50",
-    text: "text-amber-700",
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
     dot: "bg-amber-400",
   },
   approved: {
     label: "Approved",
-    bg: "bg-emerald-50",
-    text: "text-emerald-700",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
     dot: "bg-emerald-400",
   },
   waitlisted: {
     label: "Waitlisted",
-    bg: "bg-blue-50",
-    text: "text-blue-700",
+    bg: "bg-blue-500/10",
+    text: "text-blue-400",
     dot: "bg-blue-400",
   },
   rejected: {
     label: "Rejected",
-    bg: "bg-red-50",
-    text: "text-red-700",
+    bg: "bg-red-500/10",
+    text: "text-red-400",
     dot: "bg-red-400",
   },
 };
@@ -328,10 +328,10 @@ export default function AdminWaitlistPage() {
     <>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-1">
+        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-champagne mb-1">
           Applications
         </h1>
-        <p className="text-stone text-sm">
+        <p className="text-[#BDB8B2] text-sm">
           Manage waitlist submissions and review applicants.
         </p>
       </div>
@@ -363,13 +363,13 @@ export default function AdminWaitlistPage() {
               }}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
                 active
-                  ? "bg-black text-white"
-                  : "bg-gray-100 text-stone hover:bg-gray-200"
+                  ? "bg-gold text-black"
+                  : "bg-white/5 text-[#BDB8B2] hover:bg-white/10"
               }`}
             >
               {tab.label}
               <span
-                className={`text-xs ${active ? "text-white/60" : "text-stone"}`}
+                className={`text-xs ${active ? "text-black/50" : "text-[#BDB8B2]/60"}`}
               >
                 {count}
               </span>
@@ -385,20 +385,20 @@ export default function AdminWaitlistPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name, email, or neighborhood..."
-          className="w-full max-w-md rounded-xl border border-gray-200 bg-white py-2.5 px-4 text-sm text-black placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20"
+          className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 py-2.5 px-4 text-sm text-champagne placeholder:text-[#BDB8B2]/40 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20"
         />
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      <div className="bg-[#131315] rounded-2xl border border-white/10 overflow-hidden">
         {/* Header */}
-        <div className="hidden md:grid md:grid-cols-[40px_1fr_1fr_100px_100px_80px] gap-3 px-4 py-3 border-b border-gray-100 text-xs uppercase tracking-wide text-stone font-medium items-center">
+        <div className="hidden md:grid md:grid-cols-[40px_1fr_1fr_100px_100px_80px] gap-3 px-4 py-3 border-b border-white/10 text-xs uppercase tracking-wide text-[#BDB8B2] font-medium items-center">
           <div className="flex items-center justify-center">
             <input
               type="checkbox"
               checked={allVisibleSelected}
               onChange={toggleSelectAll}
-              className="w-4 h-4 rounded border-gray-300 text-black focus:ring-gold accent-black cursor-pointer"
+              className="w-4 h-4 rounded border-white/20 text-gold focus:ring-gold accent-gold cursor-pointer"
             />
           </div>
           <SortHeader
@@ -427,7 +427,7 @@ export default function AdminWaitlistPage() {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="p-8 text-center text-stone text-sm">
+          <div className="p-8 text-center text-[#BDB8B2] text-sm">
             {search ? "No matches found." : "No applications yet."}
           </div>
         ) : (
@@ -439,8 +439,8 @@ export default function AdminWaitlistPage() {
             return (
               <div
                 key={s.id}
-                className={`group border-b border-gray-50 transition-colors ${
-                  isSelected ? "bg-blue-50/40" : "hover:bg-gray-50/50"
+                className={`group border-b border-white/5 transition-colors ${
+                  isSelected ? "bg-gold/5" : "hover:bg-white/[0.03]"
                 }`}
               >
                 <div className="px-4 py-3 md:grid md:grid-cols-[40px_1fr_1fr_100px_100px_80px] gap-3 items-center">
@@ -453,7 +453,7 @@ export default function AdminWaitlistPage() {
                         e.stopPropagation();
                         toggleSelect(s.id);
                       }}
-                      className="w-4 h-4 rounded border-gray-300 text-black focus:ring-gold accent-black cursor-pointer"
+                      className="w-4 h-4 rounded border-white/20 text-gold focus:ring-gold accent-gold cursor-pointer"
                     />
                   </div>
 
@@ -462,15 +462,15 @@ export default function AdminWaitlistPage() {
                     onClick={() => setDetailId(s.id)}
                     className="text-left cursor-pointer"
                   >
-                    <span className="font-medium text-black text-sm hover:underline">
+                    <span className="font-medium text-champagne text-sm hover:underline">
                       {s.first_name} {s.last_name}
                     </span>
                     <div className="flex items-center gap-2 mt-0.5">
                       {s.gender && (
-                        <span className="text-xs text-stone">{s.gender}</span>
+                        <span className="text-xs text-[#BDB8B2]">{s.gender}</span>
                       )}
                       {s.age && (
-                        <span className="text-xs text-stone">{s.age}</span>
+                        <span className="text-xs text-[#BDB8B2]">{s.age}</span>
                       )}
                       {s.instagram && (
                         <a
@@ -490,9 +490,9 @@ export default function AdminWaitlistPage() {
                   </button>
 
                   {/* Contact */}
-                  <div className="text-sm text-stone mt-1 md:mt-0">
+                  <div className="text-sm text-[#BDB8B2] mt-1 md:mt-0">
                     <div className="truncate">{s.email}</div>
-                    {s.phone && <div className="text-xs">{s.phone}</div>}
+                    {s.phone && <div className="text-xs text-[#BDB8B2]/60">{s.phone}</div>}
                   </div>
 
                   {/* Status badge */}
@@ -506,7 +506,7 @@ export default function AdminWaitlistPage() {
                   </div>
 
                   {/* Date */}
-                  <div className="text-xs text-stone mt-1 md:mt-0 whitespace-nowrap">
+                  <div className="text-xs text-[#BDB8B2]/60 mt-1 md:mt-0 whitespace-nowrap">
                     {formatDate(s.created_at)}
                   </div>
 
@@ -563,7 +563,7 @@ export default function AdminWaitlistPage() {
                       </QuickAction>
                     )}
                     {isUpdating && (
-                      <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-gold/40 border-t-transparent rounded-full animate-spin" />
                     )}
                   </div>
                 </div>
@@ -643,7 +643,7 @@ export default function AdminWaitlistPage() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed right-0 top-0 bottom-0 w-full md:w-[420px] bg-white z-50 overflow-y-auto shadow-2xl"
+              className="fixed right-0 top-0 bottom-0 w-full md:w-[420px] bg-[#1A1A1D] z-50 overflow-y-auto shadow-2xl"
             >
               <DetailPanel
                 submission={detailSubmission}
@@ -684,26 +684,26 @@ export default function AdminWaitlistPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-2xl p-6 w-[90%] max-w-md shadow-2xl"
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-[#1A1A1D] border border-white/10 rounded-2xl p-6 w-[90%] max-w-md shadow-2xl"
             >
-              <h3 className="font-serif text-lg font-semibold text-black mb-2">
+              <h3 className="font-serif text-lg font-semibold text-champagne mb-2">
                 Confirm Rejection
               </h3>
-              <p className="text-sm text-stone mb-1">
+              <p className="text-sm text-[#BDB8B2] mb-1">
                 Are you sure you want to reject{" "}
-                <span className="font-medium text-black">
+                <span className="font-medium text-champagne">
                   {confirmReject.names}
                 </span>
                 ?
               </p>
-              <p className="text-xs text-stone mb-6">
+              <p className="text-xs text-[#BDB8B2]/60 mb-6">
                 This will send a rejection email to the applicant
                 {confirmReject.ids.length > 1 ? "s" : ""}.
               </p>
               <div className="flex items-center justify-end gap-3">
                 <button
                   onClick={() => setConfirmReject(null)}
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-stone hover:bg-gray-100 transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-[#BDB8B2] hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -746,21 +746,21 @@ function StatCard({
     <div
       className={`rounded-2xl border px-4 py-4 ${
         highlight
-          ? "bg-amber-50 border-amber-200"
-          : "bg-white border-gray-100"
+          ? "bg-amber-500/10 border-amber-500/20"
+          : "bg-[#131315] border-white/10"
       }`}
     >
-      <p className="text-xs text-stone font-medium uppercase tracking-wide mb-1">
+      <p className="text-xs text-[#BDB8B2] font-medium uppercase tracking-wide mb-1">
         {label}
       </p>
       <p
         className={`text-2xl font-semibold ${
-          highlight ? "text-amber-700" : "text-black"
+          highlight ? "text-amber-400" : "text-champagne"
         }`}
       >
         {value}
       </p>
-      {sub && <p className="text-xs text-stone mt-0.5">{sub}</p>}
+      {sub && <p className="text-xs text-[#BDB8B2]/60 mt-0.5">{sub}</p>}
     </div>
   );
 }
@@ -782,7 +782,7 @@ function SortHeader({
   return (
     <button
       onClick={() => onSort(field)}
-      className="flex items-center gap-1 cursor-pointer hover:text-black transition-colors text-left"
+      className="flex items-center gap-1 cursor-pointer hover:text-champagne transition-colors text-left"
     >
       <span>{label}</span>
       {active && (
@@ -885,16 +885,16 @@ function DetailPanel({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h2 className="font-serif text-lg font-semibold text-black">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+        <h2 className="font-serif text-lg font-semibold text-champagne">
           Applicant Details
         </h2>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer"
+          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer"
         >
           <svg
-            className="w-5 h-5 text-stone"
+            className="w-5 h-5 text-[#BDB8B2]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -913,7 +913,7 @@ function DetailPanel({
       <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
         {/* Name + Status */}
         <div>
-          <h3 className="font-serif text-2xl font-semibold text-black">
+          <h3 className="font-serif text-2xl font-semibold text-champagne">
             {s.first_name} {s.last_name}
           </h3>
           <div className="flex items-center gap-3 mt-2">
@@ -923,9 +923,9 @@ function DetailPanel({
               <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
               {cfg.label}
             </span>
-            {s.age && <span className="text-sm text-stone">{s.age}</span>}
+            {s.age && <span className="text-sm text-[#BDB8B2]">{s.age}</span>}
             {s.gender && (
-              <span className="text-sm text-stone">{s.gender}</span>
+              <span className="text-sm text-[#BDB8B2]">{s.gender}</span>
             )}
           </div>
         </div>
@@ -933,8 +933,8 @@ function DetailPanel({
         {/* Contact */}
         <div className="space-y-2">
           <PanelLabel>Contact</PanelLabel>
-          <p className="text-sm text-black">{s.email}</p>
-          {s.phone && <p className="text-sm text-stone">{s.phone}</p>}
+          <p className="text-sm text-champagne">{s.email}</p>
+          {s.phone && <p className="text-sm text-[#BDB8B2]">{s.phone}</p>}
           {s.instagram && (
             <a
               href={`https://instagram.com/${s.instagram.replace("@", "")}`}
@@ -968,7 +968,7 @@ function DetailPanel({
         {s.interesting && (
           <div>
             <PanelLabel>What makes them interesting</PanelLabel>
-            <p className="text-sm text-black leading-relaxed mt-1">
+            <p className="text-sm text-champagne/80 leading-relaxed mt-1">
               {s.interesting}
             </p>
           </div>
@@ -977,7 +977,7 @@ function DetailPanel({
         {s.ideal_date && (
           <div>
             <PanelLabel>Ideal first date</PanelLabel>
-            <p className="text-sm text-black leading-relaxed mt-1">
+            <p className="text-sm text-champagne/80 leading-relaxed mt-1">
               {s.ideal_date}
             </p>
           </div>
@@ -995,22 +995,22 @@ function DetailPanel({
             }}
             placeholder="Add private notes about this applicant..."
             rows={3}
-            className="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 px-3 text-sm text-black placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20 resize-none"
+            className="mt-1 w-full rounded-xl border border-white/10 bg-white/5 py-2.5 px-3 text-sm text-champagne placeholder:text-[#BDB8B2]/30 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20 resize-none"
           />
-          <p className="text-[10px] text-stone mt-1">
+          <p className="text-[10px] text-[#BDB8B2]/40 mt-1">
             Auto-saves. Only visible to admins.
           </p>
         </div>
 
         {/* Dates */}
-        <div className="text-xs text-stone space-y-1 pt-2 border-t border-gray-100">
+        <div className="text-xs text-[#BDB8B2]/50 space-y-1 pt-2 border-t border-white/10">
           <p>Applied: {formatDateTime(s.created_at)}</p>
           {s.updated_at && <p>Last updated: {formatDateTime(s.updated_at)}</p>}
         </div>
       </div>
 
       {/* Actions Footer */}
-      <div className="px-6 py-4 border-t border-gray-100 flex flex-wrap gap-2">
+      <div className="px-6 py-4 border-t border-white/10 flex flex-wrap gap-2">
         {s.status !== "approved" && (
           <button
             onClick={() => onUpdateStatus("approved")}
@@ -1042,14 +1042,14 @@ function DetailPanel({
           <button
             onClick={() => onUpdateStatus("pending")}
             disabled={isUpdating}
-            className="px-4 py-2.5 rounded-xl text-sm font-medium bg-gray-100 hover:bg-gray-200 text-stone transition-colors cursor-pointer disabled:opacity-50"
+            className="px-4 py-2.5 rounded-xl text-sm font-medium bg-white/5 hover:bg-white/10 text-[#BDB8B2] transition-colors cursor-pointer disabled:opacity-50"
           >
             Reset
           </button>
         )}
         {isUpdating && (
           <div className="flex items-center justify-center px-2">
-            <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-gold/40 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
       </div>
@@ -1059,7 +1059,7 @@ function DetailPanel({
 
 function PanelLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs uppercase tracking-wide text-stone font-medium block">
+    <span className="text-xs uppercase tracking-wide text-gold font-medium block">
       {children}
     </span>
   );
@@ -1069,7 +1069,7 @@ function PanelDetail({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <PanelLabel>{label}</PanelLabel>
-      <p className="text-sm text-black mt-0.5">{value}</p>
+      <p className="text-sm text-champagne mt-0.5">{value}</p>
     </div>
   );
 }
