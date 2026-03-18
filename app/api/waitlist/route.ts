@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { resend, FROM_EMAIL } from "@/lib/email/resend";
-import { applicationReceived } from "@/lib/email/templates";
+import { applicationReceived, newApplicationAdmin } from "@/lib/email/templates";
 
 // Flodesk form reference: https://trudatingnashville.myflodesk.com/waitlist
 // Form ID: 6849f5cd1c9e3680be1db78b
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
       // Don't fail the request — still try Flodesk
     }
 
-    // ── 2. Send confirmation email via Resend ──────────────
+    // ── 2. Send confirmation email to applicant ───────────
     if (process.env.RESEND_API_KEY) {
       try {
         const { subject, html } = applicationReceived(firstName);
@@ -60,6 +60,27 @@ export async function POST(request: Request) {
       } catch (emailErr) {
         console.error("Resend email failed:", emailErr);
         // Non-fatal — data is safe in Supabase
+      }
+    }
+
+    // ── 3. Notify admin of new application ───────────────
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (process.env.RESEND_API_KEY && adminEmail) {
+      try {
+        const { subject, html } = newApplicationAdmin({
+          firstName, lastName, email, phone, age, gender,
+          instagram, neighborhood, work, heardFrom: heardFrom,
+          interesting, idealDate: idealDate, referralCode: referralCode,
+        });
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: adminEmail,
+          subject,
+          html,
+        });
+      } catch (adminEmailErr) {
+        console.error("Admin notification email failed:", adminEmailErr);
+        // Non-fatal
       }
     }
 

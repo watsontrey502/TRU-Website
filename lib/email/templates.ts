@@ -286,6 +286,73 @@ export function applicationWaitlisted(firstName: string) {
   };
 }
 
+export function newApplicationAdmin(data: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+  age?: string | null;
+  gender?: string | null;
+  instagram?: string | null;
+  neighborhood?: string | null;
+  work?: string | null;
+  heardFrom?: string | null;
+  interesting?: string | null;
+  idealDate?: string | null;
+  referralCode?: string | null;
+}) {
+  const name = `${data.firstName} ${data.lastName}`;
+
+  function infoRow(label: string, value: string | null | undefined) {
+    if (!value) return "";
+    return `
+      <tr>
+        <td style="padding:6px 12px 6px 0;font-size:12px;color:${BRAND.muted};text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap;vertical-align:top;">${label}</td>
+        <td style="padding:6px 0;font-size:14px;color:${BRAND.textBright};vertical-align:top;">${value}</td>
+      </tr>`;
+  }
+
+  return {
+    subject: `New Application: ${name}`,
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel("New Application")}
+        ${heading(name)}
+        ${paragraph(`A new application just came in. Here&rsquo;s the summary:`)}
+
+        ${highlightBox(`
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            ${infoRow("Email", data.email)}
+            ${infoRow("Phone", data.phone)}
+            ${infoRow("Age", data.age)}
+            ${infoRow("Gender", data.gender)}
+            ${infoRow("Instagram", data.instagram ? `<a href="https://instagram.com/${data.instagram.replace("@", "")}" style="color:${BRAND.gold};text-decoration:none;">@${data.instagram.replace("@", "")}</a>` : null)}
+            ${infoRow("Neighborhood", data.neighborhood)}
+            ${infoRow("Work", data.work)}
+            ${infoRow("Heard From", data.heardFrom)}
+            ${infoRow("Referral", data.referralCode)}
+          </table>
+        `)}
+
+        ${data.interesting ? `
+          <p style="margin:0 0 6px;font-size:11px;color:${BRAND.gold};letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">What makes them interesting</p>
+          <p style="margin:0 0 24px;font-size:14px;color:${BRAND.text};line-height:1.7;background:${BRAND.cardInner};border-radius:10px;padding:16px 20px;border:1px solid ${BRAND.border};">${data.interesting}</p>
+        ` : ""}
+
+        ${data.idealDate ? `
+          <p style="margin:0 0 6px;font-size:11px;color:${BRAND.gold};letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">Ideal first date</p>
+          <p style="margin:0 0 24px;font-size:14px;color:${BRAND.text};line-height:1.7;background:${BRAND.cardInner};border-radius:10px;padding:16px 20px;border:1px solid ${BRAND.border};">${data.idealDate}</p>
+        ` : ""}
+
+        ${goldButton("Review in Dashboard", "https://trudatingnashville.com/dashboard/admin/waitlist")}
+
+        ${divider()}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
 export function applicationRejected(firstName: string) {
   return {
     subject: "Update on your TRÜ application",
