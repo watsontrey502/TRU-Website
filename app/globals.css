@@ -76,3 +76,35 @@ body {
   animation: shimmer 3.5s ease-in-out infinite;
   pointer-events: none;
 }
+
+/* Marquee infinite scroll */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-sand));
+}
+
+/* 3D tilt card perspective */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+.tilt-card-inner {
+  transform: translateZ(20px);
+}

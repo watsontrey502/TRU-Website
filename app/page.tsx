@@ -1,15 +1,41 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
   useScroll,
   useTransform,
+  useMotionValue,
+  useSpring,
+  AnimatePresence,
 } from "framer-motion";
 
-/* ── Fade-in-up wrapper ────────────────────────────────────────── */
+/* ── Hero images for crossfade slideshow ─────────────────────── */
+
+const HERO_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1400&q=85",
+    alt: "Friends socializing at an evening event",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1470753937643-efeb931202a9?w=1400&q=85",
+    alt: "Elegant candlelit dinner table",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1400&q=85",
+    alt: "People laughing together at a cocktail bar",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=1400&q=85",
+    alt: "Stylish venue interior with warm lighting",
+  },
+];
+
+const CROSSFADE_DURATION = 6000; // ms per image
+
+/* ── Fade-in-up wrapper ──────────────────────────────────────── */
 
 function FadeUp({
   children,
@@ -33,7 +59,151 @@ function FadeUp({
   );
 }
 
-/* ── Parallax image section ────────────────────────────────────── */
+/* ── Split text reveal — letters animate in ──────────────────── */
+
+function SplitTextReveal({
+  text,
+  className = "",
+  delay = 0,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+}) {
+  return (
+    <motion.h1
+      initial="hidden"
+      animate="visible"
+      className={className}
+      aria-label={text}
+    >
+      {text.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          variants={{
+            hidden: { opacity: 0, y: 40, filter: "blur(12px)" },
+            visible: {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            },
+          }}
+          transition={{
+            duration: 0.6,
+            delay: delay + i * 0.04,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="inline-block"
+          style={{ whiteSpace: char === " " ? "pre" : undefined }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </motion.h1>
+  );
+}
+
+/* ── Scroll progress bar ─────────────────────────────────────── */
+
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  return (
+    <motion.div
+      className="scroll-progress fixed top-0 left-0 right-0 h-[2px] z-50"
+      style={{ scaleX }}
+    />
+  );
+}
+
+/* ── Infinite marquee ────────────────────────────────────────── */
+
+const MARQUEE_ITEMS = [
+  "CURATED",
+  "NASHVILLE",
+  "MEMBERS-ONLY",
+  "REAL CONNECTION",
+  "BEAUTIFUL VENUES",
+  "THE OFFLINE ERA",
+  "DOUBLE TAKE",
+  "NO AWKWARD ANYTHING",
+];
+
+function Marquee() {
+  return (
+    <div className="overflow-hidden py-8 md:py-12 border-y border-white/[0.06]">
+      <div className="marquee-track">
+        {/* Duplicate the list for seamless loop */}
+        {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+          <span
+            key={i}
+            className="flex items-center gap-8 px-8 text-[13px] md:text-[15px] font-medium tracking-[0.25em] uppercase whitespace-nowrap"
+          >
+            <span className="text-white/30">{item}</span>
+            <span className="text-gold/40 text-[8px]">&#10022;</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── 3D Tilt card ────────────────────────────────────────────── */
+
+function TiltCard({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+
+  const springRotateX = useSpring(rotateX, { stiffness: 300, damping: 20 });
+  const springRotateY = useSpring(rotateY, { stiffness: 300, damping: 20 });
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      rotateX.set(y * -10);
+      rotateY.set(x * 10);
+    },
+    [rotateX, rotateY]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    rotateX.set(0);
+    rotateY.set(0);
+  }, [rotateX, rotateY]);
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX: springRotateX,
+        rotateY: springRotateY,
+        transformPerspective: 800,
+      }}
+      className={`tilt-card ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ── Parallax image section ──────────────────────────────────── */
 
 function ParallaxImage({
   src,
@@ -70,35 +240,124 @@ function ParallaxImage({
   );
 }
 
+/* ── Staggered photo mosaic ──────────────────────────────────── */
+
+const MOSAIC_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80",
+    alt: "Fine dining atmosphere",
+    span: "md:col-span-2 md:row-span-2",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&q=80",
+    alt: "Craft cocktails",
+    span: "",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1529543544282-ea99407407c1?w=600&q=80",
+    alt: "Candlelit ambiance",
+    span: "",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80",
+    alt: "People celebrating together",
+    span: "md:col-span-2",
+  },
+];
+
+function PhotoMosaic() {
+  return (
+    <section className="py-20 md:py-32">
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
+        <FadeUp className="mb-14 md:mb-20">
+          <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase mb-4">
+            The Atmosphere
+          </p>
+          <h2 className="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">
+            Where the night takes you.
+          </h2>
+        </FadeUp>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          {MOSAIC_IMAGES.map((img, i) => (
+            <motion.div
+              key={img.alt}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.7,
+                delay: i * 0.12,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              className={`relative overflow-hidden rounded-xl ${img.span} ${
+                i === 0 ? "aspect-square" : i === 3 ? "aspect-[2/1]" : "aspect-[3/4]"
+              }`}
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ═════════════════════════════════════════════════════════════════ */
 
 export default function Home() {
+  /* ── Hero crossfade state ── */
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, CROSSFADE_DURATION);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
-      {/* ═══ 1. HERO — full viewport, cinematic ═══ */}
+      <ScrollProgress />
+
+      {/* ═══ 1. HERO — crossfading slideshow, cinematic ═══ */}
       <section className="relative min-h-[100vh] flex items-end overflow-hidden">
-        {/* Ken Burns slow zoom */}
-        <motion.div
-          className="absolute inset-0"
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.08 }}
-          transition={{ duration: 25, ease: "linear" }}
-        >
-          <Image
-            src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1400&q=85"
-            alt="Friends socializing at an evening event"
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-        </motion.div>
+        {/* Crossfading images with Ken Burns */}
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={currentImage}
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1.12 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              opacity: { duration: 1.5, ease: "easeInOut" },
+              scale: { duration: CROSSFADE_DURATION / 1000, ease: "linear" },
+            }}
+          >
+            <Image
+              src={HERO_IMAGES[currentImage].src}
+              alt={HERO_IMAGES[currentImage].alt}
+              fill
+              className="object-cover"
+              priority={currentImage === 0}
+              sizes="100vw"
+            />
+          </motion.div>
+        </AnimatePresence>
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20 z-[1]" />
 
         {/* Film grain */}
-        <div className="grain absolute inset-0 z-[1]" />
+        <div className="grain absolute inset-0 z-[2]" />
 
         {/* Hero content */}
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 md:px-8 pb-20 md:pb-28">
@@ -111,28 +370,26 @@ export default function Home() {
             Nashville&apos;s members-only social club
           </motion.p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30, scale: 0.96, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+          <SplitTextReveal
+            text="The Offline Era."
+            delay={0.5}
             className="font-serif text-[52px] md:text-[72px] lg:text-[80px] font-bold text-white leading-[1.02] tracking-tight max-w-[12ch]"
-          >
-            The Offline Era.
-          </motion.h1>
+          />
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.65 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
             className="mt-6 text-[16px] md:text-[18px] text-white/50 max-w-md leading-relaxed font-sans"
           >
-            Curated events for interesting people who happen to be single. Real venues. Real conversation. Real connection.
+            Curated events for interesting people who happen to be single. Real
+            venues. Real conversation. Real connection.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 1.4 }}
             className="mt-10 flex flex-col sm:flex-row gap-3"
           >
             <Link
@@ -149,7 +406,26 @@ export default function Home() {
             </a>
           </motion.div>
         </div>
+
+        {/* Image indicator dots */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+          {HERO_IMAGES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentImage(i)}
+              aria-label={`Show image ${i + 1}`}
+              className={`h-1 rounded-full transition-all duration-500 ${
+                i === currentImage
+                  ? "w-8 bg-gold"
+                  : "w-2 bg-white/30 hover:bg-white/50"
+              }`}
+            />
+          ))}
+        </div>
       </section>
+
+      {/* ═══ MARQUEE — brand energy ═══ */}
+      <Marquee />
 
       {/* ═══ 2. MANIFESTO — bold brand statement ═══ */}
       <section className="py-24 md:py-36">
@@ -199,7 +475,8 @@ export default function Home() {
                 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                <span className="text-gold">A great night out</span> where everyone{" "}
+                <span className="text-gold">A great night out</span> where
+                everyone{" "}
                 happens to be single.
               </motion.span>
             </p>
@@ -207,7 +484,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 3. HOW IT WORKS — 2x2 grid ═══ */}
+      {/* ═══ 3. HOW IT WORKS — 2x2 grid with 3D tilt ═══ */}
       <section id="how-it-works" className="py-20 md:py-32">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp className="mb-14 md:mb-20">
@@ -243,19 +520,23 @@ export default function Home() {
               },
             ].map((step, i) => (
               <FadeUp key={step.num} delay={i * 0.08}>
-                <motion.div
-                  whileHover={{ scale: 1.02, borderColor: "rgba(200,169,126,0.25)" }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 flex items-start gap-5 cursor-default"
-                >
-                  <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
-                    <span className="text-gold font-semibold text-sm">{step.num}</span>
+                <TiltCard>
+                  <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 flex items-start gap-5 cursor-default hover:border-gold/20 transition-colors duration-300">
+                    <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
+                      <span className="text-gold font-semibold text-sm">
+                        {step.num}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold text-lg mb-1">
+                        {step.title}
+                      </h3>
+                      <p className="text-white/45 text-[14px] leading-relaxed">
+                        {step.desc}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-lg mb-1">{step.title}</h3>
-                    <p className="text-white/45 text-[14px] leading-relaxed">{step.desc}</p>
-                  </div>
-                </motion.div>
+                </TiltCard>
               </FadeUp>
             ))}
           </div>
@@ -283,7 +564,7 @@ export default function Home() {
         </div>
       </ParallaxImage>
 
-      {/* ═══ 5. WHY TRÜ — three pillars ═══ */}
+      {/* ═══ 5. WHY TRU — three pillars ═══ */}
       <section className="py-24 md:py-36">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <FadeUp className="mb-14 md:mb-20">
@@ -314,46 +595,30 @@ export default function Home() {
               },
             ].map((item, i) => (
               <FadeUp key={item.title} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ scale: 1.02, borderColor: "rgba(200,169,126,0.2)" }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-7 md:p-9 flex flex-col h-full cursor-default"
-                >
-                  <span className="text-gold text-lg mb-4">{item.icon}</span>
-                  <h3 className="text-white font-semibold text-[17px] mb-2.5">{item.title}</h3>
-                  <p className="text-white/45 text-[14px] leading-relaxed">
-                    {item.desc}
-                  </p>
-                </motion.div>
+                <TiltCard>
+                  <div className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-7 md:p-9 flex flex-col h-full cursor-default hover:border-gold/25 transition-colors duration-300">
+                    <span className="text-gold text-lg mb-4">{item.icon}</span>
+                    <h3 className="text-white font-semibold text-[17px] mb-2.5">
+                      {item.title}
+                    </h3>
+                    <p className="text-white/45 text-[14px] leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </TiltCard>
               </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ 6. SECOND IMAGE — group energy ═══ */}
-      <ParallaxImage
-        src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1400&q=85"
-        alt="Friends sharing a meal at a long table"
-        height="h-[50vh] md:h-[65vh]"
-      >
-        <div className="absolute bottom-0 left-0 right-0 z-10 max-w-6xl mx-auto px-6 md:px-8 pb-14 md:pb-20">
-          <FadeUp>
-            <motion.div
-              initial={{ width: 0 }}
-              whileInView={{ width: 40 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="h-0.5 bg-gradient-to-r from-gold to-sand mb-5"
-            />
-            <p className="font-serif text-2xl md:text-4xl font-bold text-white leading-snug max-w-md">
-              The kind of room you want to be in.
-            </p>
-          </FadeUp>
-        </div>
-      </ParallaxImage>
+      {/* ═══ 6. PHOTO MOSAIC — replaces second parallax ═══ */}
+      <PhotoMosaic />
 
-      {/* ═══ 7. FINAL CTA — full commitment ═══ */}
+      {/* ═══ 7. SECOND MARQUEE — momentum ═══ */}
+      <Marquee />
+
+      {/* ═══ 8. FINAL CTA — full commitment ═══ */}
       <section className="py-28 md:py-40">
         <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
           <FadeUp>
@@ -364,7 +629,8 @@ export default function Home() {
               Your next great night out starts here.
             </h2>
             <p className="text-white/45 text-base md:text-lg mb-12 max-w-lg mx-auto leading-relaxed">
-              Apply to join Nashville&apos;s most curated room. The application takes about 2 minutes.
+              Apply to join Nashville&apos;s most curated room. The application
+              takes about 2 minutes.
             </p>
             <Link
               href="/apply"
