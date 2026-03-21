@@ -244,7 +244,7 @@ function ParallaxImage({
 
 const MOSAIC_IMAGES = [
   {
-    src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80",
+    src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=85",
     alt: "Fine dining atmosphere",
     span: "md:col-span-2 md:row-span-2",
   },
@@ -254,18 +254,19 @@ const MOSAIC_IMAGES = [
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1529543544282-ea99407407c1?w=600&q=80",
-    alt: "Candlelit ambiance",
+    src: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&q=80",
+    alt: "Rooftop drinks at golden hour",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80",
-    alt: "People celebrating together",
+    src: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&q=80",
+    alt: "Friends sharing a great night out",
     span: "md:col-span-2",
   },
 ];
 
 function PhotoMosaic() {
+  const captions = ["The Table", "The Drinks", "The Rooftop", "The Company"];
   return (
     <section className="py-20 md:py-32">
       <div className="max-w-6xl mx-auto px-6 md:px-8">
@@ -290,18 +291,23 @@ function PhotoMosaic() {
                 delay: i * 0.12,
                 ease: [0.25, 0.1, 0.25, 1],
               }}
-              className={`relative overflow-hidden rounded-xl ${img.span} ${
-                i === 0 ? "aspect-square" : i === 3 ? "aspect-[2/1]" : "aspect-[3/4]"
+              className={`group relative overflow-hidden rounded-xl ${img.span} ${
+                i === 0 ? "aspect-square" : i === 3 ? "aspect-[2.2/1]" : "aspect-[3/4]"
               }`}
             >
               <Image
                 src={img.src}
                 alt={img.alt}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 50vw, 25vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                sizes={i === 0 || i === 3 ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 25vw"}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
+                <p className="text-white/90 text-[11px] md:text-xs font-medium tracking-[0.15em] uppercase">
+                  {captions[i]}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -428,8 +434,21 @@ export default function Home() {
       <Marquee />
 
       {/* ═══ 2. MANIFESTO — bold brand statement ═══ */}
-      <section className="py-24 md:py-36">
-        <div className="max-w-4xl mx-auto px-6 md:px-8 text-center">
+      <section className="relative py-24 md:py-36 overflow-hidden">
+        {/* Large watermark for depth */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5 }}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+        >
+          <span className="font-serif text-[180px] md:text-[280px] lg:text-[360px] font-bold text-white/[0.02] tracking-tight">
+            TR&Uuml;
+          </span>
+        </motion.div>
+
+        <div className="relative max-w-4xl mx-auto px-6 md:px-8 text-center">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -500,35 +519,45 @@ export default function Home() {
             {[
               {
                 num: "01",
+                icon: "✎",
                 title: "Apply",
                 desc: "Tell us what makes you interesting. It takes about 2 minutes.",
               },
               {
                 num: "02",
+                icon: "✓",
                 title: "Get Approved",
                 desc: "We curate every guest list. You\u2019ll hear back within 48 hours.",
               },
               {
                 num: "03",
+                icon: "♦",
                 title: "Attend",
                 desc: "RSVP to events at Nashville\u2019s best venues. Come alone or bring a friend.",
               },
               {
                 num: "04",
+                icon: "♡",
                 title: "Double Take",
                 desc: "Tell us who caught your eye. If it\u2019s mutual, we\u2019ll introduce you.",
               },
             ].map((step, i) => (
               <FadeUp key={step.num} delay={i * 0.08}>
                 <TiltCard>
-                  <div className="rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 flex items-start gap-5 cursor-default hover:border-gold/20 transition-colors duration-300">
-                    <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center">
-                      <span className="text-gold font-semibold text-sm">
-                        {step.num}
+                  <div className="group/card rounded-2xl bg-dark-glass border border-dark-border p-6 md:p-8 flex items-start gap-5 cursor-default hover:border-gold/20 transition-all duration-300 relative overflow-hidden">
+                    {/* Subtle corner glow on hover */}
+                    <div className="absolute -top-12 -right-12 w-24 h-24 bg-gold/0 group-hover/card:bg-gold/[0.06] rounded-full blur-2xl transition-all duration-500" />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-gold/5 flex items-center justify-center border border-gold/10">
+                      <span className="text-gold text-lg">
+                        {step.icon}
                       </span>
                     </div>
-                    <div>
-                      <h3 className="text-white font-semibold text-lg mb-1">
+                    <div className="relative">
+                      <div className="flex items-center gap-3 mb-1.5">
+                        <span className="text-gold/40 text-[11px] font-mono tracking-wider">{step.num}</span>
+                        <div className="w-6 h-px bg-gold/20" />
+                      </div>
+                      <h3 className="text-white font-semibold text-lg mb-1.5">
                         {step.title}
                       </h3>
                       <p className="text-white/45 text-[14px] leading-relaxed">
@@ -579,26 +608,37 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {[
               {
-                icon: "\u2726",
+                num: "01",
                 title: "Not a dating event",
                 desc: "A social club where everyone happens to be single. The vibe is a great night out \u2014 not a mixer with name tags.",
               },
               {
-                icon: "\u2726",
+                num: "02",
                 title: "Every room is curated",
                 desc: "We review every application and balance every guest list. Interesting people, great ratio, no randos.",
               },
               {
-                icon: "\u2726",
+                num: "03",
                 title: "No pressure. Real follow-up.",
                 desc: "Double Take lets you privately share interest after the event. If it\u2019s mutual, we connect you. No awkward anything.",
               },
             ].map((item, i) => (
               <FadeUp key={item.title} delay={i * 0.1}>
                 <TiltCard>
-                  <div className="rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-7 md:p-9 flex flex-col h-full cursor-default hover:border-gold/25 transition-colors duration-300">
-                    <span className="text-gold text-lg mb-4">{item.icon}</span>
-                    <h3 className="text-white font-semibold text-[17px] mb-2.5">
+                  <div className="group/why rounded-2xl bg-gradient-to-b from-gold/[0.06] to-transparent border border-gold/10 p-7 md:p-9 flex flex-col h-full cursor-default hover:border-gold/25 transition-all duration-300 relative overflow-hidden">
+                    {/* Large faded number in background */}
+                    <span className="absolute -top-4 -right-2 font-serif text-[120px] font-bold text-white/[0.02] group-hover/why:text-white/[0.04] transition-colors duration-500 leading-none select-none pointer-events-none">
+                      {item.num}
+                    </span>
+                    {/* Gold top accent line */}
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: 32 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
+                      className="h-0.5 bg-gradient-to-r from-gold to-gold/30 mb-6"
+                    />
+                    <h3 className="text-white font-semibold text-[17px] mb-3">
                       {item.title}
                     </h3>
                     <p className="text-white/45 text-[14px] leading-relaxed">
@@ -619,9 +659,21 @@ export default function Home() {
       <Marquee />
 
       {/* ═══ 8. FINAL CTA — full commitment ═══ */}
-      <section className="py-28 md:py-40">
-        <div className="max-w-3xl mx-auto px-6 md:px-8 text-center">
+      <section className="relative py-28 md:py-40 overflow-hidden">
+        {/* Radial glow behind CTA */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-[600px] h-[600px] bg-gold/[0.04] rounded-full blur-[120px]" />
+        </div>
+
+        <div className="relative max-w-3xl mx-auto px-6 md:px-8 text-center">
           <FadeUp>
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: 48 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="h-0.5 bg-gradient-to-r from-gold to-sand mx-auto mb-10"
+            />
             <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.25em] uppercase mb-6">
               Now accepting applications
             </p>
@@ -634,7 +686,7 @@ export default function Home() {
             </p>
             <Link
               href="/apply"
-              className="btn-shimmer inline-flex items-center justify-center px-12 py-4.5 rounded-full text-white text-[15px] font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_30px_rgba(200,169,126,0.3)]"
+              className="btn-shimmer inline-flex items-center justify-center px-12 py-4.5 rounded-full text-white text-[15px] font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity shadow-[0_0_40px_rgba(200,169,126,0.35)]"
             >
               Apply to Join
             </Link>

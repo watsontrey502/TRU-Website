@@ -428,11 +428,14 @@ export default function ApplyPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6 pt-20">
+      <div className="relative min-h-screen flex items-center justify-center px-6 pt-20 overflow-hidden">
+        {/* Success background glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-gold/[0.06] rounded-full blur-[120px] pointer-events-none" />
+
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-lg text-center"
+          className="relative w-full max-w-lg text-center"
         >
           <div className="mx-auto mb-8 w-20 h-20">
             <motion.svg viewBox="0 0 80 80" className="w-20 h-20">
@@ -473,9 +476,17 @@ export default function ApplyPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.95 }}
-            className="text-white/50 text-[15px] mb-4"
+            className="text-white/50 text-[15px] mb-2"
           >
-            We review every application personally. Expect to hear from us within 48 hours.
+            We review every application personally.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+            className="text-gold/70 text-[15px] font-medium mb-4"
+          >
+            Expect to hear from us within 48 hours.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -680,107 +691,135 @@ export default function ApplyPage() {
   /* ── Render ──────────────────────────────────────────────────── */
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 pt-20 pb-12">
-      <div className="w-full max-w-lg">
-        {/* Step indicator */}
-        <div className="flex justify-center mb-10">
-          <StepIndicator current={step} />
-        </div>
+    <div className="relative min-h-screen flex items-center justify-center px-6 pt-20 pb-12 overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-gold/[0.03] rounded-full blur-[150px] pointer-events-none" />
 
-        {/* Progress bar */}
-        <div className="mb-8">
-          <div className="h-[3px] rounded-full bg-white/[0.06] overflow-hidden">
-            <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-gold to-sand"
-              animate={{ width: `${pct}%` }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            />
+      {/* Large watermark */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 pointer-events-none select-none">
+        <span className="font-serif text-[200px] md:text-[300px] font-bold text-white/[0.015] tracking-tight leading-none">
+          TR&Uuml;
+        </span>
+      </div>
+
+      <div className="relative w-full max-w-lg">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8"
+        >
+          <p className="text-gold text-[10px] md:text-xs font-medium tracking-[0.25em] uppercase mb-2">
+            Application
+          </p>
+          <p className="text-white/30 text-sm">
+            Step {step + 1} of {totalSteps} &middot; Takes about 2 minutes
+          </p>
+        </motion.div>
+
+        {/* Glass card container */}
+        <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-6 md:p-8 backdrop-blur-sm">
+          {/* Step indicator */}
+          <div className="flex justify-center mb-8">
+            <StepIndicator current={step} />
           </div>
-        </div>
 
-        {/* Step title */}
-        <div className="mb-8">
-          <AnimatePresence mode="wait">
-            <motion.h2
-              key={`title-${step}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
-              className="font-serif text-2xl md:text-3xl font-bold text-white"
-            >
-              {STEP_TITLES[step]}
-            </motion.h2>
-          </AnimatePresence>
-        </div>
+          {/* Progress bar */}
+          <div className="mb-8">
+            <div className="h-[3px] rounded-full bg-white/[0.06] overflow-hidden">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-gold to-sand"
+                animate={{ width: `${pct}%` }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              />
+            </div>
+          </div>
 
-        {/* Step content with animated transitions */}
-        <div className="relative" style={{ minHeight: 400 }}>
-          <AnimatePresence mode="wait" custom={dir}>
-            <motion.div
-              key={step}
-              custom={dir}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              {stepContent[step]}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+          {/* Step title */}
+          <div className="mb-8">
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={`title-${step}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="font-serif text-2xl md:text-3xl font-bold text-white"
+              >
+                {STEP_TITLES[step]}
+              </motion.h2>
+            </AnimatePresence>
+          </div>
 
-        {/* Navigation buttons */}
-        <div className="mt-8 flex gap-3">
-          <button
-            type="button"
-            onClick={goBack}
-            className="flex-shrink-0 px-6 py-3.5 rounded-full text-white/60 text-sm font-medium bg-white/[0.07] border border-white/10 hover:bg-white/[0.12] transition-colors cursor-pointer"
-          >
-            Back
-          </button>
+          {/* Step content with animated transitions */}
+          <div className="relative" style={{ minHeight: 400 }}>
+            <AnimatePresence mode="wait" custom={dir}>
+              <motion.div
+                key={step}
+                custom={dir}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+              >
+                {stepContent[step]}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {step < 2 ? (
+          {/* Navigation buttons */}
+          <div className="mt-8 flex gap-3">
             <button
               type="button"
-              onClick={goNext}
-              className="btn-shimmer flex-1 py-3.5 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity cursor-pointer"
+              onClick={goBack}
+              className="flex-shrink-0 px-6 py-3.5 rounded-full text-white/60 text-sm font-medium bg-white/[0.07] border border-white/10 hover:bg-white/[0.12] transition-colors cursor-pointer"
             >
-              Continue
+              Back
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="btn-shimmer flex-1 py-3.5 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity disabled:opacity-30 cursor-pointer flex items-center justify-center gap-2"
-            >
-              {submitting && (
-                <svg
-                  className="animate-spin w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    opacity="0.3"
-                  />
-                  <path
-                    d="M12 2a10 10 0 0 1 10 10"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              )}
-              {submitting ? "Submitting..." : "Submit Application"}
-            </button>
-          )}
+
+            {step < 2 ? (
+              <button
+                type="button"
+                onClick={goNext}
+                className="btn-shimmer flex-1 py-3.5 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                Continue
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="btn-shimmer flex-1 py-3.5 rounded-full text-white text-sm font-medium bg-gradient-to-r from-gold to-[#b8935e] hover:opacity-90 transition-opacity disabled:opacity-30 cursor-pointer flex items-center justify-center gap-2"
+              >
+                {submitting && (
+                  <svg
+                    className="animate-spin w-4 h-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      opacity="0.3"
+                    />
+                    <path
+                      d="M12 2a10 10 0 0 1 10 10"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
+                {submitting ? "Submitting..." : "Submit Application"}
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Fine print */}
