@@ -257,6 +257,161 @@ export function applicationApproved(firstName: string) {
   };
 }
 
+export function applicationApprovedWithLink(firstName: string, magicLinkUrl: string) {
+  return {
+    subject: "You're in. Welcome to TRÜ. ✦",
+    html: layout(`
+      ${heroImage("https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80&fit=crop&h=400", "TRÜ Nashville cocktails")}
+      ${cardBody(`
+        ${goldLabel("&#10003; Approved")}
+        ${heading(`Welcome to TR&#220;, ${firstName}.`)}
+        ${paragraph("You&rsquo;ve been accepted into Nashville&rsquo;s most curated social club. Click below to create your account and choose your membership.")}
+
+        ${goldButton("Create Your Account", magicLinkUrl)}
+
+        ${goldDivider()}
+
+        ${paragraph(`<span style="color:${BRAND.textBright};font-weight:600;">Here&rsquo;s what happens next:</span>`)}
+        ${featureRow("1&#65039;&#8419;", "Set up your profile", "Confirm your info and upload a photo ID")}
+        ${featureRow("2&#65039;&#8419;", "Choose your membership", "Free, Social ($49/mo), or Premier ($125/mo)")}
+        ${featureRow("3&#65039;&#8419;", "Start attending events", "Browse and RSVP to curated experiences")}
+
+        ${divider()}
+        ${paragraph(`<span style="color:${BRAND.muted};font-size:13px;">This link expires in 24 hours. If it doesn&rsquo;t work, visit <a href="https://trudatingnashville.com/login" style="color:${BRAND.gold};text-decoration:none;">trudatingnashville.com/login</a> and sign in with your email.</span>`)}
+
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
+export function ticketPurchaseConfirmation(firstName: string, eventName: string, eventDate: string, eventVenue: string) {
+  return {
+    subject: `You're in for ${eventName} ✦`,
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel("Ticket Confirmed")}
+        ${heading(`See you there, ${firstName}.`)}
+        ${paragraph(`Your spot for <strong style="color:${BRAND.white};">${eventName}</strong> is confirmed.`)}
+
+        ${highlightBox(`
+          ${featureRow("&#128197;", "Date", eventDate)}
+          ${featureRow("&#128205;", "Venue", eventVenue)}
+        `)}
+
+        ${paragraph("Dress code and additional details will be emailed closer to the event.")}
+
+        ${goldButton("View Event Details", "https://trudatingnashville.com/dashboard")}
+
+        ${divider()}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
+export function subscriptionWelcome(firstName: string, tierName: string) {
+  const tierBenefits = tierName === "Premier"
+    ? `${featureRow("&#9889;", "Unlimited events", "Every event is included in your membership")}
+       ${featureRow("&#10024;", "Double Take", "See who caught your eye after events")}
+       ${featureRow("&#128101;", "+1 Guest pass", "Bring a friend to any event")}
+       ${featureRow("&#128276;", "Early access", "First to know about new events")}`
+    : `${featureRow("&#127915;", "1 event/month included", "One ticket included every billing cycle")}
+       ${featureRow("&#10024;", "Double Take", "See who caught your eye after events")}
+       ${featureRow("&#11088;", "Priority RSVP", "Get first access to popular events")}`;
+
+  return {
+    subject: `Welcome to TRÜ ${tierName} ✦`,
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel(`${tierName} Member`)}
+        ${heading(`You&rsquo;re a ${tierName} member, ${firstName}.`)}
+        ${paragraph("Your membership is active. Here&rsquo;s what&rsquo;s included:")}
+
+        ${highlightBox(tierBenefits)}
+
+        ${goldButton("Browse Events", "https://trudatingnashville.com/dashboard")}
+
+        ${divider()}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
+export function newMatchNotification(firstName: string, matchFirstName: string, eventName: string) {
+  return {
+    subject: `It's mutual. ✦`,
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel("Double Take Match")}
+        ${heading(`You matched with ${matchFirstName}.`)}
+        ${paragraph(`You both selected each other at <strong style="color:${BRAND.white};">${eventName}</strong>. A conversation has been started &mdash; you have 7 days to connect.`)}
+
+        ${goldButton("Open Conversation", "https://trudatingnashville.com/dashboard/messages")}
+
+        ${divider()}
+        ${paragraph(`<span style="color:${BRAND.muted};font-size:13px;">Conversations expire after 7 days. Exchange contact info if you want to keep talking.</span>`)}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
+export function conversationExpiring(firstName: string, matchFirstName: string, hoursLeft: number) {
+  return {
+    subject: `Your conversation with ${matchFirstName} expires soon`,
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel("Expiring Soon")}
+        ${heading(`${hoursLeft} hours left.`)}
+        ${paragraph(`Your conversation with <strong style="color:${BRAND.white};">${matchFirstName}</strong> expires in ${hoursLeft} hours. Don&rsquo;t miss your chance to connect.`)}
+
+        ${goldButton("Continue Conversation", "https://trudatingnashville.com/dashboard/messages")}
+
+        ${divider()}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
+export function paymentFailed(firstName: string) {
+  return {
+    subject: "Payment issue with your TRÜ membership",
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel("Payment Failed")}
+        ${heading(`Action needed, ${firstName}.`)}
+        ${paragraph("We weren&rsquo;t able to process your latest payment. Please update your payment method to keep your membership active.")}
+
+        ${goldButton("Update Payment", "https://trudatingnashville.com/dashboard/profile")}
+
+        ${divider()}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
+export function verificationComplete(firstName: string) {
+  return {
+    subject: "You're verified ✦",
+    html: layout(`
+      ${cardBody(`
+        ${goldLabel("&#10003; Verified")}
+        ${heading(`You&rsquo;re verified, ${firstName}.`)}
+        ${paragraph("Your identity has been confirmed. You now have the verified badge on your profile, which other members can see at events.")}
+
+        ${goldButton("View Your Profile", "https://trudatingnashville.com/dashboard/profile")}
+
+        ${divider()}
+        ${signature()}
+      `)}
+    `),
+  };
+}
+
 export function applicationWaitlisted(firstName: string) {
   return {
     subject: "You're on the waitlist ✦",

@@ -3,10 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { resend, FROM_EMAIL } from "@/lib/email/resend";
 import {
+  applicationApprovedWithLink,
   applicationApproved,
   applicationWaitlisted,
   applicationRejected,
 } from "@/lib/email/templates";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_APP_URL || "https://trudatingnashville.com";
 
 async function verifyAdmin() {
   const supabase = await createClient();
@@ -26,13 +30,63 @@ async function verifyAdmin() {
 }
 
 const templates: Record<string, typeof applicationApproved> = {
-  approved: applicationApproved,
   waitlisted: applicationWaitlisted,
   rejected: applicationRejected,
 };
 
 const validStatuses = ["pending", "approved", "waitlisted", "rejected"];
 
+/** Send approval email with magic link for account creation */
+async function sendApprovalWithMagicLink(
+  submissionId: string,
+  email: string,
+  firstName: string
+) {
+  const service = createServiceClient();
+
+  // Generate invite token
+  const inviteToken = crypto.randomUUID();
+
+  // Store invite token on the submission
+  await service
+    .from("waitlist_submissions")
+    .update({
+      invite_token: inviteToken,
+      invite_sent_at: new Date().toISOString(),
+    })
+    .eq("id", submissionId);
+
+  // Generate a magic link via Supabase Admin API
+  const redirectTo = `${SITE_URL}/auth/confirm?next=/onboarding?token=${inviteToken}`;
+
+  const { data: linkData, error: linkError } =
+    await service.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+      options: { redirectTo },
+    });
+
+  if (linkError || !linkData?.properties?.hashed_token) {
+    console.error("Failed to generate magic link:", linkError);
+    // Fallback: send the old approval email without magic link
+    const { subject, html } = applicationApproved(firstName);
+    await resend.emails.send({ from: FROM_EMAIL, to: email, subject, html });
+    return;
+  }
+
+  // Build the full magic link URL
+  const { hashed_token } = linkData.properties;
+  const magicLinkUrl = `${SITE_URL}/auth/confirm?token_hash=${hashed_token}&type=magiclink&next=/onboarding?token=${inviteToken}`;
+
+  // Send branded approval email with magic link
+  const { subject, html } = applicationApprovedWithLink(
+    firstName,
+    magicLinkUrl
+  );
+  await resend.emails.send({ from: FROM_EMAIL, to: email, subject, html });
+}
+
+/** Send non-approval status emails (waitlisted, rejected) */
 async function sendStatusEmail(
   status: string,
   previousStatus: string,
@@ -40,17 +94,14 @@ async function sendStatusEmail(
   firstName: string
 ) {
   if (status === "pending" || status === previousStatus) return;
+  if (status === "approved") return; // Handled separately with magic link
+
   const template = templates[status];
   if (!template) return;
 
   try {
     const { subject, html } = template(firstName);
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: email,
-      subject,
-      html,
-    });
+    await resend.emails.send({ from: FROM_EMAIL, to: email, subject, html });
   } catch (emailErr) {
     console.error("Email send failed:", emailErr);
   }
@@ -112,9 +163,16 @@ export async function PATCH(req: NextRequest) {
 
       // Send emails in parallel (non-fatal)
       await Promise.allSettled(
-        submissions.map((sub) =>
-          sendStatusEmail(status, sub.status, sub.email, sub.first_name)
-        )
+        submissions.map((sub) => {
+          if (status === "approved") {
+            return sendApprovalWithMagicLink(
+              sub.id,
+              sub.email,
+              sub.first_name
+            );
+          }
+          return sendStatusEmail(status, sub.status, sub.email, sub.first_name);
+        })
       );
 
       return NextResponse.json({ success: true, count: submissions.length });
@@ -128,7 +186,7 @@ export async function PATCH(req: NextRequest) {
 
       const { data: submission } = await service
         .from("waitlist_submissions")
-        .select("first_name, email, status")
+        .select("id, first_name, email, status")
         .eq("id", id)
         .single();
 
@@ -156,12 +214,21 @@ export async function PATCH(req: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
-      await sendStatusEmail(
-        status,
-        submission.status,
-        submission.email,
-        submission.first_name
-      );
+      // Send appropriate email
+      if (status === "approved") {
+        await sendApprovalWithMagicLink(
+          submission.id,
+          submission.email,
+          submission.first_name
+        );
+      } else {
+        await sendStatusEmail(
+          status,
+          submission.status,
+          submission.email,
+          submission.first_name
+        );
+      }
 
       return NextResponse.json({ success: true });
     }
