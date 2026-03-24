@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,7 +11,7 @@ type TokenState =
   | { status: "invalid"; error: string }
   | { status: "valid"; email: string; firstName: string };
 
-export default function SignupPage() {
+function SignupForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -365,5 +365,17 @@ export default function SignupPage() {
         </motion.div>
       </div>
     </>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0C0C0D] flex items-center justify-center">
+        <div className="text-white/50">Loading...</div>
+      </div>
+    }>
+      <SignupForm />
+    </Suspense>
   );
 }
