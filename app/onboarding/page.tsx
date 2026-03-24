@@ -54,7 +54,7 @@ const TIERS = [
     period: "/mo",
     popular: true,
     features: [
-      "1 event ticket included/mo",
+      "25% off all event tickets",
       "Double Take matching",
       "Priority RSVP",
       "ID verification included",

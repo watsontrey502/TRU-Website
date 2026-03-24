@@ -168,15 +168,14 @@ export default function MembershipPage() {
                   <span className="text-stone text-lg">/month</span>
                 </div>
                 <p className="text-stone text-sm mb-8">
-                  Start connecting with one event a month
+                  Save on every event you attend
                 </p>
 
                 <div className="space-y-4 text-left mb-10 flex-1">
                   {[
-                    "1 event ticket included per month",
+                    "25% off all event tickets",
                     "Double Take post-event matching",
                     "Priority RSVP",
-                    "Full price for extra tickets",
                     "Verification included",
                     "Cancel anytime",
                   ].map((item) => (

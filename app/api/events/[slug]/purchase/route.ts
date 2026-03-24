@@ -5,8 +5,6 @@ import { stripe } from "@/lib/stripe";
 import {
   getOrCreateStripeCustomer,
   hasUnlimitedEvents,
-  getSocialTicketsUsed,
-  getBillingPeriodStart,
 } from "@/lib/stripe-helpers";
 
 const SITE_URL =
@@ -119,50 +117,46 @@ export async function POST(
       });
     }
 
-    // ─── SOCIAL: Check monthly entitlement ───
+    // ─── SOCIAL: 25% discount ───
     if (tier === "social") {
-      const periodStart = getBillingPeriodStart(
-        profile.subscription_current_period_end
+      const discountedPrice = Math.round(event.price * 0.75);
+      const discountedCents = discountedPrice * 100;
+
+      const customerId = await getOrCreateStripeCustomer(
+        profile.id,
+        profile.email,
+        `${profile.first_name} ${profile.last_name}`
       );
 
-      if (periodStart) {
-        const ticketsUsed = await getSocialTicketsUsed(
-          profile.id,
-          periodStart
-        );
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        customer: customerId,
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: `${event.name} — Event Ticket (25% Social Discount)`,
+                description: `${event.date} at ${event.venue}`,
+              },
+              unit_amount: discountedCents,
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${SITE_URL}/dashboard?ticket=success&event=${slug}`,
+        cancel_url: `${SITE_URL}/dashboard?ticket=cancelled`,
+        metadata: {
+          profile_id: profile.id,
+          event_id: event.id,
+          purchase_type: "discounted",
+        },
+      });
 
-        if (ticketsUsed === 0) {
-          // Use included ticket
-          const { data: purchase } = await service
-            .from("ticket_purchases")
-            .insert({
-              profile_id: profile.id,
-              event_id: event.id,
-              amount_cents: 0,
-              purchase_type: "included",
-              billing_period_start: periodStart,
-              status: "completed",
-            })
-            .select("id")
-            .single();
-
-          await service.from("event_attendees").insert({
-            event_id: event.id,
-            profile_id: profile.id,
-            status: "confirmed",
-            ticket_purchase_id: purchase?.id,
-          });
-
-          return NextResponse.json({
-            success: true,
-            type: "included",
-          });
-        }
-      }
-      // Fall through to paid checkout if ticket already used
+      return NextResponse.json({ url: session.url, type: "checkout" });
     }
 
-    // ─── FREE / SOCIAL (ticket used): Pay via Stripe ───
+    // ─── FREE: Pay full price via Stripe ───
     const customerId = await getOrCreateStripeCustomer(
       profile.id,
       profile.email,

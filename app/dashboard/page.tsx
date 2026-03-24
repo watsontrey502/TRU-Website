@@ -65,7 +65,6 @@ export default function DashboardHome() {
   const [availableEvents, setAvailableEvents] = useState<EventRow[]>([]);
   const [recentMatches, setRecentMatches] = useState<MatchRow[]>([]);
   const [unreadMessages, setUnreadMessages] = useState(0);
-  const [ticketsUsed, setTicketsUsed] = useState(0);
   const supabase = createClient();
 
   useEffect(() => {
@@ -124,18 +123,6 @@ export default function DashboardHome() {
         }
       } catch { /* non-critical */ }
 
-      // Load ticket usage for Social tier
-      if (profileData?.subscription_tier === "social") {
-        try {
-          const { count } = await supabase
-            .from("ticket_purchases")
-            .select("*", { count: "exact", head: true })
-            .eq("profile_id", user.id)
-            .eq("purchase_type", "included")
-            .gte("created_at", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
-          setTicketsUsed(count ?? 0);
-        } catch { /* non-critical */ }
-      }
     }
     load();
   }, [supabase]);
@@ -189,8 +176,8 @@ export default function DashboardHome() {
         </div>
         {tier === "social" && (
           <div className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4">
-            <p className="text-[#BDB8B2] text-xs mb-1">Monthly Tickets</p>
-            <p className="text-champagne text-2xl font-semibold font-serif">{ticketsUsed}/1 <span className="text-sm text-[#BDB8B2]">used</span></p>
+            <p className="text-[#BDB8B2] text-xs mb-1">Event Discount</p>
+            <p className="text-gold text-sm font-semibold">25% off events</p>
           </div>
         )}
         {tier === "premier" && (
@@ -294,8 +281,8 @@ export default function DashboardHome() {
                     <span className="text-champagne font-semibold text-sm">
                       {tier === "premier" ? (
                         <span className="text-gold">Included</span>
-                      ) : tier === "social" && ticketsUsed === 0 ? (
-                        <span className="text-gold">1 Free Ticket Available</span>
+                      ) : tier === "social" ? (
+                        <span className="text-gold">${Math.round(event.price * 0.75)} <span className="text-[#BDB8B2] line-through text-xs">${event.price}</span></span>
                       ) : (
                         `$${event.price}`
                       )}
