@@ -230,14 +230,14 @@ export function applicationApproved(firstName: string) {
         ${highlightBox(`
           <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr>
-              ${statBlock("4", "Event Formats")}
-              ${statBlock("16", "Max Group Size")}
-              ${statBlock("1", "City: Nashville")}
+              ${statBlock("&#10003;", "Curated Events")}
+              ${statBlock("&#10003;", "Vetted Members")}
+              ${statBlock("&#10003;", "Nashville")}
             </tr>
           </table>
         `)}
 
-        ${paragraph("Our first events are launching soon. You&rsquo;ll be among the first to get access to intimate dinners, cocktail hours, and curated experiences.")}
+        ${paragraph("Our events are launching soon. You&rsquo;ll be among the first to get access to intimate dinners, cocktail hours, and curated experiences.")}
 
         ${goldButton("View Upcoming Events", "https://trudatingnashville.com/events")}
         <div style="height:8px;"></div>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/components/Toast";
 import { hapticSuccess } from "@/lib/haptics";
+import Image from "next/image";
 
 interface ProfileData {
   first_name: string;
@@ -22,7 +23,41 @@ interface ProfileData {
   subscription_current_period_end: string | null;
   verification_status: string;
   id_document_path: string | null;
+  bio: string | null;
+  avatar_upload_path: string | null;
+  interests: string[] | null;
+  drinking: string | null;
+  smoking: string | null;
+  intentions: string | null;
 }
+
+const INTEREST_OPTIONS = [
+  "Live Music",
+  "Foodie",
+  "Outdoors",
+  "Fitness",
+  "Travel",
+  "Art & Culture",
+  "Wine & Cocktails",
+  "Sports",
+  "Reading",
+  "Gaming",
+  "Cooking",
+  "Photography",
+  "Hiking",
+  "Dancing",
+  "Yoga",
+  "Volunteering",
+];
+
+const DRINKING_OPTIONS = ["I don't drink", "Socially", "Regularly"];
+const SMOKING_OPTIONS = ["I don't smoke", "Socially", "Occasionally"];
+const INTENTIONS_OPTIONS = [
+  "Looking for a relationship",
+  "Something casual",
+  "Just here to meet people",
+  "Not sure yet",
+];
 
 const TIER_LABELS: Record<string, string> = {
   free: "Free",
@@ -61,6 +96,13 @@ const VERIFICATION_LABELS: Record<string, { label: string; color: string }> = {
   rejected: { label: "Rejected", color: "bg-red-500/10 text-red-400" },
 };
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+
+function getAvatarUrl(path: string | null | undefined): string | null {
+  if (!path || !SUPABASE_URL) return null;
+  return `${SUPABASE_URL}/storage/v1/object/public/avatars/${path}`;
+}
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [form, setForm] = useState({
@@ -72,13 +114,21 @@ export default function ProfilePage() {
     age: "",
     gender: "",
     work: "",
+    bio: "",
+    interests: [] as string[],
+    drinking: "",
+    smoking: "",
+    intentions: "",
   });
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
   const [upgradeLoading, setUpgradeLoading] = useState<string | null>(null);
   const [uploadingId, setUploadingId] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
   const { toast } = useToast();
 
@@ -89,12 +139,13 @@ export default function ProfilePage() {
 
       const { data } = await supabase
         .from("profiles")
-        .select("first_name, last_name, email, phone, age, gender, instagram, neighborhood, work, status, subscription_tier, subscription_status, subscription_current_period_end, verification_status, id_document_path")
+        .select("first_name, last_name, email, phone, age, gender, instagram, neighborhood, work, status, subscription_tier, subscription_status, subscription_current_period_end, verification_status, id_document_path, bio, avatar_upload_path, interests, drinking, smoking, intentions")
         .eq("id", user.id)
         .single();
 
       if (data) {
         setProfile(data);
+        setAvatarUrl(getAvatarUrl(data.avatar_upload_path));
         setForm({
           first_name: data.first_name ?? "",
           last_name: data.last_name ?? "",
@@ -104,12 +155,67 @@ export default function ProfilePage() {
           age: data.age ? String(data.age) : "",
           gender: data.gender ?? "",
           work: data.work ?? "",
+          bio: data.bio ?? "",
+          interests: data.interests ?? [],
+          drinking: data.drinking ?? "",
+          smoking: data.smoking ?? "",
+          intentions: data.intentions ?? "",
         });
       }
       setLoading(false);
     }
     load();
   }, [supabase]);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast("File must be under 5MB");
+      return;
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast("Please upload a JPEG, PNG, or WebP image");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const ext = file.name.split(".").pop();
+      const filePath = `${user.id}/avatar.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) {
+        toast("Failed to upload photo");
+        setUploadingAvatar(false);
+        return;
+      }
+
+      // Update profile with the new path
+      await supabase
+        .from("profiles")
+        .update({ avatar_upload_path: filePath })
+        .eq("id", user.id);
+
+      setAvatarUrl(getAvatarUrl(filePath));
+      setProfile((prev) => prev ? { ...prev, avatar_upload_path: filePath } : prev);
+      toast("Photo updated");
+      hapticSuccess();
+    } catch {
+      toast("Failed to upload photo");
+    }
+    setUploadingAvatar(false);
+    if (avatarInputRef.current) avatarInputRef.current.value = "";
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -127,6 +233,11 @@ export default function ProfilePage() {
         age: form.age ? parseInt(form.age) : null,
         gender: form.gender,
         work: form.work,
+        bio: form.bio || null,
+        interests: form.interests.length > 0 ? form.interests : null,
+        drinking: form.drinking || null,
+        smoking: form.smoking || null,
+        intentions: form.intentions || null,
       })
       .eq("id", user.id);
 
@@ -229,6 +340,18 @@ export default function ProfilePage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const toggleInterest = (interest: string) => {
+    setForm((prev) => {
+      const exists = prev.interests.includes(interest);
+      return {
+        ...prev,
+        interests: exists
+          ? prev.interests.filter((i) => i !== interest)
+          : [...prev.interests, interest],
+      };
+    });
+  };
+
   const tier = profile?.subscription_tier ?? "free";
   const subscriptionStatus = profile?.subscription_status ?? "";
   const verification = profile?.verification_status ?? "unverified";
@@ -237,6 +360,13 @@ export default function ProfilePage() {
 
   const inputClass =
     "w-full rounded-xl border border-white/10 bg-[#1A1A1D] py-3.5 px-4 text-[15px] text-champagne placeholder:text-[#BDB8B2]/40 transition-all duration-200 focus:outline-none focus:ring-2 focus:border-gold focus:ring-gold/20";
+
+  const pillClass = (selected: boolean) =>
+    `px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 cursor-pointer ${
+      selected
+        ? "bg-gold/15 border-gold text-gold"
+        : "bg-[#0C0C0D] border-white/10 text-[#BDB8B2] hover:border-white/20"
+    }`;
 
   if (loading) {
     return (
@@ -506,6 +636,59 @@ export default function ProfilePage() {
         <section className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-6">
           <h2 className="font-serif text-lg font-semibold text-champagne mb-6">Edit Profile</h2>
 
+          {/* ── Profile Photo ── */}
+          <div className="mb-8">
+            <label className="text-sm font-medium text-[#BDB8B2] mb-3 block">Profile Photo</label>
+            <div className="flex items-center gap-5">
+              <div className="relative w-20 h-20 rounded-full overflow-hidden bg-[#0C0C0D] border-2 border-white/10 flex-shrink-0">
+                {avatarUrl ? (
+                  <Image
+                    src={avatarUrl}
+                    alt="Profile photo"
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-[#BDB8B2]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div>
+                <input
+                  ref={avatarInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                />
+                <motion.button
+                  onClick={() => avatarInputRef.current?.click()}
+                  disabled={uploadingAvatar}
+                  whileHover={{ scale: 1.015 }}
+                  whileTap={{ scale: 0.985 }}
+                  className="px-4 py-2 rounded-xl border border-white/10 text-champagne font-medium text-sm hover:border-gold/30 transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  {uploadingAvatar ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Uploading...
+                    </span>
+                  ) : (
+                    "Change Photo"
+                  )}
+                </motion.button>
+                <p className="text-[#BDB8B2]/60 text-xs mt-1.5">JPEG, PNG, or WebP. Max 5MB.</p>
+              </div>
+            </div>
+          </div>
+
           {/* Email (read-only) */}
           <div className="mb-6">
             <label className="text-sm font-medium text-[#BDB8B2] mb-2 block">Email</label>
@@ -612,6 +795,102 @@ export default function ProfilePage() {
                 placeholder="e.g. East Nashville"
                 className={inputClass}
               />
+            </div>
+          </div>
+
+          {/* ── Bio ── */}
+          <div className="mb-8">
+            <label className="text-sm font-medium text-[#BDB8B2] mb-2 block">Bio</label>
+            <div className="relative">
+              <textarea
+                value={form.bio}
+                onChange={(e) => {
+                  if (e.target.value.length <= 200) {
+                    setForm({ ...form, bio: e.target.value });
+                  }
+                }}
+                placeholder="Tell people a little about yourself..."
+                rows={3}
+                maxLength={200}
+                className={`${inputClass} resize-none`}
+              />
+              <span className="absolute bottom-3 right-4 text-xs text-[#BDB8B2]/40">
+                {form.bio.length}/200
+              </span>
+            </div>
+          </div>
+
+          {/* ── Interests ── */}
+          <div className="mb-8">
+            <label className="text-sm font-medium text-[#BDB8B2] mb-3 block">Interests</label>
+            <div className="flex flex-wrap gap-2">
+              {INTEREST_OPTIONS.map((interest) => (
+                <button
+                  key={interest}
+                  type="button"
+                  onClick={() => toggleInterest(interest)}
+                  className={pillClass(form.interests.includes(interest))}
+                >
+                  {interest}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Drinking ── */}
+          <div className="mb-8">
+            <label className="text-sm font-medium text-[#BDB8B2] mb-3 block">Drinking</label>
+            <div className="flex flex-wrap gap-2">
+              {DRINKING_OPTIONS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() =>
+                    setForm({ ...form, drinking: form.drinking === option ? "" : option })
+                  }
+                  className={pillClass(form.drinking === option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Smoking ── */}
+          <div className="mb-8">
+            <label className="text-sm font-medium text-[#BDB8B2] mb-3 block">Smoking</label>
+            <div className="flex flex-wrap gap-2">
+              {SMOKING_OPTIONS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() =>
+                    setForm({ ...form, smoking: form.smoking === option ? "" : option })
+                  }
+                  className={pillClass(form.smoking === option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Intentions ── */}
+          <div className="mb-8">
+            <label className="text-sm font-medium text-[#BDB8B2] mb-3 block">Intentions</label>
+            <div className="flex flex-wrap gap-2">
+              {INTENTIONS_OPTIONS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() =>
+                    setForm({ ...form, intentions: form.intentions === option ? "" : option })
+                  }
+                  className={pillClass(form.intentions === option)}
+                >
+                  {option}
+                </button>
+              ))}
             </div>
           </div>
 

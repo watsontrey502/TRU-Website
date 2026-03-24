@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBrowserClient } from "@supabase/ssr";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,6 +22,12 @@ type Profile = {
   instagram: string | null;
   neighborhood: string | null;
   work: string | null;
+  avatar_upload_path: string | null;
+  bio: string | null;
+  interests: string[] | null;
+  drinking: string | null;
+  smoking: string | null;
+  intentions: string | null;
 };
 
 const STEPS = [
@@ -32,6 +39,44 @@ const STEPS = [
 ] as const;
 
 type Step = (typeof STEPS)[number];
+
+const INTEREST_OPTIONS = [
+  "Live Music",
+  "Foodie",
+  "Outdoors",
+  "Fitness",
+  "Travel",
+  "Art & Culture",
+  "Wine & Cocktails",
+  "Sports",
+  "Reading",
+  "Gaming",
+  "Cooking",
+  "Photography",
+  "Hiking",
+  "Dancing",
+  "Yoga",
+  "Volunteering",
+];
+
+const DRINKING_OPTIONS = [
+  { label: "I don't drink", value: "dont_drink" },
+  { label: "Socially", value: "socially" },
+  { label: "Regularly", value: "regularly" },
+];
+
+const SMOKING_OPTIONS = [
+  { label: "I don't smoke", value: "dont_smoke" },
+  { label: "Socially", value: "socially" },
+  { label: "Occasionally", value: "occasionally" },
+];
+
+const INTENTIONS_OPTIONS = [
+  { label: "Looking for a relationship", value: "relationship" },
+  { label: "Something casual", value: "casual" },
+  { label: "Just here to meet people", value: "meet_people" },
+  { label: "Not sure yet", value: "not_sure" },
+];
 
 const TIERS = [
   {
@@ -98,6 +143,12 @@ export default function OnboardingPage() {
   const [idFile, setIdFile] = useState<File | null>(null);
   const [uploadingId, setUploadingId] = useState(false);
 
+  // Avatar upload state
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
   // Form fields
   const [form, setForm] = useState({
     first_name: "",
@@ -108,6 +159,11 @@ export default function OnboardingPage() {
     instagram: "",
     neighborhood: "",
     work: "",
+    bio: "",
+    interests: [] as string[],
+    drinking: "",
+    smoking: "",
+    intentions: "",
   });
 
   // Load profile on mount
@@ -138,7 +194,22 @@ export default function OnboardingPage() {
           instagram: data.instagram || "",
           neighborhood: data.neighborhood || "",
           work: data.work || "",
+          bio: data.bio || "",
+          interests: data.interests || [],
+          drinking: data.drinking || "",
+          smoking: data.smoking || "",
+          intentions: data.intentions || "",
         });
+
+        // Load existing avatar preview if available
+        if (data.avatar_upload_path) {
+          const { data: urlData } = supabase.storage
+            .from("avatars")
+            .getPublicUrl(data.avatar_upload_path);
+          if (urlData?.publicUrl) {
+            setAvatarPreview(urlData.publicUrl);
+          }
+        }
 
         // If onboarding already completed, go to dashboard
         if (data.onboarding_completed) {
@@ -160,10 +231,90 @@ export default function OnboardingPage() {
     loadProfile();
   }, [router, checkoutStep]);
 
+  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      setError("Please upload a JPG or PNG image.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Photo must be under 5MB.");
+      return;
+    }
+
+    setError(null);
+    setAvatarFile(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const toggleInterest = (interest: string) => {
+    setForm((prev) => {
+      const exists = prev.interests.includes(interest);
+      return {
+        ...prev,
+        interests: exists
+          ? prev.interests.filter((i) => i !== interest)
+          : [...prev.interests, interest],
+      };
+    });
+  };
+
   const handleProfileSave = useCallback(async () => {
     if (!profile) return;
     setSaving(true);
     setError(null);
+
+    // Validation
+    if (!form.first_name.trim() || !form.last_name.trim()) {
+      setError("First name and last name are required.");
+      setSaving(false);
+      return;
+    }
+    if (!avatarFile && !avatarPreview) {
+      setError("A profile photo is required.");
+      setSaving(false);
+      return;
+    }
+    if (form.interests.length < 3) {
+      setError("Please select at least 3 interests.");
+      setSaving(false);
+      return;
+    }
+    if (!form.intentions) {
+      setError("Please select your intentions.");
+      setSaving(false);
+      return;
+    }
+
+    let avatarPath = profile.avatar_upload_path;
+
+    // Upload avatar if a new file was selected
+    if (avatarFile) {
+      setUploadingAvatar(true);
+      const fileExt = avatarFile.name.split(".").pop();
+      const filePath = `${profile.id}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, avatarFile, { upsert: true });
+
+      setUploadingAvatar(false);
+
+      if (uploadError) {
+        setError("Failed to upload photo. Please try again.");
+        setSaving(false);
+        return;
+      }
+
+      avatarPath = filePath;
+    }
 
     const { error: updateError } = await supabase
       .from("profiles")
@@ -176,6 +327,12 @@ export default function OnboardingPage() {
         instagram: form.instagram || null,
         neighborhood: form.neighborhood || null,
         work: form.work || null,
+        avatar_upload_path: avatarPath,
+        bio: form.bio || null,
+        interests: form.interests.length > 0 ? form.interests : null,
+        drinking: form.drinking || null,
+        smoking: form.smoking || null,
+        intentions: form.intentions || null,
       })
       .eq("id", profile.id);
 
@@ -185,7 +342,7 @@ export default function OnboardingPage() {
       return;
     }
     setStep("verify-id");
-  }, [profile, form]);
+  }, [profile, form, avatarFile, avatarPreview]);
 
   const handleIdUpload = useCallback(async () => {
     if (!idFile || !profile) return;
@@ -296,6 +453,13 @@ export default function OnboardingPage() {
 
   const stepIndex = STEPS.indexOf(step);
 
+  const isProfileValid =
+    form.first_name.trim() !== "" &&
+    form.last_name.trim() !== "" &&
+    (!!avatarFile || !!avatarPreview) &&
+    form.interests.length >= 3 &&
+    form.intentions !== "";
+
   return (
     <>
       {/* Progress bar */}
@@ -341,11 +505,88 @@ export default function OnboardingPage() {
                 We&apos;ve pre-filled your info from your application.
               </p>
 
-              <div className="space-y-5">
+              <div className="space-y-6">
+                {/* ── Profile Photo ── */}
+                <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => avatarInputRef.current?.click()}
+                    className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-dashed border-white/20 hover:border-gold/40 transition-colors group focus:outline-none focus:border-gold/60"
+                  >
+                    {avatarPreview ? (
+                      <>
+                        <Image
+                          src={avatarPreview}
+                          alt="Profile photo"
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-6 h-6 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"
+                            />
+                          </svg>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="w-full h-full bg-white/5 flex flex-col items-center justify-center gap-1.5">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-7 h-7 text-white/30 group-hover:text-gold/60 transition-colors"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.5}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"
+                          />
+                        </svg>
+                        <span className="text-white/30 text-[10px] font-medium">
+                          Add Photo
+                        </span>
+                      </div>
+                    )}
+                  </button>
+                  <input
+                    ref={avatarInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    className="hidden"
+                    onChange={handleAvatarSelect}
+                  />
+                  <p className="text-white/30 text-[10px] mt-2">
+                    JPG or PNG &mdash; max 5MB
+                  </p>
+                </div>
+
+                {/* ── Name Fields ── */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white/50 text-xs mb-1.5">
-                      First Name
+                      First Name *
                     </label>
                     <input
                       type="text"
@@ -358,7 +599,7 @@ export default function OnboardingPage() {
                   </div>
                   <div>
                     <label className="block text-white/50 text-xs mb-1.5">
-                      Last Name
+                      Last Name *
                     </label>
                     <input
                       type="text"
@@ -371,6 +612,28 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
+                {/* ── Bio ── */}
+                <div>
+                  <label className="block text-white/50 text-xs mb-1.5">
+                    About You
+                  </label>
+                  <textarea
+                    value={form.bio}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 200) {
+                        setForm({ ...form, bio: e.target.value });
+                      }
+                    }}
+                    placeholder="Tell people a little about yourself..."
+                    rows={3}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-gold/40 placeholder:text-white/20 resize-none"
+                  />
+                  <p className="text-white/25 text-[10px] text-right mt-1">
+                    {form.bio.length}/200
+                  </p>
+                </div>
+
+                {/* ── Phone ── */}
                 <div>
                   <label className="block text-white/50 text-xs mb-1.5">
                     Phone
@@ -385,6 +648,7 @@ export default function OnboardingPage() {
                   />
                 </div>
 
+                {/* ── Age / Gender ── */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-white/50 text-xs mb-1.5">
@@ -418,6 +682,7 @@ export default function OnboardingPage() {
                   </div>
                 </div>
 
+                {/* ── Instagram ── */}
                 <div>
                   <label className="block text-white/50 text-xs mb-1.5">
                     Instagram
@@ -433,6 +698,7 @@ export default function OnboardingPage() {
                   />
                 </div>
 
+                {/* ── Neighborhood ── */}
                 <div>
                   <label className="block text-white/50 text-xs mb-1.5">
                     Neighborhood
@@ -457,6 +723,7 @@ export default function OnboardingPage() {
                   </select>
                 </div>
 
+                {/* ── Work ── */}
                 <div>
                   <label className="block text-white/50 text-xs mb-1.5">
                     What do you do?
@@ -470,6 +737,119 @@ export default function OnboardingPage() {
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-gold/40"
                   />
                 </div>
+
+                {/* ── Interests ── */}
+                <div>
+                  <label className="block text-white/50 text-xs mb-1.5">
+                    Interests *{" "}
+                    <span className="text-white/25">
+                      ({form.interests.length} selected &mdash; pick at least 3)
+                    </span>
+                  </label>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {INTEREST_OPTIONS.map((interest) => {
+                      const selected = form.interests.includes(interest);
+                      return (
+                        <button
+                          key={interest}
+                          type="button"
+                          onClick={() => toggleInterest(interest)}
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
+                            selected
+                              ? "bg-gold/15 border border-gold text-gold"
+                              : "bg-white/5 border border-white/10 text-white/50 hover:border-white/25 hover:text-white/70"
+                          }`}
+                        >
+                          {interest}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Drinking ── */}
+                <div>
+                  <label className="block text-white/50 text-xs mb-2">
+                    Drinking
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {DRINKING_OPTIONS.map((opt) => {
+                      const selected = form.drinking === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() =>
+                            setForm({ ...form, drinking: opt.value })
+                          }
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
+                            selected
+                              ? "bg-gold/15 border border-gold text-gold"
+                              : "bg-white/5 border border-white/10 text-white/50 hover:border-white/25 hover:text-white/70"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Smoking ── */}
+                <div>
+                  <label className="block text-white/50 text-xs mb-2">
+                    Smoking
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {SMOKING_OPTIONS.map((opt) => {
+                      const selected = form.smoking === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() =>
+                            setForm({ ...form, smoking: opt.value })
+                          }
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
+                            selected
+                              ? "bg-gold/15 border border-gold text-gold"
+                              : "bg-white/5 border border-white/10 text-white/50 hover:border-white/25 hover:text-white/70"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── Intentions ── */}
+                <div>
+                  <label className="block text-white/50 text-xs mb-2">
+                    Intentions *
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {INTENTIONS_OPTIONS.map((opt) => {
+                      const selected = form.intentions === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() =>
+                            setForm({ ...form, intentions: opt.value })
+                          }
+                          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
+                            selected
+                              ? "bg-gold/15 border border-gold text-gold"
+                              : "bg-white/5 border border-white/10 text-white/50 hover:border-white/25 hover:text-white/70"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
               {error && (
@@ -478,10 +858,14 @@ export default function OnboardingPage() {
 
               <button
                 onClick={handleProfileSave}
-                disabled={saving || !form.first_name || !form.last_name}
+                disabled={saving || uploadingAvatar || !isProfileValid}
                 className="w-full mt-8 py-4 rounded-full bg-gradient-to-r from-gold to-[#b8935e] text-[#0C0C0D] font-semibold text-sm tracking-wide disabled:opacity-40 transition-opacity"
               >
-                {saving ? "Saving..." : "Continue"}
+                {uploadingAvatar
+                  ? "Uploading photo..."
+                  : saving
+                    ? "Saving..."
+                    : "Continue"}
               </button>
             </div>
           )}
