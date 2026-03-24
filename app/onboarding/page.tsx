@@ -235,8 +235,9 @@ export default function OnboardingPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!["image/jpeg", "image/png"].includes(file.type)) {
-      setError("Please upload a JPG or PNG image.");
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+    if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpe?g|png|webp|heic|heif)$/i)) {
+      setError("Please upload a JPG, PNG, WebP, or HEIC image.");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -573,7 +574,7 @@ export default function OnboardingPage() {
                   <input
                     ref={avatarInputRef}
                     type="file"
-                    accept="image/jpeg,image/png"
+                    accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
                     className="hidden"
                     onChange={handleAvatarSelect}
                   />
