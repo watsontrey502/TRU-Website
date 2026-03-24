@@ -65,6 +65,7 @@ export default function DashboardHome() {
   const [availableEvents, setAvailableEvents] = useState<EventRow[]>([]);
   const [recentMatches, setRecentMatches] = useState<MatchRow[]>([]);
   const [unreadMessages, setUnreadMessages] = useState(0);
+  const [premierFreeUsed, setPremierFreeUsed] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -109,6 +110,19 @@ export default function DashboardHome() {
           setRecentMatches((allMatches ?? []).slice(0, 3));
         }
       } catch { /* non-critical */ }
+
+      // Check if Premier free ticket used this month
+      if (profileData?.subscription_tier === "premier") {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const { count } = await supabase
+          .from("ticket_purchases")
+          .select("id", { count: "exact", head: true })
+          .eq("profile_id", user.id)
+          .eq("purchase_type", "premier_included")
+          .gte("created_at", monthStart);
+        setPremierFreeUsed((count ?? 0) > 0);
+      }
 
       // Load unread message count
       try {
@@ -182,8 +196,8 @@ export default function DashboardHome() {
         )}
         {tier === "premier" && (
           <div className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4">
-            <p className="text-[#BDB8B2] text-xs mb-1">Access</p>
-            <p className="text-gold text-sm font-semibold">Unlimited Events</p>
+            <p className="text-[#BDB8B2] text-xs mb-1">Free Ticket</p>
+            <p className="text-gold text-sm font-semibold">1 Free/Month</p>
           </div>
         )}
         {tier === "free" && (
@@ -280,7 +294,11 @@ export default function DashboardHome() {
                   <div className="flex items-center justify-between">
                     <span className="text-champagne font-semibold text-sm">
                       {tier === "premier" ? (
-                        <span className="text-gold">Included</span>
+                        premierFreeUsed ? (
+                          <span className="text-gold">${Math.round(event.price * 0.75)} <span className="text-[#BDB8B2] line-through text-xs">${event.price}</span></span>
+                        ) : (
+                          <span className="text-gold">Included</span>
+                        )
                       ) : tier === "social" ? (
                         <span className="text-gold">${Math.round(event.price * 0.75)} <span className="text-[#BDB8B2] line-through text-xs">${event.price}</span></span>
                       ) : (

@@ -210,12 +210,13 @@ export default function MembershipPage() {
                   <span className="text-white/60 text-lg">/month</span>
                 </div>
                 <p className="text-white/60 text-sm mb-8">
-                  The full experience, unlimited access
+                  The full experience, VIP access
                 </p>
 
                 <div className="space-y-4 text-left mb-10 flex-1">
                   {[
-                    "Unlimited events included",
+                    "1 event ticket included per month",
+                    "25% off additional tickets",
                     "Double Take post-event matching",
                     "+1 guest pass per event",
                     "Priority RSVP & matching",

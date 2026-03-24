@@ -68,7 +68,8 @@ const TIERS = [
     price: "$125",
     period: "/mo",
     features: [
-      "Unlimited events included",
+      "1 event ticket included per month",
+      "25% off additional tickets",
       "Double Take matching",
       "+1 Guest pass per event",
       "Priority RSVP & matching",

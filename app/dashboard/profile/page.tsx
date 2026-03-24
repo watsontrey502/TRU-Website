@@ -43,7 +43,7 @@ const TIER_PRICES: Record<string, string> = {
 
 const TIER_DESCRIPTIONS: Record<string, string> = {
   social: "25% off event tickets, Double Take access, priority RSVP",
-  premier: "Unlimited events, VIP access, exclusive invitations",
+  premier: "1 free event/month, 25% off additional, VIP access",
 };
 
 const SUBSCRIPTION_STATUS_LABELS: Record<string, { label: string; color: string }> = {

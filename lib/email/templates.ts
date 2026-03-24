@@ -312,7 +312,8 @@ export function ticketPurchaseConfirmation(firstName: string, eventName: string,
 
 export function subscriptionWelcome(firstName: string, tierName: string) {
   const tierBenefits = tierName === "Premier"
-    ? `${featureRow("&#9889;", "Unlimited events", "Every event is included in your membership")}
+    ? `${featureRow("&#9889;", "1 free event/month", "One event ticket included each month")}
+       ${featureRow("&#127915;", "25% off additional", "Save on every extra event you attend")}
        ${featureRow("&#10024;", "Double Take", "See who caught your eye after events")}
        ${featureRow("&#128101;", "+1 Guest pass", "Bring a friend to any event")}
        ${featureRow("&#128276;", "Early access", "First to know about new events")}`

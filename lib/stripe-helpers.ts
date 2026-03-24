@@ -52,11 +52,18 @@ export function canAccessDoubleTake(
   return tier === "social" || tier === "premier";
 }
 
-/** Check if a tier gets free events */
-export function hasUnlimitedEvents(
+/** Check if a tier gets a monthly free event ticket */
+export function hasMonthlyFreeTicket(
   tier: string | null | undefined
 ): boolean {
   return tier === "premier";
+}
+
+/** @deprecated Premier no longer has unlimited events. Use hasMonthlyFreeTicket instead. */
+export function hasUnlimitedEvents(
+  tier: string | null | undefined
+): boolean {
+  return false;
 }
 
 /** Check if a tier includes verification */
