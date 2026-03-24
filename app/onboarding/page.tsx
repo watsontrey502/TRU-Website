@@ -300,7 +300,7 @@ export default function OnboardingPage() {
     if (avatarFile) {
       setUploadingAvatar(true);
       const fileExt = avatarFile.name.split(".").pop();
-      const filePath = `${profile.id}.${fileExt}`;
+      const filePath = `${profile.id}/avatar.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
