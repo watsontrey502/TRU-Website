@@ -3,16 +3,13 @@ import { createServerClient } from "@supabase/ssr";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const token_hash = searchParams.get("token_hash");
-  const type = searchParams.get("type") as "email" | "signup" | "magiclink" | null;
-  const next = searchParams.get("next") ?? "/dashboard";
+  const code = searchParams.get("code");
+  const token = searchParams.get("token");
+  const next = searchParams.get("next");
 
   const redirectTo = request.nextUrl.clone();
-  redirectTo.pathname = next;
-  redirectTo.searchParams.delete("token_hash");
-  redirectTo.searchParams.delete("type");
 
-  if (token_hash && type) {
+  if (code) {
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -30,10 +27,25 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    const { error } = await supabase.auth.verifyOtp({ token_hash, type });
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // Preserve token param in the redirect if present in next
+      // Determine redirect destination
+      if (token) {
+        // Signup flow: redirect to onboarding with invite token
+        redirectTo.pathname = "/onboarding";
+        redirectTo.searchParams.set("token", token);
+      } else if (next) {
+        // Login flow: redirect to specified path
+        redirectTo.pathname = next;
+      } else {
+        redirectTo.pathname = "/dashboard";
+      }
+
+      // Clean up query params
+      redirectTo.searchParams.delete("code");
+      redirectTo.searchParams.delete("next");
+
       const response = NextResponse.redirect(redirectTo);
       request.cookies.getAll().forEach((cookie) => {
         response.cookies.set(cookie.name, cookie.value);
@@ -42,7 +54,10 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // If verification fails, redirect to login with error
+  // If code exchange fails, redirect to login
   redirectTo.pathname = "/login";
+  redirectTo.searchParams.delete("code");
+  redirectTo.searchParams.delete("token");
+  redirectTo.searchParams.delete("next");
   return NextResponse.redirect(redirectTo);
 }

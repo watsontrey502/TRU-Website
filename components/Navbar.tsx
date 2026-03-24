@@ -2,13 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -18,6 +23,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setMobileOpen(false);
+    setUserMenuOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -25,16 +31,45 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user: u } }) => setUser(u));
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    setUserMenuOpen(false);
+    router.push("/");
+  };
+
   const navBg = scrolled
     ? "bg-[rgba(12,12,13,0.85)] backdrop-blur-md"
     : "bg-transparent";
 
-  const links = [
+  const publicLinks = [
     { href: "/#how-it-works", label: "How It Works" },
     { href: "/events", label: "Events" },
     { href: "/about", label: "About" },
     { href: "/faq", label: "FAQ" },
   ];
+
+  const authedLinks = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/dashboard/messages", label: "Messages" },
+    { href: "/events", label: "Events" },
+  ];
+
+  const links = user ? authedLinks : publicLinks;
 
   return (
     <>
@@ -66,15 +101,72 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/apply"
-                className="text-white px-6 py-2.5 rounded-full text-sm font-medium tracking-wide hover:opacity-90 transition-all shadow-[0_0_20px_rgba(200,169,126,0.3)]"
-                style={{
-                  background: "linear-gradient(135deg, #C8A97E, #b8935e)",
-                }}
-              >
-                Apply
-              </Link>
+
+              {user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 text-white/70 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gold/20 border border-gold/30 flex items-center justify-center">
+                      <span className="text-gold text-xs font-semibold">
+                        {user.email?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                    </div>
+                    <svg className={`w-4 h-4 transition-transform ${userMenuOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <AnimatePresence>
+                    {userMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-48 rounded-xl border border-white/10 bg-[#1a1a1b] backdrop-blur-xl shadow-xl overflow-hidden"
+                      >
+                        <Link
+                          href="/dashboard/profile"
+                          className="block px-4 py-3 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          My Account
+                        </Link>
+                        <Link
+                          href="/dashboard/messages"
+                          className="block px-4 py-3 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          Messages
+                        </Link>
+                        <Link
+                          href="/dashboard/messages"
+                          className="block px-4 py-3 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          Matches
+                        </Link>
+                        <div className="border-t border-white/10" />
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full text-left px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 transition-colors cursor-pointer"
+                        >
+                          Sign Out
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  href="/apply"
+                  className="text-white px-6 py-2.5 rounded-full text-sm font-medium tracking-wide hover:opacity-90 transition-all shadow-[0_0_20px_rgba(200,169,126,0.3)]"
+                  style={{
+                    background: "linear-gradient(135deg, #C8A97E, #b8935e)",
+                  }}
+                >
+                  Apply
+                </Link>
+              )}
             </div>
 
             {/* Mobile hamburger */}
@@ -141,21 +233,51 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Link
-                  href="/apply"
-                  className="mt-4 text-white px-10 py-4 rounded-full text-lg font-medium tracking-wide hover:opacity-90 transition-all"
-                  style={{
-                    background: "linear-gradient(135deg, #C8A97E, #b8935e)",
-                  }}
+
+              {user ? (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + links.length * 0.1 }}
+                  >
+                    <Link
+                      href="/dashboard/profile"
+                      className="text-2xl font-sans font-medium tracking-wide text-white/80 hover:text-white transition-colors"
+                    >
+                      My Account
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + links.length * 0.1 }}
+                  >
+                    <button
+                      onClick={handleSignOut}
+                      className="text-2xl font-sans font-medium tracking-wide text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+                    >
+                      Sign Out
+                    </button>
+                  </motion.div>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  Apply
-                </Link>
-              </motion.div>
+                  <Link
+                    href="/apply"
+                    className="mt-4 text-white px-10 py-4 rounded-full text-lg font-medium tracking-wide hover:opacity-90 transition-all"
+                    style={{
+                      background: "linear-gradient(135deg, #C8A97E, #b8935e)",
+                    }}
+                  >
+                    Apply
+                  </Link>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         )}

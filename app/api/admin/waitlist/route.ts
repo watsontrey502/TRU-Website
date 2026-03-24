@@ -36,8 +36,8 @@ const templates: Record<string, typeof applicationApproved> = {
 
 const validStatuses = ["pending", "approved", "waitlisted", "rejected"];
 
-/** Send approval email with magic link for account creation */
-async function sendApprovalWithMagicLink(
+/** Send approval email with signup link for account creation */
+async function sendApprovalWithSignupLink(
   submissionId: string,
   email: string,
   firstName: string
@@ -56,32 +56,13 @@ async function sendApprovalWithMagicLink(
     })
     .eq("id", submissionId);
 
-  // Generate a magic link via Supabase Admin API
-  const redirectTo = `${SITE_URL}/auth/confirm?next=/onboarding?token=${inviteToken}`;
+  // Build the signup URL with invite token
+  const signupUrl = `${SITE_URL}/signup?token=${inviteToken}`;
 
-  const { data: linkData, error: linkError } =
-    await service.auth.admin.generateLink({
-      type: "magiclink",
-      email,
-      options: { redirectTo },
-    });
-
-  if (linkError || !linkData?.properties?.hashed_token) {
-    console.error("Failed to generate magic link:", linkError);
-    // Fallback: send the old approval email without magic link
-    const { subject, html } = applicationApproved(firstName);
-    await resend.emails.send({ from: FROM_EMAIL, to: email, subject, html });
-    return;
-  }
-
-  // Build the full magic link URL
-  const { hashed_token } = linkData.properties;
-  const magicLinkUrl = `${SITE_URL}/auth/confirm?token_hash=${hashed_token}&type=magiclink&next=/onboarding?token=${inviteToken}`;
-
-  // Send branded approval email with magic link
+  // Send branded approval email with signup link
   const { subject, html } = applicationApprovedWithLink(
     firstName,
-    magicLinkUrl
+    signupUrl
   );
   await resend.emails.send({ from: FROM_EMAIL, to: email, subject, html });
 }
@@ -165,7 +146,7 @@ export async function PATCH(req: NextRequest) {
       await Promise.allSettled(
         submissions.map((sub) => {
           if (status === "approved") {
-            return sendApprovalWithMagicLink(
+            return sendApprovalWithSignupLink(
               sub.id,
               sub.email,
               sub.first_name
@@ -216,7 +197,7 @@ export async function PATCH(req: NextRequest) {
 
       // Send appropriate email
       if (status === "approved") {
-        await sendApprovalWithMagicLink(
+        await sendApprovalWithSignupLink(
           submission.id,
           submission.email,
           submission.first_name
