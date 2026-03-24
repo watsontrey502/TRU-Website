@@ -9,7 +9,7 @@ const features = [
   {
     title: "Curated Events",
     description:
-      "Access to all TR\u00dc events at member pricing. Rooftop tastings, hikes, dinner parties, trivia nights, and more.",
+      "Access to all TR\u00dc events. Rooftop tastings, hikes, dinner parties, trivia nights, and more.",
     icon: (
       <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -104,33 +104,81 @@ export default function MembershipPage() {
 
       {/* Pricing Cards */}
       <section className="bg-cream py-20">
-        <div className="max-w-5xl mx-auto px-6 md:px-8">
+        <div className="max-w-6xl mx-auto px-6 md:px-8">
           <SectionHeading
             title="Choose Your Plan"
-            subtitle="Event tickets purchased separately ($30–$85). Cancel anytime."
+            subtitle="From casual to all-in. Find the tier that fits how you date."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {/* Member Tier */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Free Tier */}
             <AnimateOnScroll>
               <div className="bg-white rounded-3xl p-8 md:p-10 shadow-[var(--shadow-card)] border border-gray-100 text-center h-full flex flex-col">
                 <p className="text-xs uppercase tracking-[0.15em] text-stone font-medium mb-2">
-                  Member
+                  Free
                 </p>
                 <div className="flex items-baseline justify-center gap-1 mb-2">
-                  <span className="font-serif text-5xl font-bold text-black">$25</span>
+                  <span className="font-serif text-5xl font-bold text-black">$0</span>
                   <span className="text-stone text-lg">/month</span>
                 </div>
                 <p className="text-stone text-sm mb-8">
-                  Everything you need to get started
+                  Browse events and buy tickets
                 </p>
 
                 <div className="space-y-4 text-left mb-10 flex-1">
                   {[
-                    "Access to all TR\u00dc events at member pricing",
+                    "Browse all TR\u00dc events",
+                    "Buy individual tickets ($50\u2013$100)",
+                    "$35 one-time verification fee",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-black flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-black text-[15px]">{item}</span>
+                    </div>
+                  ))}
+                  {[
+                    "No Double Take matching",
+                    "No priority RSVP",
+                  ].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-gray-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      <span className="text-stone text-[15px]">{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <Button variant="dark" href="/apply" className="w-full">
+                  Apply to Join
+                </Button>
+              </div>
+            </AnimateOnScroll>
+
+            {/* Social Tier */}
+            <AnimateOnScroll delay={0.1}>
+              <div className="bg-white rounded-3xl p-8 md:p-10 shadow-[var(--shadow-card)] border border-gray-100 text-center h-full flex flex-col">
+                <p className="text-xs uppercase tracking-[0.15em] text-stone font-medium mb-2">
+                  Social
+                </p>
+                <div className="flex items-baseline justify-center gap-1 mb-2">
+                  <span className="font-serif text-5xl font-bold text-black">$49</span>
+                  <span className="text-stone text-lg">/month</span>
+                </div>
+                <p className="text-stone text-sm mb-8">
+                  Start connecting with one event a month
+                </p>
+
+                <div className="space-y-4 text-left mb-10 flex-1">
+                  {[
+                    "1 event ticket included per month",
                     "Double Take post-event matching",
-                    "Member-only community access",
-                    "Cancel anytime \u2014 no fees, no hassle",
+                    "Priority RSVP",
+                    "Full price for extra tickets",
+                    "Verification included",
+                    "Cancel anytime",
                   ].map((item) => (
                     <div key={item} className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-black flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,13 +190,13 @@ export default function MembershipPage() {
                 </div>
 
                 <Button variant="dark" href="/apply" className="w-full">
-                  Join the Waitlist
+                  Get Started
                 </Button>
               </div>
             </AnimateOnScroll>
 
-            {/* Inner Circle Tier */}
-            <AnimateOnScroll delay={0.1}>
+            {/* Premier Tier */}
+            <AnimateOnScroll delay={0.2}>
               <div className="bg-black rounded-3xl p-8 md:p-10 shadow-[var(--shadow-elevated)] border border-black text-center h-full flex flex-col relative overflow-hidden">
                 {/* Popular badge */}
                 <div className="absolute top-0 right-0 bg-gold text-white text-[10px] uppercase tracking-wider font-semibold px-4 py-1.5 rounded-bl-xl">
@@ -156,44 +204,45 @@ export default function MembershipPage() {
                 </div>
 
                 <p className="text-xs uppercase tracking-[0.15em] text-sand font-medium mb-2">
-                  Inner Circle
+                  Premier
                 </p>
                 <div className="flex items-baseline justify-center gap-1 mb-2">
-                  <span className="font-serif text-5xl font-bold text-white">$65</span>
+                  <span className="font-serif text-5xl font-bold text-white">$125</span>
                   <span className="text-white/60 text-lg">/month</span>
                 </div>
                 <p className="text-white/60 text-sm mb-8">
-                  For those who want the full experience
+                  The full experience, unlimited access
                 </p>
 
                 <div className="space-y-4 text-left mb-10 flex-1">
                   {[
-                    "Everything in Member",
-                    "48-hour early access to event RSVPs",
-                    "1 guest pass per month",
-                    "Intimate curated dinners (8\u201312 people)",
-                    "Double Take do-over after matches reveal",
-                    "Priority waitlist for sold-out events",
-                  ].map((item, i) => (
+                    "Unlimited events included",
+                    "Double Take post-event matching",
+                    "+1 guest pass per event",
+                    "Priority RSVP & matching",
+                    "Early event announcements",
+                    "Verification included",
+                    "Cancel anytime",
+                  ].map((item) => (
                     <div key={item} className="flex items-start gap-3">
-                      <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${i === 0 ? "text-white/40" : "text-sand"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-sand flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className={`text-[15px] ${i === 0 ? "text-white/40" : "text-white"}`}>{item}</span>
+                      <span className="text-white text-[15px]">{item}</span>
                     </div>
                   ))}
                 </div>
 
                 <Button variant="primary" href="/apply" className="w-full">
-                  Join the Waitlist
+                  Upgrade
                 </Button>
               </div>
             </AnimateOnScroll>
           </div>
 
-          <AnimateOnScroll delay={0.2}>
+          <AnimateOnScroll delay={0.3}>
             <p className="text-center text-[11px] text-gray-300 mt-8">
-              Membership opens with our Nashville launch. Apply now for priority access.
+              All memberships require a verified profile. Apply now to get started.
             </p>
           </AnimateOnScroll>
         </div>
@@ -309,12 +358,12 @@ export default function MembershipPage() {
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.1}>
             <p className="text-white/70 text-lg md:text-xl mb-10 max-w-xl mx-auto">
-              Apply now and be first in line when membership opens in Nashville.
+              Apply now and start meeting people worth meeting.
             </p>
           </AnimateOnScroll>
           <AnimateOnScroll delay={0.2}>
             <Button variant="primary" href="/apply">
-              Join the Waitlist
+              Apply to Join
             </Button>
           </AnimateOnScroll>
         </div>

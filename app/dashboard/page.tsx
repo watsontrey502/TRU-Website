@@ -9,6 +9,10 @@ interface Profile {
   first_name: string;
   last_name: string;
   status: string;
+  subscription_tier: string;
+  subscription_status: string;
+  verification_status: string;
+  onboarding_completed: boolean;
 }
 
 interface EventRow {
@@ -34,11 +38,34 @@ interface MatchRow {
   matched_at: string;
 }
 
+const TIER_LABELS: Record<string, string> = {
+  free: "Free",
+  social: "Social",
+  premier: "Premier",
+};
+
+const TIER_COLORS: Record<string, string> = {
+  free: "bg-white/10 text-[#BDB8B2]",
+  social: "bg-gold/15 text-gold",
+  premier: "bg-gradient-to-r from-gold/20 to-amber-500/20 text-gold",
+};
+
+const VERIFICATION_LABELS: Record<string, { label: string; color: string }> = {
+  unverified: { label: "Unverified", color: "bg-red-500/10 text-red-400" },
+  id_uploaded: { label: "ID Under Review", color: "bg-yellow-500/10 text-yellow-400" },
+  id_approved: { label: "ID Approved", color: "bg-blue-500/10 text-blue-400" },
+  background_pending: { label: "Background Check Pending", color: "bg-yellow-500/10 text-yellow-400" },
+  verified: { label: "Verified", color: "bg-emerald-500/10 text-emerald-400" },
+  rejected: { label: "Rejected", color: "bg-red-500/10 text-red-400" },
+};
+
 export default function DashboardHome() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [upcomingEvents, setUpcomingEvents] = useState<EventRow[]>([]);
   const [availableEvents, setAvailableEvents] = useState<EventRow[]>([]);
   const [recentMatches, setRecentMatches] = useState<MatchRow[]>([]);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const [ticketsUsed, setTicketsUsed] = useState(0);
   const supabase = createClient();
 
   useEffect(() => {
@@ -46,10 +73,10 @@ export default function DashboardHome() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Load profile
+      // Load profile with new fields
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("first_name, last_name, status")
+        .select("first_name, last_name, status, subscription_tier, subscription_status, verification_status, onboarding_completed")
         .eq("id", user.id)
         .single();
       if (profileData) setProfile(profileData);
@@ -75,51 +102,139 @@ export default function DashboardHome() {
         setAvailableEvents(allEvents.filter((e) => !myEventIds.includes(e.id)));
       }
 
-      // Load recent matches via API (uses SECURITY DEFINER function)
+      // Load recent matches via API
       try {
         const matchRes = await fetch("/api/matches");
         if (matchRes.ok) {
           const { matches: allMatches } = await matchRes.json();
           setRecentMatches((allMatches ?? []).slice(0, 3));
         }
-      } catch {
-        // Matches are non-critical, don't block dashboard
+      } catch { /* non-critical */ }
+
+      // Load unread message count
+      try {
+        const msgRes = await fetch("/api/messages");
+        if (msgRes.ok) {
+          const { conversations } = await msgRes.json();
+          const total = (conversations ?? []).reduce(
+            (sum: number, c: { unread_count: number }) => sum + (c.unread_count ?? 0),
+            0
+          );
+          setUnreadMessages(total);
+        }
+      } catch { /* non-critical */ }
+
+      // Load ticket usage for Social tier
+      if (profileData?.subscription_tier === "social") {
+        try {
+          const { count } = await supabase
+            .from("ticket_purchases")
+            .select("*", { count: "exact", head: true })
+            .eq("profile_id", user.id)
+            .eq("purchase_type", "included")
+            .gte("created_at", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+          setTicketsUsed(count ?? 0);
+        } catch { /* non-critical */ }
       }
     }
     load();
   }, [supabase]);
 
+  const tier = profile?.subscription_tier ?? "free";
+  const verification = profile?.verification_status ?? "unverified";
+  const verificationInfo = VERIFICATION_LABELS[verification] ?? VERIFICATION_LABELS.unverified;
+
   return (
     <>
-      {/* Welcome */}
+      {/* Welcome + Status */}
       <div className="mb-10">
-        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-black mb-2">
+        <h1 className="font-serif text-3xl md:text-4xl font-semibold text-champagne mb-3">
           Welcome back{profile?.first_name ? `, ${profile.first_name}` : ""}
         </h1>
-        <div className="flex items-center gap-3">
-          <p className="text-stone">Your TRU dashboard</p>
-          {profile?.status && (
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              profile.status === "approved"
-                ? "bg-black/10 text-black"
-                : profile.status === "pending"
-                  ? "bg-gold/10 text-gold"
-                  : "bg-red-50 text-red-600"
-            }`}>
-              {profile.status}
-            </span>
-          )}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Tier badge */}
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${TIER_COLORS[tier] ?? TIER_COLORS.free}`}>
+            {TIER_LABELS[tier] ?? "Free"} Member
+          </span>
+          {/* Verification badge */}
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium ${verificationInfo.color}`}>
+            {verification === "verified" && (
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            )}
+            {verificationInfo.label}
+          </span>
         </div>
       </div>
 
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+        <div className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4">
+          <p className="text-[#BDB8B2] text-xs mb-1">Upcoming Events</p>
+          <p className="text-champagne text-2xl font-semibold font-serif">{upcomingEvents.length}</p>
+        </div>
+        <Link href="/dashboard/messages" className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4 hover:border-gold/30 transition-colors">
+          <p className="text-[#BDB8B2] text-xs mb-1">Unread Messages</p>
+          <div className="flex items-center gap-2">
+            <p className="text-champagne text-2xl font-semibold font-serif">{unreadMessages}</p>
+            {unreadMessages > 0 && (
+              <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+            )}
+          </div>
+        </Link>
+        <div className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4">
+          <p className="text-[#BDB8B2] text-xs mb-1">Matches</p>
+          <p className="text-champagne text-2xl font-semibold font-serif">{recentMatches.length}</p>
+        </div>
+        {tier === "social" && (
+          <div className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4">
+            <p className="text-[#BDB8B2] text-xs mb-1">Monthly Tickets</p>
+            <p className="text-champagne text-2xl font-semibold font-serif">{ticketsUsed}/1 <span className="text-sm text-[#BDB8B2]">used</span></p>
+          </div>
+        )}
+        {tier === "premier" && (
+          <div className="bg-[#1A1A1D] border border-white/10 rounded-2xl p-4">
+            <p className="text-[#BDB8B2] text-xs mb-1">Access</p>
+            <p className="text-gold text-sm font-semibold">Unlimited Events</p>
+          </div>
+        )}
+        {tier === "free" && (
+          <Link href="/dashboard/profile" className="bg-gradient-to-br from-gold/10 to-transparent border border-gold/20 rounded-2xl p-4 hover:border-gold/40 transition-colors">
+            <p className="text-gold text-xs mb-1">Upgrade</p>
+            <p className="text-champagne text-sm font-semibold">Get more with Social</p>
+          </Link>
+        )}
+      </div>
+
+      {/* Verification prompt */}
+      {verification === "unverified" && (
+        <Link href="/dashboard/profile" className="block mb-8">
+          <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-2xl p-5 flex items-center gap-4 hover:border-yellow-500/40 transition-colors">
+            <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-yellow-400 font-medium text-sm">Complete your verification</p>
+              <p className="text-[#BDB8B2] text-xs mt-0.5">Upload your ID to get verified and unlock all features.</p>
+            </div>
+            <svg className="w-5 h-5 text-[#BDB8B2] ml-auto flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </Link>
+      )}
+
       {/* Upcoming Events */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-black mb-4">
+        <h2 className="font-serif text-xl font-semibold text-champagne mb-4">
           Your Upcoming Events
         </h2>
         {upcomingEvents.length === 0 ? (
-          <div className="bg-white rounded-2xl p-8 border border-gray-100 text-center">
-            <p className="text-stone mb-4">No upcoming events yet.</p>
+          <div className="bg-[#1A1A1D] rounded-2xl p-8 border border-white/10 text-center">
+            <p className="text-[#BDB8B2] mb-4">No upcoming events yet.</p>
             <Link href="/dashboard" className="text-gold font-medium hover:text-gold transition-colors text-sm">
               Browse available events below
             </Link>
@@ -130,15 +245,15 @@ export default function DashboardHome() {
               <Link key={event.id} href={`/dashboard/events/${event.slug}`}>
                 <motion.div
                   whileHover={{ y: -2 }}
-                  className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow"
+                  className="bg-[#1A1A1D] rounded-2xl p-5 border border-white/10 hover:border-gold/20 transition-all"
                 >
                   <p className="text-xs text-gold font-medium uppercase tracking-wide mb-1">
                     {event.date} &middot; {event.time}
                   </p>
-                  <h3 className="font-serif text-lg font-semibold text-black mb-1">
+                  <h3 className="font-serif text-lg font-semibold text-champagne mb-1">
                     {event.name}
                   </h3>
-                  <p className="text-stone text-sm">{event.venue} &middot; {event.neighborhood}</p>
+                  <p className="text-[#BDB8B2] text-sm">{event.venue} &middot; {event.neighborhood}</p>
                   {event.double_take_open && (
                     <span className="inline-flex items-center mt-3 px-3 py-1 rounded-full text-xs font-medium bg-gold/10 text-gold">
                       Double Take Open
@@ -153,12 +268,12 @@ export default function DashboardHome() {
 
       {/* Available Events */}
       <section className="mb-12">
-        <h2 className="font-serif text-xl font-semibold text-black mb-4">
+        <h2 className="font-serif text-xl font-semibold text-champagne mb-4">
           Available Events
         </h2>
         {availableEvents.length === 0 ? (
-          <div className="bg-white rounded-2xl p-8 border border-gray-100 text-center">
-            <p className="text-stone">No upcoming events available right now. Check back soon!</p>
+          <div className="bg-[#1A1A1D] rounded-2xl p-8 border border-white/10 text-center">
+            <p className="text-[#BDB8B2]">No upcoming events available right now. Check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -166,17 +281,25 @@ export default function DashboardHome() {
               <Link key={event.id} href={`/dashboard/events/${event.slug}`}>
                 <motion.div
                   whileHover={{ y: -2 }}
-                  className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow"
+                  className="bg-[#1A1A1D] rounded-2xl p-5 border border-white/10 hover:border-gold/20 transition-all"
                 >
-                  <p className="text-xs text-stone font-medium uppercase tracking-wide mb-1">
+                  <p className="text-xs text-[#BDB8B2] font-medium uppercase tracking-wide mb-1">
                     {event.date} &middot; {event.time}
                   </p>
-                  <h3 className="font-serif text-lg font-semibold text-black mb-1">
+                  <h3 className="font-serif text-lg font-semibold text-champagne mb-1">
                     {event.name}
                   </h3>
-                  <p className="text-stone text-sm mb-3">{event.venue} &middot; {event.neighborhood}</p>
+                  <p className="text-[#BDB8B2] text-sm mb-3">{event.venue} &middot; {event.neighborhood}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-black font-semibold text-sm">${event.price}</span>
+                    <span className="text-champagne font-semibold text-sm">
+                      {tier === "premier" ? (
+                        <span className="text-gold">Included</span>
+                      ) : tier === "social" && ticketsUsed === 0 ? (
+                        <span className="text-gold">1 Free Ticket Available</span>
+                      ) : (
+                        `$${event.price}`
+                      )}
+                    </span>
                     <span className="text-gold text-sm font-medium">RSVP &rarr;</span>
                   </div>
                 </motion.div>
@@ -190,7 +313,7 @@ export default function DashboardHome() {
       {recentMatches.length > 0 && (
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-serif text-xl font-semibold text-black">
+            <h2 className="font-serif text-xl font-semibold text-champagne">
               Recent Matches
             </h2>
             <Link href="/dashboard/matches" className="text-gold text-sm font-medium hover:text-gold transition-colors">
@@ -199,19 +322,19 @@ export default function DashboardHome() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {recentMatches.map((match, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[var(--shadow-card)] text-center">
+              <div key={i} className="bg-[#1A1A1D] rounded-2xl p-5 border border-white/10 text-center">
                 <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-3">
                   <span className="text-gold font-serif font-bold text-lg">
                     {match.matched_first_name?.[0] ?? "?"}
                   </span>
                 </div>
-                <h3 className="font-semibold text-black text-sm">
+                <h3 className="font-semibold text-champagne text-sm">
                   {match.matched_first_name ?? "Someone"}
                 </h3>
-                <p className="text-stone text-xs mt-1">{match.event_name}</p>
-                <span className="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-black/10 text-black">
-                  It&apos;s mutual!
-                </span>
+                <p className="text-[#BDB8B2] text-xs mt-1">{match.event_name}</p>
+                <Link href="/dashboard/messages" className="inline-flex items-center mt-3 px-3 py-1 rounded-full text-[10px] font-medium bg-gold/10 text-gold hover:bg-gold/20 transition-colors">
+                  Message &rarr;
+                </Link>
               </div>
             ))}
           </div>
