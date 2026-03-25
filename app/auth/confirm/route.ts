@@ -5,7 +5,14 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as "email" | "signup" | "magiclink" | null;
-  const next = searchParams.get("next") ?? "/dashboard";
+  const token = searchParams.get("token");
+  // Default to onboarding if this is a signup confirmation, dashboard otherwise
+  let next = searchParams.get("next") ?? "/dashboard";
+
+  // If type is signup or email (new account confirmation), redirect to onboarding
+  if (type === "signup" || type === "email") {
+    next = token ? `/onboarding?token=${token}` : "/onboarding";
+  }
 
   const redirectTo = request.nextUrl.clone();
   redirectTo.pathname = next;
