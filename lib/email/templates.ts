@@ -312,14 +312,16 @@ export function ticketPurchaseConfirmation(firstName: string, eventName: string,
 
 export function subscriptionWelcome(firstName: string, tierName: string) {
   const tierBenefits = tierName === "Premier"
-    ? `${featureRow("&#9889;", "1 free event/month", "One event ticket included each month")}
-       ${featureRow("&#127915;", "25% off additional", "Save on every extra event you attend")}
+    ? `${featureRow("&#9889;", "1 free event/month", "One event ticket included each billing cycle")}
+       ${featureRow("&#127915;", "25% off extras", "Save on every additional event you attend")}
        ${featureRow("&#10024;", "Double Take", "See who caught your eye after events")}
        ${featureRow("&#128101;", "+1 Guest pass", "Bring a friend to any event")}
-       ${featureRow("&#128276;", "Early access", "First to know about new events")}`
-    : `${featureRow("&#127915;", "1 event/month included", "One ticket included every billing cycle")}
+       ${featureRow("&#128276;", "Early access", "First to know about new events")}
+       ${featureRow("&#9989;", "Verification included", "ID verification at no extra cost")}`
+    : `${featureRow("&#127915;", "25% off all events", "Save on every event ticket")}
        ${featureRow("&#10024;", "Double Take", "See who caught your eye after events")}
-       ${featureRow("&#11088;", "Priority RSVP", "Get first access to popular events")}`;
+       ${featureRow("&#11088;", "Priority RSVP", "Get first access to popular events")}
+       ${featureRow("&#9989;", "Verification included", "ID verification at no extra cost")}`;
 
   return {
     subject: `Welcome to TRÜ ${tierName} ✦`,
