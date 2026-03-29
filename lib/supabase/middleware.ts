@@ -49,11 +49,11 @@ export async function updateSession(request: NextRequest) {
   ) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("onboarding_completed")
+      .select("onboarding_completed, is_admin")
       .eq("id", user.id)
       .single();
 
-    if (profile && !profile.onboarding_completed) {
+    if (profile && !profile.onboarding_completed && !profile.is_admin) {
       const url = request.nextUrl.clone();
       url.pathname = "/onboarding";
       return NextResponse.redirect(url);
