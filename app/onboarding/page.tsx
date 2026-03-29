@@ -299,17 +299,31 @@ export default function OnboardingPage() {
     // Upload avatar if a new file was selected
     if (avatarFile) {
       setUploadingAvatar(true);
-      const fileExt = avatarFile.name.split(".").pop();
+      const fileExt = (avatarFile.name.split(".").pop() || "jpg").toLowerCase();
       const filePath = `${profile.id}/avatar.${fileExt}`;
+
+      // Determine content type — iPhone sometimes sends empty type for HEIC
+      let contentType = avatarFile.type;
+      if (!contentType || contentType === "application/octet-stream") {
+        const extMap: Record<string, string> = {
+          jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png",
+          webp: "image/webp", heic: "image/heic", heif: "image/heif",
+        };
+        contentType = extMap[fileExt] || "image/jpeg";
+      }
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(filePath, avatarFile, { upsert: true });
+        .upload(filePath, avatarFile, {
+          upsert: true,
+          contentType,
+        });
 
       setUploadingAvatar(false);
 
       if (uploadError) {
-        setError("Failed to upload photo. Please try again.");
+        console.error("Avatar upload error:", uploadError);
+        setError(`Failed to upload photo: ${uploadError.message}`);
         setSaving(false);
         return;
       }
