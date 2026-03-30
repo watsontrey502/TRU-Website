@@ -76,6 +76,27 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const handleForgotPassword = async () => {
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Enter your email address first, then click forgot password");
+      return;
+    }
+    setResetLoading(true);
+    setError("");
+    const supabase = createClient();
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setResetLoading(false);
+    if (resetError) {
+      setError(resetError.message);
+    } else {
+      setResetSent(true);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -216,6 +237,22 @@ export default function LoginPage() {
                   </div>
                 </div>
 
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    disabled={resetLoading}
+                    className="text-xs text-gold hover:text-gold/80 transition-colors cursor-pointer"
+                  >
+                    {resetLoading ? "Sending..." : "Forgot password?"}
+                  </button>
+                </div>
+
+                {resetSent && (
+                  <p className="text-xs text-green-600 pl-1">
+                    Password reset link sent! Check your email.
+                  </p>
+                )}
                 {error && <p className="text-xs text-red-500 pl-1">{error}</p>}
 
                 <motion.button
