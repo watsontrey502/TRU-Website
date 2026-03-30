@@ -54,6 +54,7 @@ type View = "list" | "detail" | "form";
 
 interface EventForm {
   name: string;
+  slug: string;
   date: string;
   time: string;
   venue: string;
@@ -68,6 +69,7 @@ interface EventForm {
 
 const EMPTY_FORM: EventForm = {
   name: "",
+  slug: "",
   date: "",
   time: "",
   venue: "",
@@ -163,6 +165,7 @@ export default function AdminEventsPage() {
     setEditingEvent(event);
     setForm({
       name: event.name,
+      slug: event.slug,
       date: event.date,
       time: event.time,
       venue: event.venue,
@@ -184,9 +187,17 @@ export default function AdminEventsPage() {
     }
     setSaving(true);
     try {
+      const slug = form.slug
+        ? form.slug
+        : form.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+
       const payload = {
         ...(editingEvent ? { id: editingEvent.id } : {}),
         name: form.name,
+        slug,
         date: form.date,
         time: form.time,
         venue: form.venue,
@@ -530,10 +541,41 @@ export default function AdminEventsPage() {
             <input
               type="text"
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={(e) => {
+                const name = e.target.value;
+                const autoSlug = name
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/(^-|-$)/g, "");
+                setForm({
+                  ...form,
+                  name,
+                  ...(editingEvent ? {} : { slug: autoSlug }),
+                });
+              }}
               placeholder="Speed Dating at The 404"
               className="form-input"
             />
+          </FormField>
+
+          <FormField label="Slug">
+            <input
+              type="text"
+              value={form.slug}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  slug: e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-]+/g, "-"),
+                })
+              }
+              placeholder="speed-dating-at-the-404"
+              className="form-input"
+            />
+            <p className="text-xs text-[#BDB8B2]/40 mt-1">
+              Auto-generated from name. Used in the event URL.
+            </p>
           </FormField>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
